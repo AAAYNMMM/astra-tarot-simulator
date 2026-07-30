@@ -11,11 +11,12 @@
 3. `docs/MODULARIZATION_PLAN.md`
 4. `docs/DATA_ARCHITECTURE.md`
 5. `docs/ENGINEERING_GUARDS.md`
-6. `docs/ENGINE_ARCHITECTURE.md`
-7. `docs/CARD_DATA_STANDARD.md`
-8. `docs/ROADMAP.md`
-9. `docs/PROGRESS.md`
-10. 与当前任务直接相关的代码、数据和测试
+6. `docs/FINAL_QUALITY_GUARDS.md`
+7. `docs/ENGINE_ARCHITECTURE.md`
+8. `docs/CARD_DATA_STANDARD.md`
+9. `docs/ROADMAP.md`
+10. `docs/PROGRESS.md`
+11. 与当前任务直接相关的代码、数据和测试
 
 不得仅依据用户当前一句话直接修改项目。先确认锁定决策、当前阶段、已完成任务和下一任务。
 
@@ -27,7 +28,7 @@
 
 1. 读取上述全部文档。
 2. 从 `docs/PROGRESS.md` 中寻找状态为 `NEXT` 的任务。
-3. 对照该任务所属方案和验收标准核实依赖：模块化任务看 `MODULARIZATION_PLAN.md`、`DATA_ARCHITECTURE.md` 与 `ENGINEERING_GUARDS.md`，其余任务看 `ROADMAP.md` 及相关质量文档。
+3. 对照该任务所属方案和验收标准核实依赖：模块化任务看 `MODULARIZATION_PLAN.md`、`DATA_ARCHITECTURE.md`、`ENGINEERING_GUARDS.md` 与 `FINAL_QUALITY_GUARDS.md`，其余任务看 `ROADMAP.md` 及相关质量文档。
 4. 若依赖满足，直接开始该任务。
 5. 完成代码、数据、测试和必要文档更新。
 6. 提交后按 `ENGINEERING_GUARDS.md` 使用 CWapi 对固定 commit 执行适用的本地验证。
@@ -65,9 +66,11 @@
 - 项目代码必须模块化，适合通过 GitHub 按职责读取、审查和修改。
 - 静态知识、临时状态、用户历史和缓存数据必须分层管理。
 - 项目不创建或依赖 GitHub Actions；真实运行验证统一使用 CWapi 本地 Runner。
+- PWA 更新、无障碍、错误恢复、版本兼容、评测治理和资源预算按 `FINAL_QUALITY_GUARDS.md` 执行。
+- 开发规划已经冻结，非阻断性新想法不得继续推迟 `MOD-001` 或 2.0 路线。
 - Phase M 完成前，不得开始批量单牌资料或新规则引擎开发。
 
-完整决策见 `docs/DECISIONS.md`。
+完整决策见 `docs/DECISIONS.md`、`docs/ENGINEERING_GUARDS.md` 与 `docs/FINAL_QUALITY_GUARDS.md`。
 
 ## 4. 工作原则
 
@@ -93,6 +96,10 @@
 - 动态导入的数据模块必须纳入 PWA 缓存清单和完整性测试。
 - 卡牌与问题目录、动态注册表和缓存清单优先由脚本生成，避免重复人工维护。
 - 单牌资料必须记录来源、误读边界并通过跨牌一致性和反例审查。
+- 评测开发集与最终盲测集分离，不得为迎合当前实现修改冻结盲测集。
+- PWA 资源失败不得使用错误 MIME 类型回退；更新必须保持版本原子性和可回滚。
+- 动态界面必须通过键盘、焦点、屏幕阅读器和 200% 缩放验收。
+- 错误恢复不得重抽牌或破坏已有历史，诊断默认不包含用户私密内容。
 - 不得创建 `.github/workflows/`；项目验证入口应由 CWapi 对固定 commit 在本地执行。
 - 没有当前 commit 对应的 CWapi RESULT，不得声称代码、数据或运行行为已在本地验证通过。
 - 每次任务完成后运行模块规模检查，并在进度文档记录本轮文件变化。
@@ -102,6 +109,7 @@
 - `docs/MODULARIZATION_PLAN.md`
 - `docs/DATA_ARCHITECTURE.md`
 - `docs/ENGINEERING_GUARDS.md`
+- `docs/FINAL_QUALITY_GUARDS.md`
 
 ## 5. 任务完成定义
 
@@ -116,4 +124,5 @@
 7. 新增和修改的人工维护文件符合模块规模限制，或有已批准例外。
 8. 数据模块、存储和缓存变更符合 `DATA_ARCHITECTURE.md`。
 9. 工程安全、生成文件、资料治理和本地验证符合 `ENGINEERING_GUARDS.md`。
-10. `docs/PROGRESS.md` 已记录完成结果、验证证据和唯一下一任务。
+10. PWA、无障碍、错误恢复、版本兼容、评测治理和资源预算符合 `FINAL_QUALITY_GUARDS.md` 中当前阶段适用的条目。
+11. `docs/PROGRESS.md` 已记录完成结果、验证证据和唯一下一任务。
