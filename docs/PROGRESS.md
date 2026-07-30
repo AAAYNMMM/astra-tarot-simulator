@@ -10,7 +10,7 @@
 | 当前阶段 | Phase M：模块化基础 |
 | 当前进行中任务 | 无 |
 | 下一任务 | `MOD-001` 模块边界、数据边界与基线验证 |
-| 最近完成任务 | `DOC-008` 执行层文档一致性优化 |
+| 最近完成任务 | `DOC-009` 依赖顺序与确定性契约优化 |
 | 阻塞项 | 无 |
 | 最后更新时间 | 2026-07-31 |
 | 规划状态 | 已冻结；非阻断性新想法不得继续推迟开发 |
@@ -28,6 +28,8 @@
 | 当前完整 commit |  |
 | CWapi task_id |  |
 | CWapi RESULT |  |
+| 受影响父任务 |  |
+| 父任务派生状态 |  |
 | 开始时间 |  |
 | 最后更新时间 |  |
 
@@ -60,9 +62,9 @@
 - 核对当前主要文件、函数职责和依赖关系。
 - 为 `app.js`、`styles.css`、`data.js` 建立唯一迁移映射。
 - 确认 `src/` 最终结构和现有 `kebab-case` 业务 ID。
-- 区分静态知识、临时状态、用户数据和生成文件。
+- 区分静态知识、临时状态、用户数据、人工源和生成文件。
 - 建立模块规模与依赖方向检查。
-- 记录自动测试、关键交互和旧历史字段基线。
+- 记录自动测试、关键交互、旧历史字段和浏览器环境基线。
 - 建立最小 CWapi 统一验证入口。
 
 ### 开始前必读
@@ -88,6 +90,8 @@
 - `automation/README.md`
 - 最小 `src/` 骨架或职责说明
 - 旧历史字段和迁移输入基线
+- 当前浏览器与操作系统人工基线
+- 人工源、临时目录和生成文件职责说明
 
 ### baseline 验证入口
 
@@ -124,14 +128,15 @@ automation/validate.py --scope baseline
 1. 模块规模脚本报告 `app.js`、`styles.css`、`data.js` 超限。
 2. `MODULE_MAP.md` 为每个旧职责指定唯一目标模块。
 3. 依赖方向和循环依赖规则可检查。
-4. 现有业务 ID、静态知识、临时状态、用户数据和生成文件边界被记录。
+4. 现有业务 ID、静态知识、临时状态、用户数据、人工源和生成文件边界被记录。
 5. Python 和 Node 基线测试结果被记录。
 6. 准备、洗牌、发牌、翻牌、结果、历史和关闭生命周期人工基线被记录。
 7. 当前 `localStorage` 设置与历史结构被记录。
-8. `automation/validate.py --scope baseline` 可由 CWapi 对固定 commit 执行。
-9. 没有运行行为变化。
-10. 当前 commit 取得匹配的 CWapi RESULT。
-11. 本文件将唯一 `NEXT` 更新为 `MOD-002`。
+8. 当前浏览器和操作系统环境被标记为已测试、降级、未测试或不支持。
+9. `automation/validate.py --scope baseline` 可由 CWapi 对固定 commit 执行。
+10. 没有运行行为变化。
+11. 当前 commit 取得匹配的 CWapi RESULT。
+12. 本文件将唯一 `NEXT` 更新为 `MOD-002`。
 
 ## 4. 当前基线
 
@@ -140,17 +145,19 @@ automation/validate.py --scope baseline
 | `app.js` | 1528 行 | 超过 JS 600 行硬上限 |
 | `styles.css` | 4918 行 | 超过 CSS 900 行硬上限 |
 | `data.js` | 637 行 | 超过 JS 600 行硬上限 |
-| `run.py` | 243 行 | 规模可接受，访问边界待强化 |
+| `run.py` | 243 行 | 规模可接受，访问边界待 `MOD-004B` 强化 |
 | 业务 ID | 现有代码使用 `kebab-case` | Phase M 保持不变 |
 | `localStorage` 设置 | 小型 JSON | 抽离接口后继续使用 |
-| `localStorage` 历史 | 最多20条精简记录 | 存在静默截断，后期迁移 |
-| IndexedDB | 尚未使用 | `AU-002`、`AU-003` 实现 |
+| `localStorage` 历史 | 最多 20 条精简记录 | 存在静默截断，后期迁移 |
+| IndexedDB | 尚未使用 | `AU-002`、`AU-003A–C` 实现 |
 | GitHub Actions | 不使用 | CWapi 本地验证 |
-| CWapi统一入口 | 尚未建立 | `MOD-001` 建立 baseline，`MOD-006D` 完成 full |
-| PWA更新 | 统一回退首页 | `MOD-006C` 修资源类型，`PLAT-001` 完成原子更新 |
+| CWapi 统一入口 | 尚未建立 | `MOD-001` 建立 baseline，`MOD-006D` 完成 full |
+| PWA 更新 | 统一回退首页 | `MOD-006C` 修资源类型和等级，`PLAT-001` 完成原子更新 |
 | 无障碍 | 部分 ARIA 和键盘支持 | `AX-001`、`AX-002` 完成 |
 | 错误恢复 | 局部容错 | `ERR-001` 完成统一模型 |
-| 版本兼容 | 有独立版本规划 | `REL-005` 建立矩阵 |
+| 版本兼容 | 有独立版本规划 | `REL-005` 建立矩阵并在最终回归前完成 |
+| 确定性 | 当前抽牌使用安全随机源 | `MOD-003` 建接口，`AU-001` 建三条独立随机流 |
+| 浏览器支持矩阵 | 尚未冻结 | `MOD-001` 记录基线，`REL-001` 冻结发布矩阵 |
 
 ## 5. 阶段进度
 
@@ -159,59 +166,72 @@ automation/validate.py --scope baseline
 | Phase 0 | DONE | 100% | 接手、决策、架构和执行层文档已对齐 |
 | Phase M | NEXT | 0% | 当前执行 `MOD-001` |
 | Phase 1 | BLOCKED | 0% | 等待 `MOD-006D` |
-| Phase 2 | BACKLOG | 0% | 父任务必须拆为4–6张叶子任务 |
-| Phase 3 | BACKLOG | 0% | 问题和适配按领域拆分 |
+| Phase 2 | PARENT-PENDING | 0% | 等待 `TQ-005`，资料按 4–6 张叶子任务拆分 |
+| Phase 3 | PARENT-PENDING | 0% | 问题和适配按领域拆分 |
 | Phase 4 | BACKLOG | 0% | Position Operator 与 Observation |
 | Phase 5 | BACKLOG | 0% | 结构边优先的 Relation Graph |
-| Phase 6 | BACKLOG | 0% | Claim、冲突和模板 |
-| Phase 7 | BACKLOG | 0% | 随机、IndexedDB、迁移和备份 |
-| Phase 8 | BACKLOG | 0% | 盲测、9.0+、错误恢复、无障碍和UI |
-| Phase 9 | BACKLOG | 0% | PWA、性能、兼容、许可证和发布 |
+| Phase 6 | BACKLOG | 0% | Claim、稳定评分、冲突和模板 |
+| Phase 7 | PARENT-PENDING | 0% | 独立随机流、IndexedDB、迁移和备份 |
+| Phase 8 | PARENT-PENDING | 0% | 评测资产、门禁、最终盲测、错误恢复、无障碍和 UI |
+| Phase 9 | PARENT-PENDING | 0% | PWA、性能、兼容、许可证、最终回归和发布 |
 
 ## 6. 任务状态表
 
 | 任务 ID | 状态 | 完成日期 | 结果 |
 |---|---|---|---|
 | DOC-001–007 | DONE | 2026-07-30 至 2026-07-31 | 原始项目文档体系和质量护栏 |
-| DOC-008 | DONE | 2026-07-31 | 统一ID、路径、任务依赖、粒度和恢复现场 |
-| MOD-001 | NEXT |  | 模块边界、数据边界与baseline验证 |
-| MOD-002 | BACKLOG |  | 拆分CSS |
-| MOD-003 | BACKLOG |  | 抽离基础JavaScript和随机接口 |
-| MOD-004 | BACKLOG |  | 控制器、渲染器和服务边界 |
-| MOD-005 | BACKLOG |  | 静态知识、注册表和旧解读 |
+| DOC-008 | DONE | 2026-07-31 | 统一 ID、路径、任务依赖、粒度和恢复现场 |
+| DOC-009 | DONE | 2026-07-31 | 父任务状态、任务拆分、确定性、评测和发布顺序优化 |
+| MOD-001 | NEXT |  | 模块边界、数据边界与 baseline 验证 |
+| MOD-002 | BACKLOG |  | 拆分 CSS |
+| MOD-003 | BACKLOG |  | 抽离基础 JavaScript 和随机接口 |
+| MOD-004A | BACKLOG |  | 状态、控制器和渲染器 |
+| MOD-004B | BACKLOG |  | 服务白名单、路径穿越和生命周期保护 |
+| MOD-005 | BACKLOG |  | 人工知识源和旧解读兼容 |
 | MOD-006A | BACKLOG |  | 模块入口与旧全局清理 |
-| MOD-006B | BACKLOG |  | 生成清单和基础分组缓存 |
-| MOD-006C | BACKLOG |  | PWA资源类型回退和缓存验证 |
-| MOD-006D | BACKLOG |  | full验证、全量回归和Phase M收口 |
-| TQ-001 | BLOCKED |  | 等待 `MOD-006D` |
+| MOD-006B | BACKLOG |  | 正式生成目录、注册表和缓存清单 |
+| MOD-006C | BACKLOG |  | PWA 资源类型与资源等级 |
+| MOD-006D | BACKLOG |  | full 验证、全量回归和 Phase M 收口 |
+| TQ-001 | BLOCKED |  | 等待 `MOD-006D`，只负责结构 Schema |
 | TQ-002 | BACKLOG |  | 词典、来源和解释政策 |
 | EV-000A | BACKLOG |  | 评测协议和盲测边界 |
-| TQ-003 | BACKLOG |  | 6张黄金样本初稿 |
+| TQ-003 | BACKLOG |  | 6 张黄金样本初稿 |
 | TQ-004 | BACKLOG |  | 审查工具和黄金样本冻结 |
-| TQ-101–107 | PARENT |  | 78张牌父任务，执行前拆分 |
-| QP-001–004 | BACKLOG/PARENT |  | 问题系统，批量任务按领域拆分 |
-| PO-001–003 | BACKLOG |  | 牌位和Observation |
+| TQ-005 | BACKLOG |  | 黄金样本可消费性验证 |
+| TQ-101–107 | PARENT-PENDING |  | 78 张牌父任务，等待 `TQ-005` |
+| QP-001–002 | BACKLOG |  | 问题分类与 Schema |
+| QP-003–004 | PARENT-PENDING |  | 问题资料和适配按领域拆分 |
+| PO-001–003 | BACKLOG |  | 牌位和 Observation |
 | MR-001–004 | BACKLOG |  | 多牌关系 |
-| CL-001–004 | BACKLOG |  | 结论和冲突 |
+| CL-001–004 | BACKLOG |  | 结论、稳定评分和冲突 |
 | TX-001–003 | BACKLOG |  | 模板和安全校验 |
-| AU-001–002 | BACKLOG |  | 随机与ReadingRecord |
-| AU-003A–C | BACKLOG |  | 迁移、备份、容量和降级 |
-| EV-000B、EV-001–004 | BACKLOG/PARENT |  | 最终盲测和质量门禁 |
+| AU-001–002 | BACKLOG |  | 独立随机流与 ReadingRecord |
+| AU-003 | PARENT-PENDING |  | 迁移、备份、容量和降级父任务 |
+| AU-003A–C | BACKLOG |  | 三个顺序叶子任务 |
+| EV-001–002 | BACKLOG |  | 单牌与问题评测资产 |
+| EV-003 | PARENT-PENDING |  | 多牌评测父任务 |
+| EV-003A–C | BACKLOG |  | 语料、自动指标和人工评审 |
+| EV-004 | BACKLOG |  | 回归门禁与 Doctor |
+| EV-000B | BACKLOG |  | 最终盲测，必须发生在 EV-004 之后 |
 | ERR-001 | BACKLOG |  | 统一错误恢复 |
 | AX-001–002 | BACKLOG |  | 无障碍 |
 | UI-001–002 | BACKLOG |  | 新引擎和历史界面 |
-| PLAT-001 | BACKLOG |  | PWA原子更新 |
+| PLAT-001 | BACKLOG |  | PWA 原子更新 |
 | PERF-001 | BACKLOG |  | 性能与资源预算 |
 | PWA-002 | BACKLOG |  | 图标和离线牌组 |
-| REL-001–005 | BACKLOG/PARENT |  | 发布稳定化 |
+| REL-002 | BACKLOG |  | 性能、离线和隐私验收 |
+| REL-005 | BACKLOG |  | 版本兼容与回滚，最终回归前完成 |
+| REL-003 | BACKLOG |  | 文档、许可证和第三方声明 |
+| REL-001 | BACKLOG |  | 所有发布前代码变更后的最终全量回归 |
+| REL-004 | BACKLOG |  | 发布 2.0 |
 
 ## 7. 当前代码审查结论
 
-- 当前包含78张牌、42个固定问题和4种固定牌阵。
+- 当前包含 78 张牌、42 个固定问题和 4 种固定牌阵。
 - 当前业务 ID 使用 `kebab-case`，未来资料必须沿用。
 - `app.js`、`styles.css`、`data.js` 必须分阶段拆分。
-- 当前Python服务器以仓库根目录为服务目录，需增加白名单和生命周期保护。
-- 当前Service Worker手工维护资源并统一回退首页，需分两阶段修复。
+- 当前 Python 服务器以仓库根目录为服务目录，需增加白名单和生命周期保护。
+- 当前 Service Worker 手工维护资源并统一回退首页，需分两阶段修复。
 - 当前单牌资料不足以支撑目标规则引擎。
 - 当前具体问题没有独立 QuestionProfile。
 - 当前综合解读仍依赖粗糙的正逆位和元素统计。
@@ -226,13 +246,15 @@ automation/validate.py --scope baseline
 
 已检查：
 
-- ID统一为现有 `kebab-case`。
-- 所有目标代码路径统一进入 `src/`。
-- Position Operator 和 Relation Graph 顺序已修正。
-- `MOD-006` 已拆为 A–D。
-- Phase 1 评测与黄金样本顺序已修正。
-- 大型任务被标记为父任务。
-- CWapi baseline入口提前到 `MOD-001`。
+- 父任务具有可计算派生状态。
+- `MOD-004` 已拆为前端和服务器安全两个叶子任务。
+- `TQ-001` 与 `TQ-002` 的校验职责不再互相倒置。
+- 根种子、独立随机流、稳定排序和平局规则已纳入路线。
+- `MOD-005` 与 `MOD-006B` 的人工源和生成职责已分开。
+- `TQ-005` 在批量生产 72 张牌前验证资料可消费性。
+- `EV-000B` 移到评测资产和门禁之后。
+- `REL-001` 移到所有发布前代码变更之后。
+- PWA 必需资源与可选牌组资源已区分。
 - 当前唯一 `NEXT` 仍为 `MOD-001`。
 
-未执行运行测试：本轮是纯文档一致性修复，不创建CWapi TASK。
+未执行运行测试：本轮是纯文档一致性修复，不创建 CWapi TASK。
