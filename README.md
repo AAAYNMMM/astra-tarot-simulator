@@ -46,6 +46,21 @@ python run.py --no-browser
 - PWA 清单与离线缓存；支持的浏览器会显示“安装为桌面应用”入口。
 - 页面关闭时会通知本地启动器；刷新或重新载入拥有短暂宽限时间，不会误停服务。
 
+## 开发路线与持续任务
+
+项目正在规划纯规则解牌引擎升级，目标是在不使用 AI 大模型、不改变现有四种牌阵、只使用固定预设问题的前提下，提高单牌资料质量、多牌综合能力和具体问题贴合度。
+
+后续开发代理进入项目后应首先读取：
+
+1. [`AGENTS.md`](AGENTS.md)：AI 接手顺序、“开始任务”和“继续任务”的执行规则。
+2. [`docs/DECISIONS.md`](docs/DECISIONS.md)：不可擅自改变的产品与技术决策。
+3. [`docs/ENGINE_ARCHITECTURE.md`](docs/ENGINE_ARCHITECTURE.md)：目标规则引擎架构。
+4. [`docs/CARD_DATA_STANDARD.md`](docs/CARD_DATA_STANDARD.md)：78 张牌达到 9.0/10 以上的资料标准。
+5. [`docs/ROADMAP.md`](docs/ROADMAP.md)：分阶段任务、依赖与验收标准。
+6. [`docs/PROGRESS.md`](docs/PROGRESS.md)：当前开发进度和唯一下一任务。
+
+当前下一任务以 `docs/PROGRESS.md` 中标记为 `NEXT` 的任务为准。每次开发完成后必须同步更新该文件，避免项目进度被埋在某个聊天窗口里，成为数字考古遗址。
+
 ## 隐私与说明
 
 应用不会联网发送问题或牌面。历史记录保存在浏览器的 `localStorage` 中，清除浏览器站点数据会同时删除记录。
