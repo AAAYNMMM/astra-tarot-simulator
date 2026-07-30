@@ -2,25 +2,14 @@
 
 ## 1. 目标
 
-在不使用 AI 大模型、不改变四种固定牌阵、只允许预设问题的前提下，建立一套：
-
-- 可复现
-- 可审计
-- 可测试
-- 可解释
-- 能进行多牌综合
-- 能针对具体预设问题输出贴合结论
-
-的确定性解牌引擎。
-
-核心质量目标：
+在不使用 AI 大模型、不改变四种固定牌阵、只允许预设问题的前提下，建立一套可复现、可审计、可测试、可解释并能进行多牌综合的确定性解牌引擎。
 
 | 能力 | 目标 |
 |---|---:|
 | 单牌资料质量 | ≥ 9.0 / 10 |
 | 多牌综合能力 | ≥ 9.0 / 10 |
 | 预设问题贴合度 | ≥ 9.0 / 10 |
-| 证据可追溯性 | 100% 核心结论可追溯 |
+| 核心结论可追溯率 | 100% |
 | 同输入复现率 | 100% |
 
 ## 2. 总体流水线
@@ -30,122 +19,125 @@
     ↓
 QuestionProfile 加载
     ↓
-固定牌阵与牌位语义适配
+固定牌阵定义、关系图和问题适配加载
     ↓
-随机种子、洗牌、抽牌、正逆位
+高质量随机种子 → 确定性洗牌、抽牌、正逆位
     ↓
-单牌观察 Observation 生成
+按抽牌结果加载 CardSemanticProfile
     ↓
-牌位运算 Position Operator
+卡牌语义 + 逆位机制 + QuestionProfile + Position Operator
     ↓
-牌间关系 Relation Graph
+Observation 生成
     ↓
-候选结论 Claim Candidate
+固定牌阵结构边
     ↓
-证据评分与冲突消解
+语义关系候选与 Relation Graph
     ↓
-结论分类 Conclusion Classifier
+ClaimCandidate 生成
+    ↓
+证据评分、反证和冲突消解
+    ↓
+有限结论分类
     ↓
 一致性与安全校验
     ↓
-模板化自然语言输出
+确定性模板渲染
     ↓
-历史记录与审计数据保存
+历史和审计数据保存
 ```
 
-抽牌阶段和解释阶段必须严格分离。
+抽牌阶段和解释阶段严格分离。问题、牌义加载或期望结果不得影响抽牌。
 
-## 3. 核心数据对象
+Position Operator 是 Observation 的输入，不是 Observation 生成后的装饰步骤。
+
+## 3. 核心对象
 
 ### 3.1 QuestionProfile
 
-每个预设问题必须有独立配置。
-
 ```js
 {
-  id: "career_change_now",
+  id: "career-change",
   text: "现在适合转换工作或学习方向吗？",
   domain: "career",
-  intent: "change_decision",
-  timeframe: "near_term",
-
+  intent: "change-decision",
+  timeframe: "near-term",
   answerDimensions: [
-    "change_motivation",
-    "current_readiness",
-    "main_obstacle",
-    "external_condition",
-    "development_trend",
-    "recommended_action"
+    "change-motivation",
+    "current-readiness",
+    "main-obstacle",
+    "external-condition",
+    "development-trend",
+    "recommended-action",
   ],
-
   allowedConclusionTypes: [
-    "act_now",
-    "act_with_conditions",
-    "wait_and_prepare",
-    "adjust_current_path",
-    "currently_unfavorable",
-    "indeterminate"
+    "act-now",
+    "act-with-conditions",
+    "wait-and-prepare",
+    "adjust-current-path",
+    "currently-unfavorable",
+    "indeterminate",
   ],
-
   forbiddenClaims: [
-    "guaranteed_success",
-    "exact_date",
-    "certain_external_fact"
+    "guaranteed-success",
+    "exact-date",
+    "certain-external-fact",
   ],
-
   spreadProfiles: {
     single: {},
     timeline: {},
     cross: {},
-    celtic: {}
-  }
+    celtic: {},
+  },
 }
 ```
 
-`spreadProfiles` 不改变牌阵，只说明同一固定牌位在该问题中的具体职责。
+`spreadProfiles` 不改变牌阵或牌位，只定义同一固定牌位在该问题中的回答职责。
 
 ### 3.2 CardSemanticProfile
 
-每张牌的结构化资料。完整标准见 `CARD_DATA_STANDARD.md`。
+每张牌的结构化知识。完整要求见 `CARD_DATA_STANDARD.md`。
+
+业务 ID 使用现有 `kebab-case`，例如 `major-7`、`cups-two`。每条可引用语义单元拥有稳定 ID。
 
 ### 3.3 Observation
 
-牌面经过问题与牌位适配后的局部观察。
+Observation 是卡牌资料、正逆位机制、问题配置和牌位运算共同作用后的局部观察：
 
 ```js
 {
-  cardId: "major_07",
+  id: "obs-2",
+  cardId: "major-7",
   orientation: "reversed",
   positionId: "advice",
-  questionId: "career_change_now",
-
+  questionId: "career-change",
+  semanticUnitRef: "major-7#action.align-direction",
   selectedFacet: "action",
-  selectedReversalMode: "blocked",
-  semanticTags: ["direction_conflict", "preparation_gap"],
+  selectedReversalMode: "misdirected",
+  semanticTags: ["direction-conflict", "preparation-gap"],
   dimensions: {
     activation: -1,
     stability: -1,
-    clarity: -2
+    clarity: -2,
   },
-
-  statementKey: "align_direction_before_action",
   localScore: 1.42,
-  evidenceType: "primary"
+  evidenceType: "primary",
 }
 ```
 
-### 3.4 Relation
+每个 Observation 必须保留来源引用，不能只保存渲染后的句子。
 
-描述两张牌或两个牌位观察之间的关系。
+### 3.4 Relation
 
 ```js
 {
-  sourceObservationId: "obs_2",
-  targetObservationId: "obs_5",
-  type: "conditional_tension",
+  id: "rel-3",
+  sourceObservationId: "obs-2",
+  targetObservationId: "obs-5",
+  type: "conditional-tension",
   strength: 0.78,
-  tags: ["desire_vs_readiness"],
-  explanationKey: "internal_drive_external_delay"
+  tags: ["desire-vs-readiness"],
+  explanationKey: "internal-drive-external-delay",
+  origin: "spread-structure",
 }
 ```
 
@@ -160,44 +152,36 @@ QuestionProfile 加载
 - `transforms`
 - `conditions`
 - `repairs`
-- `repeats_theme`
-- `stage_progression`
+- `repeats-theme`
+- `stage-progression`
 
 ### 3.5 ClaimCandidate
 
 ```js
 {
-  id: "claim_01",
-  dimension: "recommended_action",
-  conclusionType: "act_with_conditions",
-  statementKey: "change_possible_after_preparation",
-
-  evidence: ["obs_2", "obs_5"],
-  counterEvidence: ["obs_1"],
-  relations: ["rel_3"],
-  conditions: ["verify_opportunity", "preserve_security"],
-
+  id: "claim-1",
+  dimension: "recommended-action",
+  conclusionType: "act-with-conditions",
+  statementKey: "change-possible-after-preparation",
+  evidence: ["obs-2", "obs-5"],
+  counterEvidence: ["obs-1"],
+  relations: ["rel-3"],
+  conditions: ["verify-opportunity", "preserve-security"],
   supportScore: 4.6,
   conflictPenalty: 1.1,
   finalScore: 3.5,
-  confidenceBand: "medium_high"
+  confidenceBand: "medium-high",
 }
 ```
 
 ### 3.6 ReadingResult
 
-最终结果必须同时保存显示文本和结构化证据。
-
 ```js
 {
-  readingId: "...",
-  engineVersion: "2.0.0",
-  cardDataVersion: "1.0.0",
-  questionProfileVersion: "1.0.0",
-  templateVersion: "1.0.0",
+  readingId: "reading-...",
+  versions: {},
   randomSeed: "...",
-
-  questionId: "career_change_now",
+  questionId: "career-change",
   spreadId: "cross",
   draw: [],
   observations: [],
@@ -205,42 +189,34 @@ QuestionProfile 加载
   selectedClaims: [],
   rejectedClaims: [],
   validation: {},
-  renderedText: {}
+  renderedText: {},
 }
 ```
 
-## 4. 固定牌阵关系图
+最终结果同时保存结构化证据与显示文本。
+
+## 4. 固定牌阵职责
 
 ### 4.1 心语单张
 
-职责：核心观察，不伪装成完整因果报告。
+只输出：
 
-允许输出：
-
-- 一条核心状态或提醒
+- 一条核心观察
 - 一条与问题相关的解释
 - 一条行动建议
 - 一条边界或条件
 
-不得输出复杂的过去、未来、外部人物确定事实。
+不得伪装成完整因果报告，不得确定外部人物事实。
 
 ### 4.2 时间之流
 
 固定结构：过去 → 当下 → 未来。
 
-关系计算：
-
-- 过去是否延续到当下
-- 当下是否强化、缓解或逆转过去
-- 当下如何导向未来
-- 未来是否重复旧模式
-- 三张牌是否形成递进、停滞、循环或转折
+检查延续、强化、缓解、逆转、循环和转折。
 
 ### 4.3 五牌十字
 
-固定牌位保持现状。
-
-主要关系：
+主要结构边：
 
 - 根源 → 核心
 - 关键影响 → 核心
@@ -248,86 +224,69 @@ QuestionProfile 加载
 - 建议 → 趋势
 - 建议 ↔ 关键影响
 
-重点输出：
-
-- 当前局面的核心结构
-- 根源与关键影响
-- 当前路径的趋势
-- 建议如何修正趋势
-- 条件性结论
+重点输出核心结构、根源、影响、趋势、修正和条件。
 
 ### 4.4 凯尔特十字
 
-固定十个牌位保持现状。
+固定十个牌位保持不变。必须先提炼 2–4 条主线，再展开证据，不得按十张牌依次复述。
 
-重点关系：
+## 5. Position Operator
 
-- 当前态势与交叉挑战
-- 意识目标与潜意识根基
-- 过去影响与近期发展
-- 建议对挑战的修正
-- 外界条件对当前目标的支持或阻碍
-- 希望恐惧对判断的影响
-- 近期发展与最终结果是否同向
-
-凯尔特十字不能按十张牌顺序逐段复述。必须先提炼 2 至 4 条主线，再展开证据。
-
-## 5. 牌位运算符
-
-牌位必须改变以下内容：
+牌位运算符决定：
 
 - 可选语义侧面
 - 时态
-- 主体
+- 主体范围
 - 权重
 - 条件性
 - 是否转化为行动
 - 是否可作为核心结论证据
-
-示例：
 
 ```js
 const POSITION_OPERATORS = {
   challenge: {
     allowedFacets: ["obstacle", "excess", "deficiency", "distortion"],
     weight: 1.3,
-    evidencePriority: "primary"
+    evidencePriority: "primary",
   },
-
   advice: {
     allowedFacets: ["action", "adjustment", "boundary", "preparation"],
     weight: 1.5,
     convertToAction: true,
-    evidencePriority: "primary"
+    evidencePriority: "primary",
   },
-
   outcome: {
     allowedFacets: ["trend", "consequence", "resolution"],
     weight: 1.2,
     conditional: true,
-    evidencePriority: "primary"
-  }
+    evidencePriority: "primary",
+  },
 };
 ```
 
-## 6. 多牌关系层级
+## 6. Relation Graph 分层
 
-关系计算按以下优先级执行：
+关系计算按以下顺序：
 
-1. 问题维度与牌位关系
-2. 结构化主题关系
-3. 状态与行动方向关系
-4. 正逆位机制关系
-5. 固定牌阵位置关系
-6. 大阿卡纳阶段关系
-7. 花色与元素关系
-8. 数字、宫廷角色与重复模式
+1. 固定牌阵结构边。
+2. 问题维度与牌位职责。
+3. 主题、状态和行动方向关系。
+4. 正逆位机制关系。
+5. 大阿卡纳阶段、元素、数字和宫廷角色等辅助关系。
 
-元素和数字只能作为辅助证据，不得压过问题、牌位和核心牌义。
+约束：
+
+- 固定结构连接的牌必须检查。
+- 非结构边只有在共享、冲突或转化标签满足条件时才成为候选。
+- 不对凯尔特十字的所有两两组合无差别建边。
+- 每个 Observation 只保留有限数量的高价值语义关系。
+- 辅助关系不得压过问题、牌位和核心牌义。
+- 大阿卡纳不作为第五花色元素。
+- 平局可以明确保留，不强选唯一主导元素。
 
 ## 7. 评分模型
 
-### 7.1 局部观察分
+### 7.1 Observation 分数
 
 ```text
 局部观察分 =
@@ -338,7 +297,7 @@ const POSITION_OPERATORS = {
 × 数据质量系数
 ```
 
-### 7.2 综合结论分
+### 7.2 Claim 分数
 
 ```text
 综合结论分 =
@@ -357,31 +316,31 @@ const POSITION_OPERATORS = {
 - 正位数量减逆位数量
 - 简单吉凶总和
 - 单一元素数量直接决定结论
-- 大阿卡纳数量直接代表“事情重大”而忽略位置
+- 大阿卡纳数量直接代表事情重大
 
-## 8. 冲突消解顺序
+## 8. 冲突消解
 
-1. 是否属于内在与外在不同层面
-2. 是否属于过去、现在与未来不同阶段
-3. 是否属于动机与现实条件不同层面
-4. 建议是否可以修正趋势
-5. 是否可转化为“满足条件后成立”
-6. 是否存在主次证据差异
-7. 仍无法整合时输出“趋势分散”
+1. 区分内在与外在。
+2. 区分过去、当前与未来。
+3. 区分动机与现实条件。
+4. 判断建议能否修正趋势。
+5. 转化为条件分支。
+6. 根据主次证据降权。
+7. 仍无法整合时输出趋势分散或不确定。
 
-冲突牌不能被删除，只能被解释、降权或保留为反证。
+冲突证据不能被删除，只能被解释、降权或保留为反证。
 
-## 9. 结论分类
+## 9. 有限结论分类
 
-每种问题意图必须使用有限结论集合。
+每种问题意图使用有限结论集合。模板负责表达变化，分类本身保持稳定。
 
 决策类示例：
 
-- `act_now`
-- `act_with_conditions`
-- `wait_and_prepare`
-- `adjust_current_path`
-- `currently_unfavorable`
+- `act-now`
+- `act-with-conditions`
+- `wait-and-prepare`
+- `adjust-current-path`
+- `currently-unfavorable`
 - `indeterminate`
 
 趋势类示例：
@@ -391,83 +350,83 @@ const POSITION_OPERATORS = {
 - `slowing`
 - `conflicted`
 - `restructuring`
-- `ending_or_redefining`
+- `ending-or-redefining`
 - `conditional`
 - `indeterminate`
-
-有限分类用于保证一致性，模板负责表达变化。
 
 ## 10. 模板渲染
 
 模板按结论类型、问题领域、置信度和关系结构组织，不按牌名堆积。
 
-模板渲染必须支持：
+必须支持：
 
+- 固定种子下可复现
 - 同义句轮换
-- 固定随机种子下可复现
 - 术语重复限制
-- 高、中、低置信度措辞
-- 支持证据与反证的自然连接
+- 置信度措辞
+- 支持证据与反证连接
 - 条件与行动顺序
-- 单张、三张、五张和十张不同输出深度
+- 四种牌阵不同输出深度
 
 ## 11. 校验器
 
-至少实现：
+### 数据校验
 
-### 11.1 数据校验
+- 业务 ID 与语义单元 ID 合法且唯一。
+- 78 张牌齐全。
+- 字段、枚举、数值范围和引用合法。
 
-- 78 张牌齐全且 ID 唯一
-- 字段完整
-- 枚举合法
-- 数值范围合法
-- 引用标签存在
+### 证据校验
 
-### 11.2 证据校验
+- 每条核心结论至少有两个有效证据，单张牌阵除外。
+- 证据来自实际抽牌和真实语义单元。
+- 牌位与语义侧面匹配。
 
-- 每条核心结论至少有两个有效证据，单张牌阵除外
-- 证据必须来自实际抽牌
-- 牌位与语义侧面匹配
+### 问题贴合校验
 
-### 11.3 问题贴合校验
+- 必答维度达到阈值。
+- 结论类型被 QuestionProfile 允许。
+- 不跑到无关领域。
 
-- 必答维度覆盖率达到阈值
-- 禁止输出未允许的结论类型
-- 不得跑到无关领域
+### 矛盾校验
 
-### 11.4 矛盾校验
+- 相反建议被排序、分层或条件化。
+- 不允许不同段落无解释地互相否定。
 
-- 相反行动建议必须被排序、分层或条件化
-- 不得在不同段落给出互斥结论而无说明
+### 安全校验
 
-### 11.5 安全校验
+禁止确定疾病、死亡、怀孕、犯罪、投资收益、第三者、欺骗、精确日期或必然事件。
 
-禁止：
-
-- 确定疾病、死亡、怀孕或犯罪事实
-- 保证投资收益
-- 建议停止治疗或替代专业意见
-- 确定第三者、欺骗、恶意等外部事实
-- 精确日期和必然事件
-
-## 12. 建议模块结构
+## 12. 目标模块结构
 
 ```text
-engine/
-├── question_profiles.js
-├── card_semantics.js
-├── card_schema.js
-├── reversal_rules.js
-├── position_operators.js
-├── spread_relations.js
-├── observation_engine.js
-├── relation_engine.js
-├── claim_engine.js
-├── conflict_resolver.js
-├── conclusion_classifier.js
-├── template_renderer.js
-├── validation_engine.js
+src/engine/
+├── models/
+├── observations/
+│   ├── position-operators.js
+│   └── observation-engine.js
+├── relations/
+│   ├── spread-graph.js
+│   └── relation-engine.js
+├── claims/
+│   ├── claim-engine.js
+│   ├── evidence-scorer.js
+│   ├── conflict-resolver.js
+│   └── conclusion-classifier.js
+├── validation/
+│   └── validation-engine.js
+├── rendering/
+│   └── template-renderer.js
 └── version.js
+
+src/knowledge/
+├── cards/
+├── questions/
+├── spreads/
+├── vocabularies/
+└── templates/
 ```
 
-实现顺序由 `ROADMAP.md` 和 `PROGRESS.md` 决定，不应一次性创建空架子冒充完成。
+完整卡牌和问题资料不得重新集中到 `card_semantics.js` 或 `question_profiles.js` 之类的大文件。
+
+实现顺序由 `ROADMAP.md` 和 `PROGRESS.md` 决定。
