@@ -9,11 +9,12 @@
 1. `README.md`
 2. `docs/DECISIONS.md`
 3. `docs/MODULARIZATION_PLAN.md`
-4. `docs/ENGINE_ARCHITECTURE.md`
-5. `docs/CARD_DATA_STANDARD.md`
-6. `docs/ROADMAP.md`
-7. `docs/PROGRESS.md`
-8. 与当前任务直接相关的代码、数据和测试
+4. `docs/DATA_ARCHITECTURE.md`
+5. `docs/ENGINE_ARCHITECTURE.md`
+6. `docs/CARD_DATA_STANDARD.md`
+7. `docs/ROADMAP.md`
+8. `docs/PROGRESS.md`
+9. 与当前任务直接相关的代码、数据和测试
 
 不得仅依据用户当前一句话直接修改项目。先确认锁定决策、当前阶段、已完成任务和下一任务。
 
@@ -25,7 +26,7 @@
 
 1. 读取上述全部文档。
 2. 从 `docs/PROGRESS.md` 中寻找状态为 `NEXT` 的任务。
-3. 对照该任务所属方案和验收标准核实依赖：模块化任务看 `MODULARIZATION_PLAN.md`，其余任务看 `ROADMAP.md`。
+3. 对照该任务所属方案和验收标准核实依赖：模块化任务看 `MODULARIZATION_PLAN.md` 与 `DATA_ARCHITECTURE.md`，其余任务看 `ROADMAP.md`。
 4. 若依赖满足，直接开始该任务。
 5. 完成代码、数据、测试和必要文档更新。
 6. 更新 `docs/PROGRESS.md`，记录完成情况、验证结果和新的 `NEXT` 任务。
@@ -56,6 +57,7 @@
 - 单牌资料质量、多牌综合能力和预设问题贴合度的目标评分均为 9.0/10 以上。
 - “准确”指牌义质量、问题贴合、一致性、证据链和条件表达，不宣称科学验证的超自然预测准确率。
 - 项目代码必须模块化，适合通过 GitHub 按职责读取、审查和修改。
+- 静态知识、临时状态、用户历史和缓存数据必须分层管理。
 - Phase M 完成前，不得开始批量单牌资料或新规则引擎开发。
 
 完整决策见 `docs/DECISIONS.md`。
@@ -75,11 +77,19 @@
 - JavaScript 人工维护文件不得超过 600 行；入口文件建议不超过 200 行。
 - CSS 人工维护文件不得超过 900 行。
 - 每张完整 `CardSemanticProfile` 独立一个数据文件。
+- 完整 `QuestionProfile` 采用可独立加载的小文件，不得重新堆成超大问题配置文件。
+- 应用源代码和静态知识统一放入 `src/`，仓库根目录保持精简。
+- `localStorage` 只保存小型设置，完整历史使用 IndexedDB；控制器不得直接调用存储 API。
+- 历史记录保存本次结果、版本和证据链，不复制整套知识库。
 - 模块只承担单一职责，不得用新文件名重新制造单体文件。
-- 修改前检查依赖方向，禁止 `engine/` 访问 DOM，禁止循环依赖。
+- 修改前检查依赖方向，禁止 `engine/` 访问 DOM，禁止静态知识访问存储，禁止循环依赖。
+- 动态导入的数据模块必须纳入 PWA 缓存清单和完整性测试。
 - 每次任务完成后运行模块规模检查，并在进度文档记录本轮文件变化。
 
-详细模块边界、目录结构和限制见 `docs/MODULARIZATION_PLAN.md`。
+详细模块边界、目录结构和限制见：
+
+- `docs/MODULARIZATION_PLAN.md`
+- `docs/DATA_ARCHITECTURE.md`
 
 ## 5. 任务完成定义
 
@@ -91,4 +101,5 @@
 4. 人工抽样检查完成，若任务要求人工审查。
 5. 没有破坏锁定决策。
 6. 新增和修改的人工维护文件符合模块规模限制，或有已批准例外。
-7. `docs/PROGRESS.md` 已记录完成结果、验证结果和唯一下一任务。
+7. 数据模块、存储和缓存变更符合 `DATA_ARCHITECTURE.md`。
+8. `docs/PROGRESS.md` 已记录完成结果、验证结果和唯一下一任务。
