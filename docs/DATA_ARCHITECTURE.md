@@ -60,14 +60,7 @@
 
 ### 人工主来源
 
-人工编辑：
-
-- 单张CardSemanticProfile；
-- 单题QuestionProfile；
-- 固定牌阵与关系图；
-- 词典和模板。
-
-不得与第二套手工目录并存。
+人工编辑：单张CardSemanticProfile、单题QuestionProfile、固定牌阵与关系图、词典和模板。不得与第二套手工目录并存。
 
 ### 生成文件
 
@@ -88,17 +81,7 @@
 
 ## 3. ID与稳定引用
 
-所有业务ID使用现有小写kebab-case：
-
-| 类型 | 示例 |
-|---|---|
-| 大阿卡纳 | `major-7` |
-| 小阿卡纳 | `cups-two` |
-| 问题 | `career-change` |
-| 牌阵 | `single`、`timeline`、`cross`、`celtic` |
-| 牌位 | `core`、`challenge`、`outcome` |
-
-文件名不是业务ID。注册表显式映射ID与模块路径。
+所有业务ID使用现有小写kebab-case，例如 `major-7`、`cups-two`、`career-change`、`cross`。文件名不是业务ID，注册表显式映射ID与路径。
 
 每条可进入推理的语义单元具有稳定ID：
 
@@ -119,11 +102,6 @@
 ```text
 src/
 ├── app/
-│   ├── bootstrap.js
-│   ├── dom.js
-│   ├── state/
-│   ├── controllers/
-│   └── renderers/
 ├── config/
 ├── core/
 ├── engine/
@@ -152,15 +130,7 @@ src/
 
 ### 卡牌
 
-人工源一张牌一个模块。轻量目录只含抽牌、图片路径和基础显示字段。
-
-```js
-const loaders = {
-  "major-7": () => import("../knowledge/cards/major/07-chariot.js"),
-};
-```
-
-单次只加载抽中的1、3、5或10张完整资料。加载失败不得重抽、替换或影响正逆位。
+人工源一张牌一个模块。轻量目录只含抽牌、图片路径和基础显示字段。单次只加载抽中的1、3、5或10张完整资料。加载失败不得重抽、替换或影响正逆位。
 
 ### 问题
 
@@ -168,26 +138,7 @@ const loaders = {
 
 ### 领域适配
 
-优先引用已有语义单元：
-
-```js
-domains: {
-  career: {
-    facetRefs: [
-      "state.controlled-progress",
-      "risk.direction-conflict",
-      "action.align-direction",
-    ],
-    weightAdjustments: {
-      agency: 0.2,
-      materiality: 0.1,
-    },
-    overrides: [],
-  },
-}
-```
-
-只有通用语义无法表达时才增加带稳定ID和来源的override。
+优先引用已有语义单元。只有通用语义无法表达时才增加带稳定ID和来源的override。
 
 ### 牌阵
 
@@ -195,44 +146,50 @@ domains: {
 
 ## 6. 版本与规范化哈希
 
-版本对象至少包含：
-
-```js
-export const VERSIONS = Object.freeze({
-  appShell: "2.0.0",
-  engine: "2.0.0",
-  scoring: "1.0.0",
-  randomDerivation: "1.0.0",
-  drawAlgorithm: "1.0.0",
-  cardSchema: "1.0.0",
-  cardData: "1.0.0",
-  questionSchema: "1.0.0",
-  questionData: "1.0.0",
-  vocabulary: "1.0.0",
-  templates: "1.0.0",
-  storageSchema: 1,
-});
-```
+版本对象至少包含应用壳、引擎、评分、随机派生、洗牌、卡牌Schema/资料、问题Schema/资料、词典、模板和存储Schema版本。
 
 ### 哈希算法
 
 - SHA-256。
 - 文本转为UTF-8并规范LF。
-- 结构化JSON使用稳定键序和规范序列化。
+- JSON使用稳定键序和规范序列化。
 - 二进制按原始字节。
 - 路径使用规范化仓库相对路径并排序。
 - 生成器版本进入manifest。
-- `.gitattributes` 固定人工文本换行，避免Windows/Linux无意义漂移。
+- `.gitattributes` 固定人工文本换行。
+
+### 无自引用哈希图
+
+生成顺序必须是有向无环图：
+
+```text
+人工源、运行模块、资源
+        ↓
+轻量目录、注册表、knowledge清单
+        ↓
+artifact manifest
+        ↓
+PWA预缓存清单
+        ↓
+CWapi RESULT绑定最终commit与两个manifest哈希
+```
+
+规则：
+
+- artifact manifest不包含自身哈希。
+- artifact manifest不包含“包含它自己的最终commit”。
+- artifact manifest不包含依赖它生成的预缓存清单哈希。
+- 预缓存清单可以引用artifact manifest的URL和哈希，但不包含自身哈希。
+- 最终commit、artifactManifestHash和precacheManifestHash由CWapi RESULT和发布证据绑定。
+- 任何需要自我引用的字段都必须从manifest中移除，而不是尝试寻找不存在的哈希固定点。
 
 ### artifact manifest
-
-保存完整发布产物索引：
 
 ```js
 {
   schemaVersion: "1.0.0",
-  repositoryCommit: "...",
-  generatorVersion: "...",
+  generatorVersion: "1.0.0",
+  sourceSetHash: "...",
   engineManifestHash: "...",
   knowledgeManifestHash: "...",
   modules: {
@@ -242,27 +199,27 @@ export const VERSIONS = Object.freeze({
     vocabularies: {},
     templates: {},
   },
-  cacheManifestHash: "...",
+  runtimeResources: {},
 }
 ```
 
 完整78张牌和全部问题的模块哈希只保存在artifact manifest，不复制到每条历史。
 
-规则：
+验证规则：
 
 - 内容变化提升对应data版本。
 - 字段契约变化提升Schema版本。
-- 结论算法、权重、阈值或平局变化提升engine/scoring版本。
+- 算法、权重、阈值或平局变化提升engine/scoring版本。
 - 随机派生或洗牌变化提升对应版本。
 - IndexedDB结构变化提升storageSchema。
 - 版本字符串不能替代内容哈希。
-- 验证发现内容变化但版本未升、生成文件过期或manifest不匹配。
+- 验证发现内容变化但版本未升、生成文件过期、manifest不匹配或哈希依赖循环。
 
 ## 7. 用户数据存储
 
 ### localStorage
 
-只保存小型设置和轻量能力标记。必须有默认值和容错解析。禁止保存完整历史、规则数据或大段结果。
+只保存小型设置和轻量能力标记。禁止保存完整历史、规则数据或大段结果。
 
 ### IndexedDB
 
@@ -272,8 +229,6 @@ export const VERSIONS = Object.freeze({
 |---|---|---|
 | `readings` | `id` | 完整结果与证据链 |
 | `metadata` | `key` | Schema、迁移、artifact和维护元信息 |
-
-建议索引：`createdAt`、`questionId`、`spreadId`、`engineVersion`。
 
 ### ReadingRecord
 
@@ -294,7 +249,7 @@ export const VERSIONS = Object.freeze({
   versions: {},
   artifactFingerprint: {
     manifestHash: "...",
-    repositoryCommit: "...",
+    sourceSetHash: "...",
     engineHash: "...",
     consumed: {
       cards: {
@@ -327,17 +282,17 @@ export const VERSIONS = Object.freeze({
 }
 ```
 
-ReadingRecord只保存本次实际消费模块的指纹、总manifest哈希和必要显示快照，不复制整套知识库或完整模块索引。
+ReadingRecord不保存repositoryCommit，也不复制全部模块哈希。最终commit与manifest哈希的对应关系由发布/CWapi证据保存。
 
 ### 三类历史承诺
 
-1. **同产物确定性**：相同输入、根种子、版本和哈希产生相同结果。
-2. **历史可审计**：旧记录保存当时结构化证据和文本，即使旧产物不可执行仍可查看。
-3. **跨版本重新计算**：只有旧引擎和旧知识产物仍可获得且兼容时保证。
+1. 同产物确定性：相同输入、根种子、版本和哈希产生相同结果。
+2. 历史可审计：旧记录保存当时结构化证据和文本。
+3. 跨版本重新计算：只有旧产物仍可获得且兼容时保证。
 
 ### 迁移与降级
 
-旧 `astra-tarot-history-v1` 迁移必须容错、幂等、事务化，失败不破坏旧历史。IndexedDB不可用时仍可占卜，统一接口保存精简历史并提示能力受限。
+旧history-v1迁移必须容错、幂等、事务化，失败不破坏旧历史。IndexedDB不可用时仍可占卜，统一接口保存精简历史并提示能力受限。
 
 ## 8. 运行时加载顺序
 
@@ -346,13 +301,13 @@ index.html
   ↓
 src/app/bootstrap.js
   ↓
-轻量配置、问题目录、牌阵定义、卡牌目录
+轻量配置、目录和牌阵定义
   ↓
 用户选择问题和牌阵
   ↓
 抽牌只使用轻量卡牌目录
   ↓
-加载抽中牌资料和当前QuestionProfile
+加载抽中牌和当前问题资料
   ↓
 规则引擎计算
   ↓
@@ -361,13 +316,11 @@ src/app/bootstrap.js
 
 ## 9. PWA资源与状态
 
-脚本生成卡牌/问题目录与注册表、knowledge清单、artifact manifest和预缓存清单。
-
 - `APP-SHELL-READY`：shell、knowledge和默认配置可用。
-- `DEFAULT-DECK-READY`：默认牌组资源可用，可完成完整离线占卜。
+- `DEFAULT-DECK-READY`：默认牌组可用，可完成完整离线占卜。
 - `SELECTED-DECKS-READY`：用户选择缓存的其他牌组可用。
 
-只有导航请求可以回退index.html。JavaScript、CSS、图片和知识失败保留正确类型。默认牌组失败不能标记完整离线可用；其他牌组失败只影响对应牌组。
+只有导航请求可以回退index.html。其他类型失败保留正确类型。默认牌组失败不能标记完整离线可用；其他牌组失败只影响对应牌组。
 
 ## 10. 数据完整性检查
 
@@ -375,17 +328,17 @@ src/app/bootstrap.js
 
 - 业务ID合法且唯一。
 - 人工源元数据完整。
-- 卡牌/问题目录、资料、注册表和哈希一一对应。
+- 目录、资料、注册表和哈希一一对应。
 - 生成结果可稳定重建且未过期。
 - 不存在第二套人工目录或遗留临时目录。
 - 语义单元ID和引用合法。
 - 动态导入可解析。
 - 牌阵仍为固定1、3、5、10张。
 - 静态知识不访问DOM或存储。
-- 历史序列化可往返。
-- 迁移幂等。
+- 历史序列化可往返，迁移幂等。
 - 版本、manifest和消费指纹完整。
-- ReadingRecord不复制全部模块哈希。
+- manifest哈希图无自引用和循环。
+- ReadingRecord不复制全部模块哈希或repository commit。
 - 预缓存清单覆盖活动模块。
 - PWA状态不夸大离线能力。
 
