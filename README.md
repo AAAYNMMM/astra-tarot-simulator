@@ -54,6 +54,8 @@ python run.py --no-browser
 
 项目不使用 GitHub Actions。代码、数据、存储、缓存和发布相关验证统一复用 `AAAYNMMM/CWapi` 的本地 Runner，对固定 commit 执行测试并返回可审计 RESULT。
 
+项目开发方案已经完成最终质量收口并冻结。PWA 原子更新、无障碍、错误恢复、版本兼容、评测治理和资源预算已经映射到后期任务；非阻断性新想法不再推迟当前模块化开发。
+
 后续开发代理进入项目后应首先读取：
 
 1. [`AGENTS.md`](AGENTS.md)：AI 接手顺序、“开始任务”和“继续任务”的执行规则。
@@ -61,10 +63,11 @@ python run.py --no-browser
 3. [`docs/MODULARIZATION_PLAN.md`](docs/MODULARIZATION_PLAN.md)：代码拆分、文件规模、目录结构和 Phase M 任务。
 4. [`docs/DATA_ARCHITECTURE.md`](docs/DATA_ARCHITECTURE.md)：静态知识、按需加载、IndexedDB 历史、版本和缓存策略。
 5. [`docs/ENGINEERING_GUARDS.md`](docs/ENGINEERING_GUARDS.md)：CWapi 本地验证、服务安全、资料治理、备份、Doctor 和许可证护栏。
-6. [`docs/ENGINE_ARCHITECTURE.md`](docs/ENGINE_ARCHITECTURE.md)：目标规则引擎架构。
-7. [`docs/CARD_DATA_STANDARD.md`](docs/CARD_DATA_STANDARD.md)：78 张牌达到 9.0/10 以上的资料标准。
-8. [`docs/ROADMAP.md`](docs/ROADMAP.md)：规则引擎分阶段任务、依赖与验收标准。
-9. [`docs/PROGRESS.md`](docs/PROGRESS.md)：当前开发进度和唯一下一任务。
+6. [`docs/FINAL_QUALITY_GUARDS.md`](docs/FINAL_QUALITY_GUARDS.md)：PWA、无障碍、错误恢复、版本兼容、评测治理、性能预算和规划冻结。
+7. [`docs/ENGINE_ARCHITECTURE.md`](docs/ENGINE_ARCHITECTURE.md)：目标规则引擎架构。
+8. [`docs/CARD_DATA_STANDARD.md`](docs/CARD_DATA_STANDARD.md)：78 张牌达到 9.0/10 以上的资料标准。
+9. [`docs/ROADMAP.md`](docs/ROADMAP.md)：规则引擎分阶段任务、依赖与验收标准。
+10. [`docs/PROGRESS.md`](docs/PROGRESS.md)：当前开发进度和唯一下一任务。
 
 当前下一任务以 `docs/PROGRESS.md` 中标记为 `NEXT` 的任务为准。每次开发完成后必须同步更新该文件，避免项目进度被埋在某个聊天窗口里，成为数字考古遗址。
 
