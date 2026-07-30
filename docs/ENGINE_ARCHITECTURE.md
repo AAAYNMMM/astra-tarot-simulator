@@ -1,91 +1,117 @@
 # 纯规则塔罗解牌引擎目标架构
 
-## 1. 目标
+## 1. 文档职责
 
-在不使用 AI 大模型、不改变四种固定牌阵、只允许预设问题的前提下，建立一套可复现、可审计、可测试、可解释并能进行多牌综合的确定性解牌引擎。
+本文档定义纯规则解牌引擎的对象、流水线、确定性、关系分层、评分、冲突和双层校验。
+
+任务编号和实施顺序以 `EXECUTION_CONTRACTS.md` 为准；本文件不维护第二套任务图。
+
+## 2. 目标
+
+在不使用AI大模型、不改变四种固定牌阵、只允许预设问题的前提下，建立一套可复现、可审计、可测试、可解释并能进行多牌综合的确定性引擎。
 
 | 能力 | 目标 |
 |---|---:|
-| 单牌资料质量 | ≥ 9.0 / 10 |
-| 多牌综合能力 | ≥ 9.0 / 10 |
-| 预设问题贴合度 | ≥ 9.0 / 10 |
+| 单牌资料质量 | ≥9.0/10 |
+| 多牌综合能力 | ≥9.0/10 |
+| 预设问题贴合度 | ≥9.0/10 |
 | 核心结论可追溯率 | 100% |
-| 同输入复现率 | 100% |
+| 同输入、版本、artifact和根种子复现率 | 100% |
 
-## 2. 总体流水线
+## 3. 总体流水线
 
 ```text
 固定问题选择
     ↓
-QuestionProfile 加载
+QuestionProfile加载
     ↓
 固定牌阵定义、关系图和问题适配加载
     ↓
-高质量根种子 → 独立 draw / orientation / rendering 随机流
+高质量根种子
+    ├── draw随机流
+    ├── orientation随机流
+    └── rendering随机流
     ↓
-确定性洗牌、抽牌、正逆位
+确定性洗牌、抽牌和正逆位
     ↓
-按抽牌结果加载 CardSemanticProfile
+按抽牌结果加载CardSemanticProfile
     ↓
 卡牌语义 + 逆位机制 + QuestionProfile + Position Operator
     ↓
-Observation 生成
+Observation生成
     ↓
 固定牌阵结构边
     ↓
-语义关系候选与 Relation Graph
+问题维度与牌位职责关系
     ↓
-ClaimCandidate 生成
+主题、状态、行动和逆位语义关系
+    ↓
+元素、数字、宫廷和阶段辅助关系
+    ↓
+ClaimCandidate生成
     ↓
 证据评分、反证和冲突消解
     ↓
 有限结论分类
     ↓
-一致性与安全校验
+结构化Claim校验
     ↓
 确定性模板渲染
+    ↓
+渲染后文本校验
     ↓
 历史和审计数据保存
 ```
 
-抽牌阶段和解释阶段严格分离。问题、牌义加载或期望结果不得影响抽牌。
+抽牌阶段和解释阶段严格分离。问题、资料加载、模板或期望结果不得影响牌序和正逆位。
 
-Position Operator 是 Observation 的输入，不是 Observation 生成后的装饰步骤。
+## 4. 最小消费者契约
 
-## 3. 确定性契约
+批量编写78张牌前，黄金样本必须通过最小消费者契约。
 
-### 3.1 随机流
+### 4.1 QuestionProfileConsumerContract
 
-根种子通过版本化派生算法生成：
+至少声明：
 
-```text
-rootSeed
-├── drawSeed
-├── orientationSeed
-└── renderingSeed
-```
+- `id`
+- `domain`
+- `intent`
+- `timeframe`
+- `answerDimensions`
+- `allowedConclusionTypes`
+- `forbiddenClaims`
+- 当前牌阵中牌位职责的最小映射
 
-规则：
+### 4.2 PositionOperatorConsumerContract
 
-- `drawSeed` 只用于牌序。
-- `orientationSeed` 只用于正逆位。
-- `renderingSeed` 只用于模板和同义句选择。
-- 模板增加或删除一次随机选择不得改变牌序和正逆位。
-- 引擎不得直接调用散落的 `Math.random()`。
-- ReadingRecord 保存根种子、派生算法版本、随机算法版本和实际抽牌。
+至少声明：
 
-### 3.2 稳定排序
+- `positionId`
+- 可选Facet或语义角色
+- 时态
+- 主体范围
+- 权重
+- 条件性
+- 行动转换
+- 证据优先级
 
-- 所有评分排序使用稳定业务 ID 作为明确次级键。
-- 不依赖对象属性遍历顺序。
-- 不使用本地化字符串排序决定推理结果。
-- 分数必须是有限值；`NaN` 和 `Infinity` 立即失败。
-- 权重、阈值、平局规则和排序规则全部版本化。
-- 相同输入、版本和根种子必须生成相同结构化结果与模板选择。
+### 4.3 ObservationConsumerContract
 
-## 4. 核心对象
+至少声明：
 
-### 4.1 QuestionProfile
+- 卡牌、问题、牌位和正逆位来源
+- 稳定语义单元引用
+- 选中语义角色
+- 逆位模式
+- 语义标签
+- 有限局部分数
+- 证据类型
+
+后续完整QuestionProfile、Position Operator和Observation Engine必须扩展并兼容这些最小契约。
+
+## 5. 核心对象
+
+### 5.1 QuestionProfile
 
 ```js
 {
@@ -124,13 +150,13 @@ rootSeed
 }
 ```
 
-`spreadProfiles` 不改变牌阵或牌位，只定义同一固定牌位在该问题中的回答职责。
+`spreadProfiles`只定义回答职责，不改变牌阵和牌位。
 
-### 4.2 CardSemanticProfile
+### 5.2 CardSemanticProfile
 
-每张牌的结构化知识。业务 ID 使用现有 `kebab-case`，例如 `major-7`、`cups-two`。每条可引用语义单元拥有稳定 ID。完整要求见 `CARD_DATA_STANDARD.md`。
+完整要求见 `CARD_DATA_STANDARD.md`。业务ID使用现有kebab-case；所有可引用语义单元拥有稳定ID和来源。
 
-### 4.3 Observation
+### 5.3 Observation
 
 ```js
 {
@@ -153,9 +179,9 @@ rootSeed
 }
 ```
 
-每个 Observation 必须保留来源引用，不能只保存渲染后的句子。
+每个Observation保留真实来源引用，不能只保存渲染句子。
 
-### 4.4 Relation
+### 5.4 Relation
 
 ```js
 {
@@ -170,9 +196,7 @@ rootSeed
 }
 ```
 
-关系类型至少包括：`supports`、`reinforces`、`weakens`、`contradicts`、`causes`、`continues`、`transforms`、`conditions`、`repairs`、`repeats-theme`、`stage-progression`。
-
-### 4.5 ClaimCandidate
+### 5.5 ClaimCandidate
 
 ```js
 {
@@ -191,17 +215,14 @@ rootSeed
 }
 ```
 
-### 4.6 ReadingResult
+### 5.6 ReadingResult
 
 ```js
 {
   readingId: "reading-...",
   versions: {},
-  random: {
-    rootSeed: "...",
-    derivationVersion: "1.0.0",
-    algorithmVersion: "1.0.0",
-  },
+  artifactFingerprint: {},
+  rootSeed: "...",
   questionId: "career-change",
   spreadId: "cross",
   draw: [],
@@ -209,18 +230,21 @@ rootSeed
   relations: [],
   selectedClaims: [],
   rejectedClaims: [],
-  validation: {},
+  validation: {
+    structured: {},
+    rendered: {},
+  },
   renderedText: {},
 }
 ```
 
-最终结果同时保存结构化证据与显示文本。
+最终结果同时保存结构化证据、双层校验和显示文本。
 
-## 5. 固定牌阵职责
+## 6. 固定牌阵职责
 
 ### 心语单张
 
-只输出一条核心观察、一条与问题相关的解释、一条行动建议和一条边界或条件。不得伪装成完整因果报告。
+只输出一条核心观察、一条问题相关解释、一条行动建议和一条边界或条件。不得伪装成完整因果报告。
 
 ### 时间之流
 
@@ -228,74 +252,83 @@ rootSeed
 
 ### 五牌十字
 
-主要结构边：根源 → 核心、关键影响 → 核心、核心 → 趋势、建议 → 趋势、建议 ↔ 关键影响。
+主要结构边：
+
+- 根源 → 核心
+- 关键影响 → 核心
+- 核心 → 趋势
+- 建议 → 趋势
+- 建议 ↔ 关键影响
 
 ### 凯尔特十字
 
-固定十个牌位保持不变。必须先提炼 2–4 条主线，再展开证据，不得按十张牌依次复述。
+固定十个牌位保持不变。先提炼2–4条主线，再展开证据，不按十张牌依次复述。
 
-## 6. Position Operator
+## 7. Position Operator
 
-牌位运算符决定可选语义侧面、时态、主体范围、权重、条件性、是否转化为行动、是否可作为核心结论证据。
+牌位运算符决定：
 
-```js
-const POSITION_OPERATORS = {
-  challenge: {
-    allowedFacets: ["obstacle", "excess", "deficiency", "distortion"],
-    weight: 1.3,
-    evidencePriority: "primary",
-  },
-  advice: {
-    allowedFacets: ["action", "adjustment", "boundary", "preparation"],
-    weight: 1.5,
-    convertToAction: true,
-    evidencePriority: "primary",
-  },
-  outcome: {
-    allowedFacets: ["trend", "consequence", "resolution"],
-    weight: 1.2,
-    conditional: true,
-    evidencePriority: "primary",
-  },
-};
-```
+- 可选语义侧面；
+- 时态；
+- 主体范围；
+- 权重；
+- 条件性；
+- 是否转化为行动；
+- 是否可作为核心证据。
 
-## 7. Relation Graph 分层
+完整Position Operator任务只负责配置完整和合法；“同一牌在不同牌位产生不同Observation”的最终行为验收属于Observation Engine。
 
-关系计算按以下顺序：
+## 8. Relation Graph分层
+
+关系计算顺序固定：
 
 1. 固定牌阵结构边。
 2. 问题维度与牌位职责。
-3. 主题、状态和行动方向关系。
-4. 正逆位机制关系。
-5. 大阿卡纳阶段、元素、数字和宫廷角色等辅助关系。
+3. 主题、状态、行动和逆位语义关系。
+4. 大阿卡纳阶段、元素、数字和宫廷角色等辅助关系。
 
 约束：
 
 - 固定结构连接的牌必须检查。
-- 非结构边只有在共享、冲突或转化标签满足条件时才成为候选。
-- 不对凯尔特十字的所有两两组合无差别建边。
-- 每个 Observation 只保留有限数量的高价值语义关系。
+- 非结构边只有共享、冲突或转化标签满足条件时才成为候选。
+- 不对凯尔特十字全部两两组合无差别建边。
+- 每个Observation只保留有限数量的高价值语义关系。
 - 辅助关系不得压过问题、牌位和核心牌义。
-- 大阿卡纳不作为第五花色元素。
-- 平局可以明确保留，不强选唯一主导元素。
+- 大阿卡纳不作为第五花色。
+- 平局可以保留，不强选唯一主导元素。
 
-## 8. 评分模型
+关系类型至少包括：
 
-Observation 分数：
+- supports
+- reinforces
+- weakens
+- contradicts
+- causes
+- continues
+- transforms
+- conditions
+- repairs
+- repeats-theme
+- stage-progression
+
+## 9. 评分模型
+
+### Observation分数
 
 ```text
-牌位权重
+局部观察分 =
+  牌位权重
 × 问题维度匹配度
 × 牌义侧面强度
 × 正逆位适配度
 × 数据质量系数
 ```
 
-Claim 分数：
+### Claim分数
 
 ```text
-支持证据总分
+综合结论分 =
+  支持证据总分
 + 关系强化奖励
 + 关键位置奖励
 + 跨层一致奖励
@@ -305,49 +338,103 @@ Claim 分数：
 - 越权断言惩罚
 ```
 
-评分器必须：
+要求：
 
-- 对每个权重和阈值进行版本化。
-- 对平局声明稳定处理。
-- 拒绝非有限值。
-- 不使用正逆位数量、简单吉凶、单一元素或大阿卡纳数量直接决定结论。
+- 权重、阈值和平局规则版本化。
+- 所有分数为有限值。
+- 平局使用稳定业务ID次级键。
+- 不依赖对象遍历或本地化字符串排序。
+- 不使用正逆位数量、简单吉凶、单一元素或大牌数量直接决定结论。
 
-## 9. 冲突消解
+## 10. 冲突消解
 
-依次区分内外、过去/当前/未来、动机与现实条件、建议修正、条件分支和主次证据。仍无法整合时输出趋势分散或不确定。冲突证据不能被删除。
+依次尝试：
 
-## 10. 模板渲染
+1. 区分内在与外在。
+2. 区分过去、当前与未来。
+3. 区分动机与现实条件。
+4. 判断建议能否修正趋势。
+5. 转化为条件分支。
+6. 根据主次证据降权。
+7. 仍无法整合时输出趋势分散或不确定。
 
-模板按结论类型、问题领域、置信度和关系结构组织，不按牌名堆积。
+冲突证据不能被删除，只能被解释、降权或保留为反证。
 
-必须支持固定 `renderingSeed` 下可复现、同义句轮换、术语重复限制、置信度措辞、支持证据与反证连接、条件与行动顺序和四种牌阵不同输出深度。
+## 11. 有限结论分类
 
-## 11. 校验器
+每种问题意图使用有限结论集合。模板负责表达变化，分类本身保持稳定。
 
-至少覆盖：
+决策类示例：
 
-- 业务 ID 与语义单元 ID 合法且唯一。
-- 78 张牌齐全。
-- 字段、枚举、数值范围和引用合法。
-- 核心结论证据来自实际抽牌和真实语义单元。
-- 问题必答维度、允许结论和领域边界正确。
-- 相反建议被排序、分层或条件化。
-- 禁止确定疾病、死亡、怀孕、犯罪、投资收益、第三者、欺骗、精确日期或必然事件。
-- 所有评分值有限且排序稳定。
+- act-now
+- act-with-conditions
+- wait-and-prepare
+- adjust-current-path
+- currently-unfavorable
+- indeterminate
 
-## 12. 黄金样本可消费性验证
+趋势类示例：
 
-在批量生产其余 72 张牌前，`TQ-005` 使用 6 张黄金样本、少量试验 QuestionProfile、现有牌位和最小 Observation 路径验证：
+- stabilizing
+- growing
+- slowing
+- conflicted
+- restructuring
+- ending-or-redefining
+- conditional
+- indeterminate
 
-- 稳定语义引用可加载。
-- 领域 `facetRefs` 可解析。
-- 逆位机制能选择合法语义。
-- 同一牌在不同牌位生成不同 Observation。
-- 随机流和排序契约不被资料加载影响。
+## 12. 双层校验
 
-本任务不实现完整 Relation、Claim、模板或 UI。
+### 12.1 结构化Claim校验
 
-## 13. 目标模块结构
+在模板渲染前检查：
+
+- 核心结论证据来源；
+- 反证和冲突；
+- 牌位与问题维度；
+- 结论类型是否被允许；
+- 禁止结论；
+- 条件是否缺失；
+- 分数、阈值和稳定排序。
+
+非法Claim不得进入模板层。
+
+### 12.2 渲染后文本校验
+
+检查：
+
+- 不同段落无解释地互相否定；
+- 禁止措辞或确定性断言泄漏；
+- 证据、反证和条件在渲染中丢失；
+- 术语重复、空泛句和格式错误；
+- 四牌阵输出深度不匹配。
+
+关键词扫描不能替代结构化校验。
+
+## 13. 安全边界
+
+禁止确定：
+
+- 疾病和医疗诊断；
+- 死亡和怀孕；
+- 犯罪和第三者；
+- 投资收益；
+- 欺骗或具体外部人物事实；
+- 精确日期；
+- 必然事件。
+
+安全边界必须同时存在于QuestionProfile、词典、结构化校验和渲染后校验。
+
+## 14. 确定性
+
+- 根种子派生draw、orientation和rendering三条独立随机流。
+- 模板只消费rendering流。
+- 数据加载、错误重试和日志不得消费任何业务随机流。
+- 相同输入、版本、artifact哈希和根种子产生相同结构化结果与渲染选择。
+- 随机派生、洗牌、评分、阈值和平局规则全部版本化。
+
+## 15. 目标模块结构
 
 ```text
 src/engine/
@@ -364,7 +451,8 @@ src/engine/
 │   ├── conflict-resolver.js
 │   └── conclusion-classifier.js
 ├── validation/
-│   └── validation-engine.js
+│   ├── claim-validator.js
+│   └── rendered-text-validator.js
 ├── rendering/
 │   └── template-renderer.js
 └── version.js
@@ -377,4 +465,6 @@ src/knowledge/
 └── templates/
 ```
 
-完整卡牌和问题资料不得重新集中到大型聚合文件。实现顺序由 `ROADMAP.md` 和 `PROGRESS.md` 决定。
+完整卡牌和问题资料不得重新集中到大型 `card_semantics.js` 或 `question_profiles.js`。
+
+实现顺序和任务依赖见 `EXECUTION_CONTRACTS.md`。
