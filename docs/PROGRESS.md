@@ -2,7 +2,7 @@
 
 > 本文件是后续“开始任务”和“继续任务”的唯一实时进度入口。
 >
-> 路线图定义规则引擎应该做什么；`MODULARIZATION_PLAN.md`、`DATA_ARCHITECTURE.md` 与 `ENGINEERING_GUARDS.md` 定义前置重构和工程护栏；本文件记录目前做到哪里。
+> 路线图定义规则引擎应该做什么；`MODULARIZATION_PLAN.md`、`DATA_ARCHITECTURE.md`、`ENGINEERING_GUARDS.md` 与 `FINAL_QUALITY_GUARDS.md` 定义前置重构和质量护栏；本文件记录目前做到哪里。
 
 ## 1. 当前状态
 
@@ -11,9 +11,10 @@
 | 当前阶段 | Phase M：模块化基础 |
 | 当前进行中任务 | 无 |
 | 下一任务 | `MOD-001` 模块边界、数据边界与基线测试 |
-| 最近完成任务 | `DOC-006` 增加工程护栏并采用 CWapi 本地验证 |
+| 最近完成任务 | `DOC-007` 最终质量收口与规划冻结 |
 | 阻塞项 | 无 |
 | 最后更新时间 | 2026-07-31 |
+| 规划状态 | 已冻结；非阻断性新想法不再推迟开发 |
 
 ## 2. 下一任务说明
 
@@ -39,6 +40,7 @@
 - `docs/MODULARIZATION_PLAN.md`
 - `docs/DATA_ARCHITECTURE.md`
 - `docs/ENGINEERING_GUARDS.md`
+- `docs/FINAL_QUALITY_GUARDS.md`
 - `docs/ENGINE_ARCHITECTURE.md`
 - `docs/ROADMAP.md`
 - 当前 `app.js`
@@ -67,6 +69,8 @@
 - 一次性拆完全部代码
 - 引入 npm 构建依赖
 - 创建 `.github/workflows/`
+- 提前实现后期无障碍、PWA 更新、版本迁移或性能优化
+- 继续新增非阻断性规划文档
 
 验收标准：
 
@@ -96,6 +100,11 @@
 | IndexedDB | 尚未使用 | 计划在 AU-002、AU-003 实现完整历史和迁移 |
 | GitHub Actions | 不使用 | 复用 CWapi 本地 Runner 工作流 |
 | CWapi 验证入口 | 尚未建立项目脚本 | 计划在 MOD-006 收口，期间按任务建立可审计检查入口 |
+| PWA 更新 | 当前直接 `skipWaiting` 并统一回退首页 | 后续需要原子更新和按资源类型失败 |
+| 无障碍 | 已有部分 ARIA、键盘和减少动画支持 | 尚未完成动态牌桌与焦点回归 |
+| 错误恢复 | 各处局部容错 | 尚未建立统一错误模型与隐私安全诊断 |
+| 版本兼容 | 已规划独立版本号 | 尚未建立机器可读兼容矩阵和回滚策略 |
+| 性能预算 | 尚未冻结 | 后期按真实牌阵、历史和缓存规模测量 |
 
 Phase M 完成后：
 
@@ -115,17 +124,17 @@ Phase M 完成后：
 
 | 阶段 | 状态 | 完成度 | 说明 |
 |---|---|---:|---|
-| Phase 0 项目目标与任务系统 | DONE | 100% | 接手协议、决策、架构、标准、数据方案和工程护栏已建立 |
+| Phase 0 项目目标与任务系统 | DONE | 100% | 接手协议、决策、架构、数据方案、工程护栏和最终质量收口已建立 |
 | Phase M 模块化基础 | NEXT | 0% | 下一步 MOD-001，必须在 TQ-001 前完成 |
 | Phase 1 单牌数据基础 | BLOCKED | 0% | 等待 MOD-006 完成 |
-| Phase 2 78 张牌资料升级 | BACKLOG | 0% | 等待 Phase 1 |
+| Phase 2 78 张牌资料升级 | BACKLOG | 0% | 等待 Phase 1；批量资料前完成 EV-000 基本规则 |
 | Phase 3 预设问题系统 | BACKLOG | 0% | 等待问题配置基础 |
 | Phase 4 牌位运算系统 | BACKLOG | 0% | 不改变牌阵结构 |
 | Phase 5 多牌关系引擎 | BACKLOG | 0% | 等待 Observation 与关系词典 |
 | Phase 6 结论与文本系统 | BACKLOG | 0% | 等待多牌关系引擎 |
-| Phase 7 审计与历史升级 | BACKLOG | 0% | IndexedDB、迁移、备份、随机和证据链 |
-| Phase 8 评测与界面整合 | BACKLOG | 0% | 三项 9.0+、Doctor 与质量门禁 |
-| Phase 9 发布稳定化 | BACKLOG | 0% | CWapi 本地回归、安全、许可证和 2.0 收口 |
+| Phase 7 审计与历史升级 | BACKLOG | 0% | IndexedDB、迁移、备份、随机、证据链和兼容基础 |
+| Phase 8 评测与界面整合 | BACKLOG | 0% | 三项 9.0+、盲测治理、无障碍、Doctor 与质量门禁 |
+| Phase 9 发布稳定化 | BACKLOG | 0% | CWapi 回归、PWA 原子更新、性能、回滚、许可证和 2.0 收口 |
 
 ## 5. 任务状态表
 
@@ -137,12 +146,13 @@ Phase M 完成后：
 | DOC-004 | DONE | 2026-07-31 | 已建立模块化方案并更新接手规则与锁定决策 |
 | DOC-005 | DONE | 2026-07-31 | 已建立 `src/` 目标结构、知识分层、按需加载、IndexedDB 和缓存方案 |
 | DOC-006 | DONE | 2026-07-31 | 已建立服务安全、资料治理、备份、Doctor 和 CWapi 本地验证方案 |
+| DOC-007 | DONE | 2026-07-31 | 已建立 PWA、无障碍、错误恢复、兼容、评测和性能最终护栏并冻结规划 |
 | MOD-001 | NEXT |  | 模块边界、数据边界与基线测试 |
 | MOD-002 | BACKLOG |  | 拆分 CSS |
 | MOD-003 | BACKLOG |  | 抽离基础 JavaScript、随机接口、平台和存储接口 |
 | MOD-004 | BACKLOG |  | 拆分应用控制器与渲染器，强化本地服务边界 |
 | MOD-005 | BACKLOG |  | 拆分静态知识与旧版解读，建立生成目录和注册表 |
-| MOD-006 | BACKLOG |  | 缓存、CWapi 验证入口、回归和清理 |
+| MOD-006 | BACKLOG |  | 缓存、CWapi 验证入口、PLAT-001、回归和清理 |
 | TQ-001 | BLOCKED |  | 等待 MOD-006 后定义 CardSemanticProfile Schema |
 | TQ-002 | BACKLOG |  | 建立统一语义词典、来源与解释政策 |
 | TQ-003 | BACKLOG |  | 制作 6 张黄金样本并验证跨牌边界 |
@@ -154,9 +164,15 @@ Phase M 完成后：
 | CL-001–004 | BACKLOG |  | 结论、评分和冲突消解 |
 | TX-001–003 | BACKLOG |  | 模板渲染与校验 |
 | AU-001–003 | BACKLOG |  | 随机、IndexedDB 历史、迁移、备份与审计 |
+| EV-000 | BACKLOG |  | 评测治理、冻结盲测集与评审一致性 |
 | EV-001–004 | BACKLOG |  | 三项核心质量评测、Doctor 和回归质量门禁 |
 | UI-001–002 | BACKLOG |  | 界面和历史接入 |
-| REL-001–004 | BACKLOG |  | CWapi 全量本地回归、安全、许可证与发布稳定化 |
+| AX-001–002 | BACKLOG |  | 键盘、焦点、屏幕阅读器和动态牌桌无障碍 |
+| ERR-001 | BACKLOG |  | 统一错误、恢复和本地诊断 |
+| PLAT-001 | BACKLOG |  | PWA 原子更新与资源类型回退 |
+| PERF-001 | BACKLOG |  | 加载、缓存和存储预算 |
+| PWA-002 | BACKLOG |  | 安装图标和离线牌组管理 |
+| REL-001–005 | BACKLOG |  | CWapi 全量回归、安全、许可证、兼容回滚与发布稳定化 |
 
 ## 6. 当前代码基线
 
@@ -169,13 +185,13 @@ Phase M 完成后：
 - 当前 `styles.css` 包含近五千行样式，必须按令牌、基础、布局、组件、功能、动画和响应式拆分。
 - 当前 `data.js` 同时保存卡牌、问题和牌阵，后续静态知识必须迁入 `src/knowledge/`。
 - 当前 Python 静态服务器以仓库根目录为服务目录，后续必须增加访问白名单和生命周期保护。
-- 当前 service worker 预缓存清单由代码手工维护，模块化后必须改为可生成和可校验的分组清单。
+- 当前 service worker 预缓存清单由代码手工维护，并会统一回退首页；模块化后必须改为可生成、可校验、按类型失败和原子切换的分组缓存。
 - 当前单牌资料主要由关键词、正逆位说明和固定建议组成，适合展示，不足以支持目标规则引擎。
 - 当前具体问题没有独立推理配置，综合逻辑主要依赖六大问题分类。
 - 当前综合结论存在依赖正逆位数量、主导元素和固定模板的情况。
 - 当前全部大阿卡纳归为“灵”，会造成元素统计偏斜。
 - 当前历史记录未保存完整证据链、规则版本或可复现随机种子。
-- 当前测试主要检查卡牌数量、字段存在和牌阵位置，尚未覆盖语义质量与关系推理。
+- 当前测试主要检查卡牌数量、字段存在和牌阵位置，尚未覆盖语义质量、关系推理、盲测治理和无障碍。
 - 项目验证不使用 GitHub Actions，后续通过 CWapi 对固定 commit 执行本地测试和回归。
 
 这些问题必须按 Phase M 和后续路线图分阶段修复，不要在 MOD-001 中顺手全部改掉。
@@ -187,6 +203,7 @@ Phase M 完成后：
 - `docs/MODULARIZATION_PLAN.md`
 - `docs/DATA_ARCHITECTURE.md`
 - `docs/ENGINEERING_GUARDS.md`
+- `docs/FINAL_QUALITY_GUARDS.md`
 - `docs/ENGINE_ARCHITECTURE.md`
 - `docs/CARD_DATA_STANDARD.md`
 - `docs/ROADMAP.md`
@@ -198,14 +215,14 @@ Phase M 完成后：
 
 已检查：
 
-- CWapi 当前政策明确不使用 GitHub Actions，并要求本地 Runner 对固定 commit 返回 RESULT。
-- 工程护栏没有改变现有四种牌阵、固定问题或纯规则引擎目标。
-- 安全、生成文件、资料来源、历史备份、Doctor 和浏览器回归已映射到后续阶段。
+- 最终质量文档覆盖 PWA 原子更新、无障碍、统一错误恢复、版本兼容、评测治理和资源预算。
+- 新任务均映射到后期阶段，不改变当前唯一 `NEXT` 任务。
+- 规划冻结规则明确，非阻断性新想法不再推迟 2.0。
+- AGENTS、FINAL_QUALITY_GUARDS 和 PROGRESS 的读取顺序、任务状态与完成条件一致。
 - 当前唯一 `NEXT` 任务仍为 `MOD-001`。
-- AGENTS、DECISIONS、ENGINEERING_GUARDS 和 PROGRESS 的验证政策一致。
 
 未执行运行测试：
 
 - 本轮没有运行代码变更。
 - 本轮属于纯文档决策更新，不需要创建 CWapi TASK。
-- MOD-001 完成实现和脚本后，必须按适用范围取得当前 commit 的 CWapi RESULT。
+- `MOD-001` 完成实现和脚本后，必须按适用范围取得当前 commit 的 CWapi RESULT。
