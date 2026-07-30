@@ -1,0 +1,385 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="星纱塔罗：一款离线运行、拥有完整 78 张牌与动画牌阵的沉浸式塔罗占卜模拟器。"
+    />
+    <meta name="theme-color" content="#100d1e" />
+    <meta name="color-scheme" content="dark" />
+    <title>星纱塔罗 · 占卜模拟器</title>
+    <link rel="icon" href="icon.svg" type="image/svg+xml" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="cosmos" aria-hidden="true">
+      <div class="nebula nebula-one"></div>
+      <div class="nebula nebula-two"></div>
+      <div class="star-layer star-layer-far"></div>
+      <div class="star-layer star-layer-near"></div>
+    </div>
+
+    <div class="app-shell">
+      <header class="topbar">
+        <a class="brand" href="#" id="brandHome" aria-label="返回占卜准备页">
+          <span class="brand-mark" aria-hidden="true">
+            <span class="brand-orbit"></span>
+            <span class="brand-star">✦</span>
+          </span>
+          <span>
+            <strong>星纱塔罗</strong>
+            <small>ASTRA TAROT</small>
+          </span>
+        </a>
+
+        <nav class="journey" aria-label="占卜进度">
+          <div class="journey-step is-active" data-step="1">
+            <span>1</span>
+            <em>静心设问</em>
+          </div>
+          <i aria-hidden="true"></i>
+          <div class="journey-step" data-step="2">
+            <span>2</span>
+            <em>洗牌抽取</em>
+          </div>
+          <i aria-hidden="true"></i>
+          <div class="journey-step" data-step="3">
+            <span>3</span>
+            <em>翻牌解读</em>
+          </div>
+        </nav>
+
+        <div class="top-actions">
+          <button class="icon-button" id="historyButton" type="button" aria-label="打开占卜记录">
+            <span aria-hidden="true">◷</span>
+            <em>记录</em>
+          </button>
+          <button class="icon-button" id="helpButton" type="button" aria-label="打开使用说明">
+            <span aria-hidden="true">?</span>
+            <em>说明</em>
+          </button>
+        </div>
+      </header>
+
+      <main class="workspace">
+        <aside class="setup-panel panel-surface" aria-label="占卜设置">
+          <div class="panel-heading">
+            <span class="eyebrow">YOUR READING</span>
+            <h1>把注意力放回此刻</h1>
+            <p>选择一个最贴近你当下状态的问题。</p>
+          </div>
+
+          <div class="setup-scroll">
+            <section class="setup-section" aria-labelledby="categoryHeading">
+              <div class="section-title">
+                <span class="section-number">01</span>
+                <div>
+                  <h2 id="categoryHeading">占卜主题</h2>
+                  <p>先选择想要探索的领域</p>
+                </div>
+              </div>
+              <div class="category-grid" id="categoryGrid"></div>
+            </section>
+
+            <section class="setup-section" aria-labelledby="questionHeading">
+              <div class="section-title">
+                <span class="section-number">02</span>
+                <div>
+                  <h2 id="questionHeading">选择问题</h2>
+                  <p id="categoryTagline">让问题保持具体、开放</p>
+                </div>
+              </div>
+              <button
+                class="question-picker"
+                id="questionPickerButton"
+                type="button"
+                aria-haspopup="dialog"
+                aria-controls="questionDialog"
+              >
+                <span class="question-picker-orb" aria-hidden="true">✦</span>
+                <span class="question-picker-copy">
+                  <small id="selectedQuestionLabel">今日能量</small>
+                  <strong id="selectedQuestionText">今天的核心能量是什么？</strong>
+                </span>
+                <span class="question-picker-action">更换 <b aria-hidden="true">→</b></span>
+              </button>
+            </section>
+
+            <section class="setup-section" aria-labelledby="spreadHeading">
+              <div class="section-title">
+                <span class="section-number">03</span>
+                <div>
+                  <h2 id="spreadHeading">选择牌阵</h2>
+                  <p>不同牌阵会照亮不同角度</p>
+                </div>
+              </div>
+              <div class="spread-list" id="spreadList"></div>
+            </section>
+
+            <section class="setup-section" aria-labelledby="deckStyleHeading">
+              <div class="section-title">
+                <span class="section-number">04</span>
+                <div>
+                  <h2 id="deckStyleHeading">选择牌面</h2>
+                  <p>四套真实牌组 · 正面与牌背一一对应</p>
+                </div>
+              </div>
+              <div class="deck-style-list" id="deckStyleList"></div>
+            </section>
+          </div>
+
+          <div class="start-zone">
+            <button class="primary-button" id="startReading" type="button">
+              <span class="button-glow" aria-hidden="true"></span>
+              <span class="button-icon" aria-hidden="true">✦</span>
+              <span>
+                <strong>开始占卜</strong>
+                <small>静心片刻，交给牌面回应</small>
+              </span>
+              <span class="button-arrow" aria-hidden="true">→</span>
+            </button>
+            <p class="privacy-note">
+              <span aria-hidden="true">◇</span>
+              完全离线运行 · 不收集你的问题与结果
+            </p>
+          </div>
+        </aside>
+
+        <section class="reading-panel panel-surface" aria-label="塔罗牌桌">
+          <header class="reading-header">
+            <div>
+              <span class="reading-kicker" id="readingKicker">THE VEIL IS QUIET</span>
+              <h2 id="readingTitle">等待你的问题</h2>
+            </div>
+            <div class="reading-meta" id="readingMeta" hidden>
+              <span id="metaCategory"></span>
+              <i></i>
+              <span id="metaSpread"></span>
+            </div>
+          </header>
+
+          <div class="reading-stage" id="readingStage">
+            <div class="constellation constellation-left" aria-hidden="true">
+              <i></i><i></i><i></i><i></i>
+              <svg viewBox="0 0 210 180" preserveAspectRatio="none">
+                <path d="M20 28 L83 55 L132 22 L183 79 L145 150 L72 131 L20 28" />
+              </svg>
+            </div>
+            <div class="constellation constellation-right" aria-hidden="true">
+              <i></i><i></i><i></i>
+              <svg viewBox="0 0 190 150" preserveAspectRatio="none">
+                <path d="M22 103 L74 36 L139 61 L169 121 L92 133 L22 103" />
+              </svg>
+            </div>
+
+            <div class="idle-state" id="idleState">
+              <div class="idle-deck" aria-hidden="true">
+                <div class="ghost-card ghost-card-one"></div>
+                <div class="ghost-card ghost-card-two"></div>
+                  <div class="tarot-back-preview">
+                  <img id="idleDeckImage" src="assets/rws/card-back-rws.jpg" alt="经典韦特牌背" />
+                </div>
+              </div>
+              <div class="idle-copy">
+                <span class="idle-divider"><i></i> ✦ <i></i></span>
+                <h3>答案不在未来，而在你如何看见现在</h3>
+                <p>从左侧选择主题、问题与牌阵，然后开始你的占卜。</p>
+              </div>
+            </div>
+
+            <div class="shuffle-scene" id="shuffleScene" hidden aria-live="polite">
+              <div class="shuffle-aura" aria-hidden="true"></div>
+              <div class="shuffle-deck" id="shuffleDeck" aria-hidden="true"></div>
+              <div class="shuffle-copy">
+                <span id="shufflePhase">正在净化牌面能量</span>
+                <div class="shuffle-progress"><i id="shuffleProgress"></i></div>
+                <small>请在心中默念你所选择的问题</small>
+              </div>
+            </div>
+
+            <div class="card-table" id="cardTable" hidden></div>
+
+            <div class="stage-guidance" id="stageGuidance" hidden aria-live="polite">
+              <span class="pulse-dot" aria-hidden="true"></span>
+              <span id="guidanceText">依次点击牌背，翻开属于你的讯息</span>
+            </div>
+          </div>
+
+          <footer class="reading-actions">
+            <div class="reading-status">
+              <span class="status-orb" aria-hidden="true">☾</span>
+              <span id="statusText">牌面正在静候你的选择</span>
+            </div>
+            <div class="action-row">
+              <button class="secondary-button" id="newReadingButton" type="button" hidden>
+                <span aria-hidden="true">↻</span>
+                重新占卜
+              </button>
+              <button class="secondary-button" id="revealAllButton" type="button" hidden>
+                <span aria-hidden="true">✦</span>
+                全部翻开
+              </button>
+            </div>
+          </footer>
+        </section>
+
+        <aside class="insight-panel panel-surface" aria-label="牌面解读">
+          <header class="insight-header">
+            <div>
+              <span class="eyebrow">INTERPRETATION</span>
+              <h2>牌面解读</h2>
+            </div>
+            <div class="insight-tabs" id="insightTabs" hidden>
+              <button type="button" data-tab="card" class="is-active">单牌</button>
+              <button type="button" data-tab="summary">综合</button>
+            </div>
+          </header>
+          <div class="insight-scroll" id="insightContent">
+            <div class="insight-empty">
+              <div class="empty-symbol" aria-hidden="true">
+                <span>☽</span>
+                <i></i>
+              </div>
+              <h3>解读将在翻牌后显现</h3>
+              <p>每张牌都会结合你选择的问题与牌位，给出对应的讯息和行动建议。</p>
+              <ul>
+                <li><span>01</span> 先感受牌面的第一印象</li>
+                <li><span>02</span> 再阅读正位或逆位含义</li>
+                <li><span>03</span> 阅读综合讯息与行动建议</li>
+              </ul>
+            </div>
+          </div>
+          <footer class="insight-footer">
+            <span aria-hidden="true">※</span>
+            <p>塔罗用于自我觉察与梳理，不替代医疗、法律或财务等专业意见。</p>
+          </footer>
+        </aside>
+      </main>
+
+      <footer class="app-footer">
+        <span>四套真实塔罗牌面 · 每套 78 张本地随机抽取</span>
+        <span class="footer-moon" aria-hidden="true">☾</span>
+        <button id="installButton" type="button" hidden>安装为桌面应用</button>
+      </footer>
+    </div>
+
+    <dialog class="app-dialog" id="questionDialog">
+      <div class="dialog-shell question-dialog-shell">
+        <header class="dialog-header">
+          <div>
+            <span class="eyebrow">CHOOSE A QUESTION</span>
+            <h2>选择此刻最想问的问题</h2>
+            <p id="questionDialogHint">从当前主题的七个问题中选择一项。</p>
+          </div>
+          <button class="dialog-close" type="button" data-close-dialog aria-label="关闭">×</button>
+        </header>
+        <div class="question-list dialog-question-list" id="questionList"></div>
+        <footer class="dialog-footer">
+          <span class="dialog-tip">问题越具体，越容易看见可行动的提示。</span>
+          <button class="secondary-button" type="button" data-close-dialog>完成</button>
+        </footer>
+      </div>
+    </dialog>
+
+    <dialog class="app-dialog" id="historyDialog">
+      <div class="dialog-shell dialog-wide">
+        <header class="dialog-header">
+          <div>
+            <span class="eyebrow">YOUR ARCHIVE</span>
+            <h2>占卜记录</h2>
+            <p>最近的占卜只保存在这台设备上。</p>
+          </div>
+          <button class="dialog-close" type="button" data-close-dialog aria-label="关闭">×</button>
+        </header>
+        <div class="history-list" id="historyList"></div>
+        <footer class="dialog-footer">
+          <button class="danger-quiet-button" id="clearHistoryButton" type="button">清空全部记录</button>
+          <button class="secondary-button" type="button" data-close-dialog>完成</button>
+        </footer>
+      </div>
+    </dialog>
+
+    <dialog class="app-dialog" id="helpDialog">
+      <div class="dialog-shell">
+        <header class="dialog-header">
+          <div>
+            <span class="eyebrow">HOW IT WORKS</span>
+            <h2>使用说明</h2>
+            <p>把它当作一面整理思绪的镜子。</p>
+          </div>
+          <button class="dialog-close" type="button" data-close-dialog aria-label="关闭">×</button>
+        </header>
+        <div class="help-content">
+          <section>
+            <span>01</span>
+            <div>
+              <h3>选择真正关心的问题</h3>
+              <p>从六类主题的预设问题中选择一项。开放式问题通常比简单的“是或否”更有启发。</p>
+            </div>
+          </section>
+          <section>
+            <span>02</span>
+            <div>
+              <h3>选择适合的牌阵</h3>
+              <p>单张适合快速提示；三张适合梳理变化与行动；五张适合变量较多的复杂问题。</p>
+            </div>
+          </section>
+          <section>
+            <span>03</span>
+            <div>
+              <h3>先感受，再阅读</h3>
+              <p>翻开牌时先留意第一感受，再结合牌位、正逆位与综合结论阅读，不必勉强套用所有文字。</p>
+            </div>
+          </section>
+          <section>
+            <span>04</span>
+            <div>
+              <h3>查看完整的综合解读</h3>
+              <p>翻开全部牌后会生成综合讯息与三步建议。结果用于自我觉察，真正的决定始终由你作出。</p>
+            </div>
+          </section>
+          <div class="help-note">
+            <strong>关于随机与隐私</strong>
+            <p>抽牌使用浏览器的安全随机源；所有记录仅存于本机浏览器，应用不会上传问题或结果。</p>
+          </div>
+          <div class="help-note">
+            <strong>关于四套牌面</strong>
+            <p>左侧选择的是整套牌组：经典韦特、阿尔诺古典、瑞士 1JJ 与皮埃蒙特。每套都有独立的 78 张正面和对应牌背，所有图片都直接显示本地原文件色彩，不使用滤镜换色。</p>
+            <p>不同历史体系在力量与正义的编号、女祭司与教皇的名称上存在传统差异；本应用按牌义对应图像，确保抽到的牌名与画面含义一致。</p>
+          </div>
+        </div>
+        <footer class="dialog-footer">
+          <button class="primary-button compact-primary" type="button" data-close-dialog>
+            <span class="button-icon" aria-hidden="true">✦</span>
+            <span><strong>开始探索</strong></span>
+          </button>
+        </footer>
+      </div>
+    </dialog>
+
+    <dialog class="app-dialog" id="confirmDialog">
+      <div class="dialog-shell dialog-small">
+        <header class="dialog-header">
+          <div>
+            <span class="eyebrow">A GENTLE PAUSE</span>
+            <h2 id="confirmTitle">确认操作</h2>
+            <p id="confirmMessage">此操作需要你的确认。</p>
+          </div>
+          <button class="dialog-close" type="button" data-confirm-cancel aria-label="取消">×</button>
+        </header>
+        <footer class="dialog-footer">
+          <button class="secondary-button" type="button" data-confirm-cancel>取消</button>
+          <button class="danger-button" id="confirmAccept" type="button">确认</button>
+        </footer>
+      </div>
+    </dialog>
+
+    <div class="toast-region" id="toastRegion" aria-live="polite" aria-atomic="true"></div>
+
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

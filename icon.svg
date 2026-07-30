@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="38%" r="75%">
+      <stop offset="0" stop-color="#382552"/>
+      <stop offset=".58" stop-color="#171027"/>
+      <stop offset="1" stop-color="#0b0814"/>
+    </radialGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#f3dfa7"/>
+      <stop offset=".52" stop-color="#d0ac67"/>
+      <stop offset="1" stop-color="#8c6635"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#bg)"/>
+  <circle cx="256" cy="256" r="174" fill="none" stroke="url(#gold)" stroke-width="5"/>
+  <ellipse cx="256" cy="256" rx="174" ry="62" fill="none" stroke="#d8bb7a" stroke-opacity=".6" stroke-width="4" transform="rotate(-28 256 256)"/>
+  <ellipse cx="256" cy="256" rx="74" ry="174" fill="none" stroke="#d8bb7a" stroke-opacity=".48" stroke-width="4" transform="rotate(24 256 256)"/>
+  <path d="M267 137c-68 6-119 62-119 130 0 72 59 131 131 131 36 0 69-15 93-39-18 9-38 14-59 14-72 0-131-59-131-131 0-43 21-81 53-105 10-1 21-1 32 0z" fill="url(#gold)"/>
+  <path d="M351 174l13 36 36 13-36 13-13 36-13-36-36-13 36-13z" fill="#f5e5b7"/>
+  <path d="M132 152l6 17 17 6-17 6-6 17-6-17-17-6 17-6zM384 333l7 20 20 7-20 7-7 20-7-20-20-7 20-7z" fill="#d8bb7a"/>
+</svg>

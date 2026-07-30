@@ -1,0 +1,21 @@
+{
+  "name": "星纱塔罗 · 占卜模拟器",
+  "short_name": "星纱塔罗",
+  "description": "离线运行、拥有完整 78 张牌和动态牌阵的沉浸式塔罗占卜模拟器。",
+  "lang": "zh-CN",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#080711",
+  "theme_color": "#100d1e",
+  "categories": ["lifestyle", "entertainment"],
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
