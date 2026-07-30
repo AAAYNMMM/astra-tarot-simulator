@@ -1,8 +1,7 @@
 # 项目开发进度
 
-> 本文件是后续“开始任务”和“继续任务”的唯一实时进度入口。
->
-> 路线图定义规则引擎应该做什么；`MODULARIZATION_PLAN.md`、`DATA_ARCHITECTURE.md`、`ENGINEERING_GUARDS.md` 与 `FINAL_QUALITY_GUARDS.md` 定义前置重构和质量护栏；本文件记录目前做到哪里。
+> 本文件是“开始任务”和“继续任务”的唯一实时状态入口。
+> 架构文档定义应该怎样做，本文件记录现在做到哪里、验证了什么以及下一步是什么。
 
 ## 1. 当前状态
 
@@ -10,219 +9,230 @@
 |---|---|
 | 当前阶段 | Phase M：模块化基础 |
 | 当前进行中任务 | 无 |
-| 下一任务 | `MOD-001` 模块边界、数据边界与基线测试 |
-| 最近完成任务 | `DOC-007` 最终质量收口与规划冻结 |
+| 下一任务 | `MOD-001` 模块边界、数据边界与基线验证 |
+| 最近完成任务 | `DOC-008` 执行层文档一致性优化 |
 | 阻塞项 | 无 |
 | 最后更新时间 | 2026-07-31 |
-| 规划状态 | 已冻结；非阻断性新想法不再推迟开发 |
+| 规划状态 | 已冻结；非阻断性新想法不得继续推迟开发 |
 
-## 2. 下一任务说明
+## 2. 当前活动任务
 
-### MOD-001：模块边界、数据边界与基线测试
+当前没有活动任务。开始 `MOD-001` 时必须填写以下现场，不得只保存在聊天中。
+
+| 字段 | 当前值 |
+|---|---|
+| 任务 ID |  |
+| 状态 |  |
+| 规范来源 |  |
+| 工作分支 |  |
+| 当前完整 commit |  |
+| CWapi task_id |  |
+| CWapi RESULT |  |
+| 开始时间 |  |
+| 最后更新时间 |  |
+
+### 已完成验收项
+
+- [ ]
+
+### 剩余验收项
+
+- [ ]
+
+### 本轮修改文件
+
+- 无
+
+### 阻塞原因
+
+- 无
+
+### 下一具体动作
+
+- 执行 `MOD-001`。
+
+## 3. 下一任务：MOD-001
 
 **状态：NEXT**
 
-目标：
+### 目标
 
 - 核对当前主要文件、函数职责和依赖关系。
-- 为 `app.js`、`styles.css` 和 `data.js` 建立明确迁移映射。
-- 确认以 `src/` 为统一源码根目录的最终结构。
-- 区分静态知识、临时状态、用户持久数据和生成清单。
+- 为 `app.js`、`styles.css`、`data.js` 建立唯一迁移映射。
+- 确认 `src/` 最终结构和现有 `kebab-case` 业务 ID。
+- 区分静态知识、临时状态、用户数据和生成文件。
 - 建立模块规模与依赖方向检查。
-- 记录重构前自动测试和关键交互基线。
-- 记录当前 localStorage 历史字段和未来迁移输入契约。
-- 记录本项目将由 CWapi 执行的验证入口与范围，不创建 GitHub Actions。
+- 记录自动测试、关键交互和旧历史字段基线。
+- 建立最小 CWapi 统一验证入口。
 
-开始前必须读取：
+### 开始前必读
 
 - `AGENTS.md`
 - `docs/DECISIONS.md`
 - `docs/MODULARIZATION_PLAN.md`
 - `docs/DATA_ARCHITECTURE.md`
 - `docs/ENGINEERING_GUARDS.md`
-- `docs/FINAL_QUALITY_GUARDS.md`
-- `docs/ENGINE_ARCHITECTURE.md`
-- `docs/ROADMAP.md`
-- 当前 `app.js`
-- 当前 `styles.css`
-- 当前 `data.js`
-- 当前 `index.html`、`run.py`、`sw.js` 和测试文件
+- 本文件
+- 当前 `app.js`、`styles.css`、`data.js`
+- 当前 `index.html`、`run.py`、`sw.js` 和测试
 
-建议产物：
+`MOD-001` 不需要重新完整装载后期规则引擎和单牌内容规范，除非发现跨阶段冲突。
 
-- `scripts/check_module_size.py`
-- `scripts/check_import_boundaries.py`，若本轮可在不扩大范围的情况下完成
+### 产物
+
 - `docs/MODULE_MAP.md`
+- `scripts/check_module_size.py`
+- `scripts/check_import_boundaries.py`
 - `tests/module_contract_test.js`
-- `src/` 最小目录骨架或职责说明文件
-- 当前历史记录字段与迁移基线说明
-- CWapi 后续验证入口规划，实际统一验证脚本可在 `MOD-006` 收口
+- `automation/validate.py`
+- `automation/README.md`
+- 最小 `src/` 骨架或职责说明
+- 旧历史字段和迁移输入基线
 
-本任务不应：
+### baseline 验证入口
 
-- 改变四种牌阵或牌位
-- 改写 78 张牌的含义
-- 改变抽牌结果和正逆位概率
-- 扩展预设问题
-- 实现新规则引擎
-- 直接把历史迁移到 IndexedDB
-- 一次性拆完全部代码
-- 引入 npm 构建依赖
-- 创建 `.github/workflows/`
-- 提前实现后期无障碍、PWA 更新、版本迁移或性能优化
-- 继续新增非阻断性规划文档
+```text
+automation/validate.py --scope baseline
+```
 
-验收标准：
+至少执行：
 
-1. 模块规模脚本能够报告 `app.js`、`styles.css` 和 `data.js` 的当前超限情况。
-2. `MODULE_MAP.md` 列出旧文件中各职责的目标 `src/` 模块。
-3. 明确依赖方向和禁止循环依赖规则。
-4. 明确静态知识、临时状态、用户数据和生成文件的边界。
-5. 原有 Python 与 Node 测试结果已记录。
-6. 至少记录准备页、洗牌、发牌、翻牌、结果、历史和关闭生命周期的人工基线检查项。
-7. 当前 localStorage 历史结构和迁移输入已记录。
-8. 明确 CWapi 对固定 commit 的验证方式，不新增 GitHub Actions。
-9. 没有改变运行行为。
-10. 本文件更新为下一任务 `MOD-002`。
+- 当前 Python 测试
+- 当前 Node smoke test
+- 模块规模检查
+- 依赖边界检查
+- 机器可读摘要
+- 可靠退出码
 
-## 3. 当前代码、存储与验证基线
+### 禁止范围
 
-截至 2026-07-31：
+- 不改变四种牌阵或牌位。
+- 不改变任何现有卡牌、问题、牌阵和牌位 ID。
+- 不改写 78 张牌含义。
+- 不改变抽牌或正逆位概率。
+- 不扩展预设问题。
+- 不实现新规则引擎。
+- 不迁移 IndexedDB。
+- 不一次性拆完全部代码。
+- 不引入 npm 构建依赖。
+- 不创建 `.github/workflows/`。
+- 不提前实现后期完整 PWA、无障碍、版本迁移或性能优化。
+- 不新增非阻断性规划文档。
 
-| 文件、存储或验证 | 规模/状态 | 判定 |
+### 验收
+
+1. 模块规模脚本报告 `app.js`、`styles.css`、`data.js` 超限。
+2. `MODULE_MAP.md` 为每个旧职责指定唯一目标模块。
+3. 依赖方向和循环依赖规则可检查。
+4. 现有业务 ID、静态知识、临时状态、用户数据和生成文件边界被记录。
+5. Python 和 Node 基线测试结果被记录。
+6. 准备、洗牌、发牌、翻牌、结果、历史和关闭生命周期人工基线被记录。
+7. 当前 `localStorage` 设置与历史结构被记录。
+8. `automation/validate.py --scope baseline` 可由 CWapi 对固定 commit 执行。
+9. 没有运行行为变化。
+10. 当前 commit 取得匹配的 CWapi RESULT。
+11. 本文件将唯一 `NEXT` 更新为 `MOD-002`。
+
+## 4. 当前基线
+
+| 项目 | 当前状态 | 判定 |
 |---|---|---|
-| `app.js` | 1528 行 | 超过 JS 600 行硬上限，待拆分 |
-| `styles.css` | 4918 行 | 超过 CSS 900 行硬上限，待拆分 |
-| `data.js` | 637 行 | 超过 JS 600 行硬上限，未来资料扩展风险极高 |
-| `run.py` | 243 行 | 当前规模可接受，但服务访问边界需加强 |
-| `localStorage` 设置 | 小型 JSON | 可继续使用，需抽离存储接口 |
-| `localStorage` 历史 | 最多 20 条精简记录 | 当前可用，无法承载目标证据链且存在静默截断 |
-| IndexedDB | 尚未使用 | 计划在 AU-002、AU-003 实现完整历史和迁移 |
-| GitHub Actions | 不使用 | 复用 CWapi 本地 Runner 工作流 |
-| CWapi 验证入口 | 尚未建立项目脚本 | 计划在 MOD-006 收口，期间按任务建立可审计检查入口 |
-| PWA 更新 | 当前直接 `skipWaiting` 并统一回退首页 | 后续需要原子更新和按资源类型失败 |
-| 无障碍 | 已有部分 ARIA、键盘和减少动画支持 | 尚未完成动态牌桌与焦点回归 |
-| 错误恢复 | 各处局部容错 | 尚未建立统一错误模型与隐私安全诊断 |
-| 版本兼容 | 已规划独立版本号 | 尚未建立机器可读兼容矩阵和回滚策略 |
-| 性能预算 | 尚未冻结 | 后期按真实牌阵、历史和缓存规模测量 |
+| `app.js` | 1528 行 | 超过 JS 600 行硬上限 |
+| `styles.css` | 4918 行 | 超过 CSS 900 行硬上限 |
+| `data.js` | 637 行 | 超过 JS 600 行硬上限 |
+| `run.py` | 243 行 | 规模可接受，访问边界待强化 |
+| 业务 ID | 现有代码使用 `kebab-case` | Phase M 保持不变 |
+| `localStorage` 设置 | 小型 JSON | 抽离接口后继续使用 |
+| `localStorage` 历史 | 最多20条精简记录 | 存在静默截断，后期迁移 |
+| IndexedDB | 尚未使用 | `AU-002`、`AU-003` 实现 |
+| GitHub Actions | 不使用 | CWapi 本地验证 |
+| CWapi统一入口 | 尚未建立 | `MOD-001` 建立 baseline，`MOD-006D` 完成 full |
+| PWA更新 | 统一回退首页 | `MOD-006C` 修资源类型，`PLAT-001` 完成原子更新 |
+| 无障碍 | 部分 ARIA 和键盘支持 | `AX-001`、`AX-002` 完成 |
+| 错误恢复 | 局部容错 | `ERR-001` 完成统一模型 |
+| 版本兼容 | 有独立版本规划 | `REL-005` 建立矩阵 |
 
-Phase M 完成后：
-
-- 源代码统一位于 `src/`。
-- 应用入口建议 ≤ 200 行。
-- 任一人工维护 JavaScript 文件 ≤ 600 行。
-- 任一人工维护 CSS 文件 ≤ 900 行。
-- 每张完整 `CardSemanticProfile` 使用独立模块。
-- 完整 `QuestionProfile` 使用可独立加载的小模块。
-- 静态知识通过轻量目录与动态注册表加载。
-- 控制器不直接访问 localStorage 或 IndexedDB。
-- 卡牌目录、问题目录、动态注册表和缓存清单可由脚本稳定生成。
-- 项目提供适合 CWapi 对固定 commit 执行的确定性验证入口。
-- `.github/workflows/` 为空或不存在。
-
-## 4. 阶段进度
+## 5. 阶段进度
 
 | 阶段 | 状态 | 完成度 | 说明 |
 |---|---|---:|---|
-| Phase 0 项目目标与任务系统 | DONE | 100% | 接手协议、决策、架构、数据方案、工程护栏和最终质量收口已建立 |
-| Phase M 模块化基础 | NEXT | 0% | 下一步 MOD-001，必须在 TQ-001 前完成 |
-| Phase 1 单牌数据基础 | BLOCKED | 0% | 等待 MOD-006 完成 |
-| Phase 2 78 张牌资料升级 | BACKLOG | 0% | 等待 Phase 1；批量资料前完成 EV-000 基本规则 |
-| Phase 3 预设问题系统 | BACKLOG | 0% | 等待问题配置基础 |
-| Phase 4 牌位运算系统 | BACKLOG | 0% | 不改变牌阵结构 |
-| Phase 5 多牌关系引擎 | BACKLOG | 0% | 等待 Observation 与关系词典 |
-| Phase 6 结论与文本系统 | BACKLOG | 0% | 等待多牌关系引擎 |
-| Phase 7 审计与历史升级 | BACKLOG | 0% | IndexedDB、迁移、备份、随机、证据链和兼容基础 |
-| Phase 8 评测与界面整合 | BACKLOG | 0% | 三项 9.0+、盲测治理、无障碍、Doctor 与质量门禁 |
-| Phase 9 发布稳定化 | BACKLOG | 0% | CWapi 回归、PWA 原子更新、性能、回滚、许可证和 2.0 收口 |
+| Phase 0 | DONE | 100% | 接手、决策、架构和执行层文档已对齐 |
+| Phase M | NEXT | 0% | 当前执行 `MOD-001` |
+| Phase 1 | BLOCKED | 0% | 等待 `MOD-006D` |
+| Phase 2 | BACKLOG | 0% | 父任务必须拆为4–6张叶子任务 |
+| Phase 3 | BACKLOG | 0% | 问题和适配按领域拆分 |
+| Phase 4 | BACKLOG | 0% | Position Operator 与 Observation |
+| Phase 5 | BACKLOG | 0% | 结构边优先的 Relation Graph |
+| Phase 6 | BACKLOG | 0% | Claim、冲突和模板 |
+| Phase 7 | BACKLOG | 0% | 随机、IndexedDB、迁移和备份 |
+| Phase 8 | BACKLOG | 0% | 盲测、9.0+、错误恢复、无障碍和UI |
+| Phase 9 | BACKLOG | 0% | PWA、性能、兼容、许可证和发布 |
 
-## 5. 任务状态表
+## 6. 任务状态表
 
 | 任务 ID | 状态 | 完成日期 | 结果 |
 |---|---|---|---|
-| DOC-001 | DONE | 2026-07-30 | 已建立根目录 `AGENTS.md` |
-| DOC-002 | DONE | 2026-07-30 | 已建立锁定决策记录 |
-| DOC-003 | DONE | 2026-07-30 | 已建立架构、单牌标准、路线图与进度文档 |
-| DOC-004 | DONE | 2026-07-31 | 已建立模块化方案并更新接手规则与锁定决策 |
-| DOC-005 | DONE | 2026-07-31 | 已建立 `src/` 目标结构、知识分层、按需加载、IndexedDB 和缓存方案 |
-| DOC-006 | DONE | 2026-07-31 | 已建立服务安全、资料治理、备份、Doctor 和 CWapi 本地验证方案 |
-| DOC-007 | DONE | 2026-07-31 | 已建立 PWA、无障碍、错误恢复、兼容、评测和性能最终护栏并冻结规划 |
-| MOD-001 | NEXT |  | 模块边界、数据边界与基线测试 |
-| MOD-002 | BACKLOG |  | 拆分 CSS |
-| MOD-003 | BACKLOG |  | 抽离基础 JavaScript、随机接口、平台和存储接口 |
-| MOD-004 | BACKLOG |  | 拆分应用控制器与渲染器，强化本地服务边界 |
-| MOD-005 | BACKLOG |  | 拆分静态知识与旧版解读，建立生成目录和注册表 |
-| MOD-006 | BACKLOG |  | 缓存、CWapi 验证入口、PLAT-001、回归和清理 |
-| TQ-001 | BLOCKED |  | 等待 MOD-006 后定义 CardSemanticProfile Schema |
-| TQ-002 | BACKLOG |  | 建立统一语义词典、来源与解释政策 |
-| TQ-003 | BACKLOG |  | 制作 6 张黄金样本并验证跨牌边界 |
-| TQ-004 | BACKLOG |  | 建立资料评分、反例与审查工具 |
-| TQ-101–107 | BACKLOG |  | 完成并审查 78 张牌 |
-| QP-001–004 | BACKLOG |  | 建立预设问题与适配系统 |
-| PO-001–003 | BACKLOG |  | 牌位运算和 Observation |
-| MR-001–004 | BACKLOG |  | 多牌关系推理 |
-| CL-001–004 | BACKLOG |  | 结论、评分和冲突消解 |
-| TX-001–003 | BACKLOG |  | 模板渲染与校验 |
-| AU-001–003 | BACKLOG |  | 随机、IndexedDB 历史、迁移、备份与审计 |
-| EV-000 | BACKLOG |  | 评测治理、冻结盲测集与评审一致性 |
-| EV-001–004 | BACKLOG |  | 三项核心质量评测、Doctor 和回归质量门禁 |
-| UI-001–002 | BACKLOG |  | 界面和历史接入 |
-| AX-001–002 | BACKLOG |  | 键盘、焦点、屏幕阅读器和动态牌桌无障碍 |
-| ERR-001 | BACKLOG |  | 统一错误、恢复和本地诊断 |
-| PLAT-001 | BACKLOG |  | PWA 原子更新与资源类型回退 |
-| PERF-001 | BACKLOG |  | 加载、缓存和存储预算 |
-| PWA-002 | BACKLOG |  | 安装图标和离线牌组管理 |
-| REL-001–005 | BACKLOG |  | CWapi 全量回归、安全、许可证、兼容回滚与发布稳定化 |
+| DOC-001–007 | DONE | 2026-07-30 至 2026-07-31 | 原始项目文档体系和质量护栏 |
+| DOC-008 | DONE | 2026-07-31 | 统一ID、路径、任务依赖、粒度和恢复现场 |
+| MOD-001 | NEXT |  | 模块边界、数据边界与baseline验证 |
+| MOD-002 | BACKLOG |  | 拆分CSS |
+| MOD-003 | BACKLOG |  | 抽离基础JavaScript和随机接口 |
+| MOD-004 | BACKLOG |  | 控制器、渲染器和服务边界 |
+| MOD-005 | BACKLOG |  | 静态知识、注册表和旧解读 |
+| MOD-006A | BACKLOG |  | 模块入口与旧全局清理 |
+| MOD-006B | BACKLOG |  | 生成清单和基础分组缓存 |
+| MOD-006C | BACKLOG |  | PWA资源类型回退和缓存验证 |
+| MOD-006D | BACKLOG |  | full验证、全量回归和Phase M收口 |
+| TQ-001 | BLOCKED |  | 等待 `MOD-006D` |
+| TQ-002 | BACKLOG |  | 词典、来源和解释政策 |
+| EV-000A | BACKLOG |  | 评测协议和盲测边界 |
+| TQ-003 | BACKLOG |  | 6张黄金样本初稿 |
+| TQ-004 | BACKLOG |  | 审查工具和黄金样本冻结 |
+| TQ-101–107 | PARENT |  | 78张牌父任务，执行前拆分 |
+| QP-001–004 | BACKLOG/PARENT |  | 问题系统，批量任务按领域拆分 |
+| PO-001–003 | BACKLOG |  | 牌位和Observation |
+| MR-001–004 | BACKLOG |  | 多牌关系 |
+| CL-001–004 | BACKLOG |  | 结论和冲突 |
+| TX-001–003 | BACKLOG |  | 模板和安全校验 |
+| AU-001–002 | BACKLOG |  | 随机与ReadingRecord |
+| AU-003A–C | BACKLOG |  | 迁移、备份、容量和降级 |
+| EV-000B、EV-001–004 | BACKLOG/PARENT |  | 最终盲测和质量门禁 |
+| ERR-001 | BACKLOG |  | 统一错误恢复 |
+| AX-001–002 | BACKLOG |  | 无障碍 |
+| UI-001–002 | BACKLOG |  | 新引擎和历史界面 |
+| PLAT-001 | BACKLOG |  | PWA原子更新 |
+| PERF-001 | BACKLOG |  | 性能与资源预算 |
+| PWA-002 | BACKLOG |  | 图标和离线牌组 |
+| REL-001–005 | BACKLOG/PARENT |  | 发布稳定化 |
 
-## 6. 当前代码基线
+## 7. 当前代码审查结论
 
-截至 2026-07-31 的代码审查结论：
+- 当前包含78张牌、42个固定问题和4种固定牌阵。
+- 当前业务 ID 使用 `kebab-case`，未来资料必须沿用。
+- `app.js`、`styles.css`、`data.js` 必须分阶段拆分。
+- 当前Python服务器以仓库根目录为服务目录，需增加白名单和生命周期保护。
+- 当前Service Worker手工维护资源并统一回退首页，需分两阶段修复。
+- 当前单牌资料不足以支撑目标规则引擎。
+- 当前具体问题没有独立 QuestionProfile。
+- 当前综合解读仍依赖粗糙的正逆位和元素统计。
+- 当前历史没有完整证据链、版本和可复现种子。
+- 当前测试尚未覆盖语义、关系、盲测和无障碍。
 
-- 项目为离线浏览器应用，Python 只提供本地服务和生命周期控制。
-- 当前包含 78 张牌、42 个固定问题和 4 种固定牌阵。
-- 当前抽牌使用安全随机源优先的洗牌逻辑，牌面在动画前已确定。
-- 当前 `app.js` 同时承担状态、DOM、存储、随机、动画、解读、历史和生命周期，必须拆分。
-- 当前 `styles.css` 包含近五千行样式，必须按令牌、基础、布局、组件、功能、动画和响应式拆分。
-- 当前 `data.js` 同时保存卡牌、问题和牌阵，后续静态知识必须迁入 `src/knowledge/`。
-- 当前 Python 静态服务器以仓库根目录为服务目录，后续必须增加访问白名单和生命周期保护。
-- 当前 service worker 预缓存清单由代码手工维护，并会统一回退首页；模块化后必须改为可生成、可校验、按类型失败和原子切换的分组缓存。
-- 当前单牌资料主要由关键词、正逆位说明和固定建议组成，适合展示，不足以支持目标规则引擎。
-- 当前具体问题没有独立推理配置，综合逻辑主要依赖六大问题分类。
-- 当前综合结论存在依赖正逆位数量、主导元素和固定模板的情况。
-- 当前全部大阿卡纳归为“灵”，会造成元素统计偏斜。
-- 当前历史记录未保存完整证据链、规则版本或可复现随机种子。
-- 当前测试主要检查卡牌数量、字段存在和牌阵位置，尚未覆盖语义质量、关系推理、盲测治理和无障碍。
-- 项目验证不使用 GitHub Actions，后续通过 CWapi 对固定 commit 执行本地测试和回归。
-
-这些问题必须按 Phase M 和后续路线图分阶段修复，不要在 MOD-001 中顺手全部改掉。
-
-## 7. 当前开发文档
-
-- `AGENTS.md`
-- `docs/DECISIONS.md`
-- `docs/MODULARIZATION_PLAN.md`
-- `docs/DATA_ARCHITECTURE.md`
-- `docs/ENGINEERING_GUARDS.md`
-- `docs/FINAL_QUALITY_GUARDS.md`
-- `docs/ENGINE_ARCHITECTURE.md`
-- `docs/CARD_DATA_STANDARD.md`
-- `docs/ROADMAP.md`
-- `docs/PROGRESS.md`
+这些问题必须按唯一叶子任务逐步修复，不得在 `MOD-001` 中顺手包办。
 
 ## 8. 本轮验证记录
 
-本轮只新增和更新开发文档，没有修改运行代码。
+本轮只修改开发文档，没有修改运行代码。
 
 已检查：
 
-- 最终质量文档覆盖 PWA 原子更新、无障碍、统一错误恢复、版本兼容、评测治理和资源预算。
-- 新任务均映射到后期阶段，不改变当前唯一 `NEXT` 任务。
-- 规划冻结规则明确，非阻断性新想法不再推迟 2.0。
-- AGENTS、FINAL_QUALITY_GUARDS 和 PROGRESS 的读取顺序、任务状态与完成条件一致。
-- 当前唯一 `NEXT` 任务仍为 `MOD-001`。
+- ID统一为现有 `kebab-case`。
+- 所有目标代码路径统一进入 `src/`。
+- Position Operator 和 Relation Graph 顺序已修正。
+- `MOD-006` 已拆为 A–D。
+- Phase 1 评测与黄金样本顺序已修正。
+- 大型任务被标记为父任务。
+- CWapi baseline入口提前到 `MOD-001`。
+- 当前唯一 `NEXT` 仍为 `MOD-001`。
 
-未执行运行测试：
-
-- 本轮没有运行代码变更。
-- 本轮属于纯文档决策更新，不需要创建 CWapi TASK。
-- `MOD-001` 完成实现和脚本后，必须按适用范围取得当前 commit 的 CWapi RESULT。
+未执行运行测试：本轮是纯文档一致性修复，不创建CWapi TASK。
