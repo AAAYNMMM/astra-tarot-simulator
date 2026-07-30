@@ -50,23 +50,24 @@ python run.py --no-browser
 
 项目正在规划纯规则解牌引擎升级，目标是在不使用 AI 大模型、不改变现有四种牌阵、只使用固定预设问题的前提下，提高单牌资料质量、多牌综合能力和具体问题贴合度。
 
-在规则引擎开发前，项目会先完成 Phase M 代码模块化，把当前大型 JavaScript、CSS 和数据文件拆成适合 GitHub 精确读取、审查和修改的职责模块。项目继续保持完全离线、无需 npm 构建即可运行。
+在规则引擎开发前，项目会先完成 Phase M 代码模块化，把当前大型 JavaScript、CSS 和数据文件拆成适合 GitHub 精确读取、审查和修改的职责模块。目标结构统一使用 `src/`，并把静态塔罗知识、临时页面状态、用户历史和 PWA 缓存分层管理。项目继续保持完全离线、无需 npm 构建即可运行。
 
 后续开发代理进入项目后应首先读取：
 
 1. [`AGENTS.md`](AGENTS.md)：AI 接手顺序、“开始任务”和“继续任务”的执行规则。
 2. [`docs/DECISIONS.md`](docs/DECISIONS.md)：不可擅自改变的产品与技术决策。
 3. [`docs/MODULARIZATION_PLAN.md`](docs/MODULARIZATION_PLAN.md)：代码拆分、文件规模、目录结构和 Phase M 任务。
-4. [`docs/ENGINE_ARCHITECTURE.md`](docs/ENGINE_ARCHITECTURE.md)：目标规则引擎架构。
-5. [`docs/CARD_DATA_STANDARD.md`](docs/CARD_DATA_STANDARD.md)：78 张牌达到 9.0/10 以上的资料标准。
-6. [`docs/ROADMAP.md`](docs/ROADMAP.md)：规则引擎分阶段任务、依赖与验收标准。
-7. [`docs/PROGRESS.md`](docs/PROGRESS.md)：当前开发进度和唯一下一任务。
+4. [`docs/DATA_ARCHITECTURE.md`](docs/DATA_ARCHITECTURE.md)：静态知识、按需加载、IndexedDB 历史、版本和缓存策略。
+5. [`docs/ENGINE_ARCHITECTURE.md`](docs/ENGINE_ARCHITECTURE.md)：目标规则引擎架构。
+6. [`docs/CARD_DATA_STANDARD.md`](docs/CARD_DATA_STANDARD.md)：78 张牌达到 9.0/10 以上的资料标准。
+7. [`docs/ROADMAP.md`](docs/ROADMAP.md)：规则引擎分阶段任务、依赖与验收标准。
+8. [`docs/PROGRESS.md`](docs/PROGRESS.md)：当前开发进度和唯一下一任务。
 
 当前下一任务以 `docs/PROGRESS.md` 中标记为 `NEXT` 的任务为准。每次开发完成后必须同步更新该文件，避免项目进度被埋在某个聊天窗口里，成为数字考古遗址。
 
 ## 隐私与说明
 
-应用不会联网发送问题或牌面。历史记录保存在浏览器的 `localStorage` 中，清除浏览器站点数据会同时删除记录。
+应用不会联网发送问题或牌面。当前版本的历史记录保存在浏览器 `localStorage` 中；目标 2.0 架构会把完整历史和证据链迁移到本机 IndexedDB，小型设置仍保留在 `localStorage`。清除浏览器站点数据会删除这些本地记录。
 
 塔罗内容用于自我觉察、叙事探索和娱乐，不替代医疗、法律、投资或其他专业意见。
 
