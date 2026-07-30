@@ -10,11 +10,12 @@
 2. `docs/DECISIONS.md`
 3. `docs/MODULARIZATION_PLAN.md`
 4. `docs/DATA_ARCHITECTURE.md`
-5. `docs/ENGINE_ARCHITECTURE.md`
-6. `docs/CARD_DATA_STANDARD.md`
-7. `docs/ROADMAP.md`
-8. `docs/PROGRESS.md`
-9. 与当前任务直接相关的代码、数据和测试
+5. `docs/ENGINEERING_GUARDS.md`
+6. `docs/ENGINE_ARCHITECTURE.md`
+7. `docs/CARD_DATA_STANDARD.md`
+8. `docs/ROADMAP.md`
+9. `docs/PROGRESS.md`
+10. 与当前任务直接相关的代码、数据和测试
 
 不得仅依据用户当前一句话直接修改项目。先确认锁定决策、当前阶段、已完成任务和下一任务。
 
@@ -26,10 +27,14 @@
 
 1. 读取上述全部文档。
 2. 从 `docs/PROGRESS.md` 中寻找状态为 `NEXT` 的任务。
-3. 对照该任务所属方案和验收标准核实依赖：模块化任务看 `MODULARIZATION_PLAN.md` 与 `DATA_ARCHITECTURE.md`，其余任务看 `ROADMAP.md`。
+3. 对照该任务所属方案和验收标准核实依赖：模块化任务看 `MODULARIZATION_PLAN.md`、`DATA_ARCHITECTURE.md` 与 `ENGINEERING_GUARDS.md`，其余任务看 `ROADMAP.md` 及相关质量文档。
 4. 若依赖满足，直接开始该任务。
 5. 完成代码、数据、测试和必要文档更新。
-6. 更新 `docs/PROGRESS.md`，记录完成情况、验证结果和新的 `NEXT` 任务。
+6. 提交后按 `ENGINEERING_GUARDS.md` 使用 CWapi 对固定 commit 执行适用的本地验证。
+7. 读取并核对 CWapi RESULT；失败时修复后创建新 commit 和新 task_id。
+8. 更新 `docs/PROGRESS.md`，记录完成情况、验证证据和新的 `NEXT` 任务。
+
+纯文档任务可以减少本地测试，但仍需检查文档引用、决策和进度一致性。
 
 ### “继续任务”
 
@@ -38,8 +43,9 @@
 1. 读取上述全部文档。
 2. 优先恢复 `docs/PROGRESS.md` 中状态为 `IN_PROGRESS` 或 `BLOCKED` 的任务。
 3. 检查仓库实际状态，不能只相信旧进度文字。
-4. 从最后一个未完成验收项继续。
-5. 完成后更新进度和验证记录。
+4. 若存在尚未取得终态 RESULT 的 CWapi TASK，先读取并处理该 TASK/RESULT。
+5. 从最后一个未完成验收项继续。
+6. 完成后更新进度和验证记录。
 
 若没有 `IN_PROGRESS` 任务，则把 `NEXT` 任务视为继续目标。
 
@@ -58,6 +64,7 @@
 - “准确”指牌义质量、问题贴合、一致性、证据链和条件表达，不宣称科学验证的超自然预测准确率。
 - 项目代码必须模块化，适合通过 GitHub 按职责读取、审查和修改。
 - 静态知识、临时状态、用户历史和缓存数据必须分层管理。
+- 项目不创建或依赖 GitHub Actions；真实运行验证统一使用 CWapi 本地 Runner。
 - Phase M 完成前，不得开始批量单牌资料或新规则引擎开发。
 
 完整决策见 `docs/DECISIONS.md`。
@@ -84,12 +91,17 @@
 - 模块只承担单一职责，不得用新文件名重新制造单体文件。
 - 修改前检查依赖方向，禁止 `engine/` 访问 DOM，禁止静态知识访问存储，禁止循环依赖。
 - 动态导入的数据模块必须纳入 PWA 缓存清单和完整性测试。
+- 卡牌与问题目录、动态注册表和缓存清单优先由脚本生成，避免重复人工维护。
+- 单牌资料必须记录来源、误读边界并通过跨牌一致性和反例审查。
+- 不得创建 `.github/workflows/`；项目验证入口应由 CWapi 对固定 commit 在本地执行。
+- 没有当前 commit 对应的 CWapi RESULT，不得声称代码、数据或运行行为已在本地验证通过。
 - 每次任务完成后运行模块规模检查，并在进度文档记录本轮文件变化。
 
-详细模块边界、目录结构和限制见：
+详细边界和限制见：
 
 - `docs/MODULARIZATION_PLAN.md`
 - `docs/DATA_ARCHITECTURE.md`
+- `docs/ENGINEERING_GUARDS.md`
 
 ## 5. 任务完成定义
 
@@ -97,9 +109,11 @@
 
 1. 任务范围内的实现或文档已经提交。
 2. 对应验收标准全部满足。
-3. 自动测试通过，或明确记录无法运行的原因。
-4. 人工抽样检查完成，若任务要求人工审查。
-5. 没有破坏锁定决策。
-6. 新增和修改的人工维护文件符合模块规模限制，或有已批准例外。
-7. 数据模块、存储和缓存变更符合 `DATA_ARCHITECTURE.md`。
-8. `docs/PROGRESS.md` 已记录完成结果、验证结果和唯一下一任务。
+3. 适用的自动测试通过，或明确记录无法运行的原因。
+4. 非纯文档任务具有绑定当前完整 commit 的 CWapi RESULT，且结果与实际验证范围一致。
+5. 人工抽样检查完成，若任务要求人工审查。
+6. 没有破坏锁定决策。
+7. 新增和修改的人工维护文件符合模块规模限制，或有已批准例外。
+8. 数据模块、存储和缓存变更符合 `DATA_ARCHITECTURE.md`。
+9. 工程安全、生成文件、资料治理和本地验证符合 `ENGINEERING_GUARDS.md`。
+10. `docs/PROGRESS.md` 已记录完成结果、验证证据和唯一下一任务。
