@@ -1,6 +1,6 @@
 # 星纱塔罗 · 占卜模拟器
 
-一个完全离线运行的中文塔罗牌 GUI。它使用浏览器呈现桌面级界面，以获得流畅的洗牌、发牌和 3D 翻牌动画；Python 只负责启动本地服务，不需要安装任何第三方包。
+一个完全离线运行的中文塔罗牌GUI。浏览器负责桌面级界面、洗牌、发牌和3D翻牌动画；Python只负责启动本地服务，不需要安装第三方包。
 
 ## 启动
 
@@ -8,9 +8,9 @@
 
 1. 双击 `启动星纱塔罗.bat`。
 2. 应用会自动在默认浏览器中打开。
-3. 直接关闭最后一个应用页面；本地服务、脚本与双击启动时打开的控制台会在约 3 秒后自动退出。
+3. 关闭最后一个应用页面后，本地服务、脚本和控制台会在短暂宽限后退出。
 
-也可以在终端中运行：
+也可以在终端运行：
 
 ```powershell
 git clone https://github.com/AAAYNMMM/astra-tarot-simulator.git
@@ -18,73 +18,85 @@ cd astra-tarot-simulator
 python run.py
 ```
 
-默认会使用固定的本机端口 `57321`，这样浏览器历史记录可以跨多次启动保留；如果该端口正被其他程序占用，启动器会自动选择一个临时空闲端口。
+默认使用本机端口 `57321`；若端口被占用，会自动选择临时空闲端口。
 
-如果不希望自动打开浏览器：
+不自动打开浏览器：
 
 ```powershell
 python run.py --no-browser
 ```
 
-然后访问终端中显示的地址。也可以用 `--port 8765` 指定其他端口。
+也可以使用 `--port 8765` 指定端口。
 
 ## 已实现功能
 
-- 完整 78 张塔罗牌：22 张大阿卡纳、56 张小阿卡纳。
-- 内置四套完整真实牌组：经典 Rider–Waite–Smith、阿尔诺古典、瑞士 1JJ、Solesio 皮埃蒙特，每套都有 78 张正面与对应牌背。
-- “选择牌面”会整体切换牌组的正面与牌背；所有图片直接显示本地源文件色彩，不套用滤镜、色相旋转或调色效果。
-- 洗牌、逐张发牌、3D 翻牌、选牌高亮与完成提示动画。
-- 六大主题：感情关系、事业学业、财运机会、自我成长、选择决策、今日指引。
-- 42 个预设问题，每个主题提供 7 个覆盖不同角度的问题，由用户在独立问题选择窗中直接选择。
-- 四种不重复的主流牌阵：心语单张（1 张）、时间之流（3 张）、五牌十字（5 张）、凯尔特十字（10 张）。
-- 凯尔特十字按“中心交叉 + 外围十字 + 右侧权杖”的经典结构展示，并明确标注十个牌位；牌面会随牌桌宽高自动放大，中心交叉的两张牌也可以分别点击翻开。
-- 结合“问题主题 + 牌位 + 正逆位 + 牌型/元素 + 牌间关系”的单牌解读和综合结论。
-- 完成态直接展示综合讯息与三步行动建议，不再要求二次选择方向。
-- 本地占卜记录支持醒目的展开查看、单条删除与全部清空。
-- 结果页仅保留“重新占卜”和翻牌阶段的“全部翻开”，方便用户直接截图留存。
-- 加宽设置与解读区域，正文、选项和牌面均按可读性重新排版；支持减少动画偏好、键盘操作和移动端适配。
-- PWA 清单与离线缓存；支持的浏览器会显示“安装为桌面应用”入口。
-- 页面关闭时会通知本地启动器；刷新或重新载入拥有短暂宽限时间，不会误停服务。
+- 完整78张塔罗牌：22张大阿卡纳、56张小阿卡纳。
+- 四套完整牌组：Rider–Waite–Smith、阿尔诺古典、瑞士1JJ、Solesio皮埃蒙特。
+- 牌组正面与牌背整体切换，不使用滤镜或色相旋转伪造不同牌组。
+- 洗牌、逐张发牌、3D翻牌、选牌高亮和完成动画。
+- 六大主题和42个固定预设问题。
+- 四种固定牌阵：心语单张、时间之流、五牌十字、凯尔特十字。
+- 基于问题主题、牌位、正逆位、牌型、元素和关系的当前规则解读。
+- 综合讯息与三步行动建议。
+- 本地历史查看、单条删除和全部清空。
+- 减少动画偏好、键盘操作、移动端适配和PWA离线缓存。
+- 页面关闭通知本地启动器，刷新具有短暂宽限。
 
-## 开发路线与持续任务
+## 开发路线
 
-项目正在规划纯规则解牌引擎升级，目标是在不使用 AI 大模型、不改变现有四种牌阵、只使用固定预设问题的前提下，提高单牌资料质量、多牌综合能力和具体问题贴合度。
+目标2.0采用完全离线、可复现、可审计的纯规则解牌引擎：
 
-在规则引擎开发前，项目会先完成 Phase M 代码模块化，把当前大型 JavaScript、CSS 和数据文件拆成适合 GitHub 精确读取、审查和修改的职责模块。目标结构统一使用 `src/`，并把静态塔罗知识、临时页面状态、用户历史和 PWA 缓存分层管理。项目继续保持完全离线、无需 npm 构建即可运行。
+- 运行时不调用AI大模型或在线生成服务。
+- 保持现有四种牌阵和固定问题模式。
+- 单牌资料、多牌综合和问题贴合度目标均为9.0/10以上。
+- 抽牌、正逆位和解读严格分离。
+- 源码使用原生ES Modules，无强制npm构建。
+- 完整历史迁入本机IndexedDB，并保存证据链、版本和artifact指纹。
 
-项目不使用 GitHub Actions。代码、数据、存储、缓存和发布相关验证统一复用 `AAAYNMMM/CWapi` 的本地 Runner，对固定 commit 执行测试并返回可审计 RESULT。
+规则引擎开发前先完成Phase M模块化，把当前大型JavaScript、CSS和数据文件渐进迁移到 `src/`。每个新模块必须立刻由真实应用使用和回归，不在最后进行一次性大爆炸切换。
 
-项目开发方案已经完成最终质量收口并冻结。PWA 原子更新、无障碍、错误恢复、版本兼容、评测治理和资源预算已经映射到后期任务；非阻断性新想法不再推迟当前模块化开发。
+项目不使用GitHub Actions。代码、数据、存储、缓存和发布验证统一通过 `AAAYNMMM/CWapi` 本地Runner对固定commit执行，并返回可审计RESULT。
 
-后续开发代理进入项目后应首先读取：
+## 开发文档权威顺序
 
-1. [`AGENTS.md`](AGENTS.md)：AI 接手顺序、“开始任务”和“继续任务”的执行规则。
-2. [`docs/DECISIONS.md`](docs/DECISIONS.md)：不可擅自改变的产品与技术决策。
-3. [`docs/MODULARIZATION_PLAN.md`](docs/MODULARIZATION_PLAN.md)：代码拆分、文件规模、目录结构和 Phase M 任务。
-4. [`docs/DATA_ARCHITECTURE.md`](docs/DATA_ARCHITECTURE.md)：静态知识、按需加载、IndexedDB 历史、版本和缓存策略。
-5. [`docs/ENGINEERING_GUARDS.md`](docs/ENGINEERING_GUARDS.md)：CWapi 本地验证、服务安全、资料治理、备份、Doctor 和许可证护栏。
-6. [`docs/FINAL_QUALITY_GUARDS.md`](docs/FINAL_QUALITY_GUARDS.md)：PWA、无障碍、错误恢复、版本兼容、评测治理、性能预算和规划冻结。
-7. [`docs/ENGINE_ARCHITECTURE.md`](docs/ENGINE_ARCHITECTURE.md)：目标规则引擎架构。
-8. [`docs/CARD_DATA_STANDARD.md`](docs/CARD_DATA_STANDARD.md)：78 张牌达到 9.0/10 以上的资料标准。
-9. [`docs/ROADMAP.md`](docs/ROADMAP.md)：规则引擎分阶段任务、依赖与验收标准。
-10. [`docs/PROGRESS.md`](docs/PROGRESS.md)：当前开发进度和唯一下一任务。
+后续开发代理按以下顺序读取：
 
-当前下一任务以 `docs/PROGRESS.md` 中标记为 `NEXT` 的任务为准。每次开发完成后必须同步更新该文件，避免项目进度被埋在某个聊天窗口里，成为数字考古遗址。
+1. [`AGENTS.md`](AGENTS.md)：接手、开始、继续和审查规则。
+2. [`docs/DECISIONS.md`](docs/DECISIONS.md)：不可擅自改变的产品和技术决策。
+3. [`docs/EXECUTION_CONTRACTS.md`](docs/EXECUTION_CONTRACTS.md)：任务编号、依赖、状态、验证和发布顺序的唯一执行来源。
+4. [`docs/PROGRESS.md`](docs/PROGRESS.md)：当前活动任务、证据和唯一下一任务。
+5. 当前阶段直接相关的领域规范：
+   - [`docs/MODULARIZATION_PLAN.md`](docs/MODULARIZATION_PLAN.md)
+   - [`docs/DATA_ARCHITECTURE.md`](docs/DATA_ARCHITECTURE.md)
+   - [`docs/ENGINEERING_GUARDS.md`](docs/ENGINEERING_GUARDS.md)
+   - [`docs/FINAL_QUALITY_GUARDS.md`](docs/FINAL_QUALITY_GUARDS.md)
+   - [`docs/ENGINE_ARCHITECTURE.md`](docs/ENGINE_ARCHITECTURE.md)
+   - [`docs/CARD_DATA_STANDARD.md`](docs/CARD_DATA_STANDARD.md)
+6. [`docs/ROADMAP.md`](docs/ROADMAP.md)：阶段导航和任务目录。
+
+当前唯一下一任务以 `PROGRESS.md` 为准。规划已经冻结，连续审查在两轮没有新重大问题后停止，不能继续用“再优化一下文档”推迟开发。人类已经为此准备了足够多的Markdown。
+
+## 当前下一任务
+
+```text
+MOD-001：模块边界、数据边界与基线验证
+```
+
+它将建立模块映射、已知技术债基线、依赖检查和最小CWapi验证入口，不改变运行行为。
 
 ## 隐私与说明
 
-应用不会联网发送问题或牌面。当前版本的历史记录保存在浏览器 `localStorage` 中；目标 2.0 架构会把完整历史和证据链迁移到本机 IndexedDB，小型设置仍保留在 `localStorage`。清除浏览器站点数据会删除这些本地记录。
+应用不会联网发送问题或牌面。当前历史记录保存在浏览器 `localStorage` 中；目标2.0会把完整历史和证据链迁移到本机IndexedDB，小型设置继续使用 `localStorage`。清除浏览器站点数据会删除本地记录。
 
 塔罗内容用于自我觉察、叙事探索和娱乐，不替代医疗、法律、投资或其他专业意见。
 
 ## 牌面来源
 
-经典韦特使用 LuciellaES 整理的
-[Rider-Waite Smith Tarot Cards (CC0)](https://luciellaes.itch.io/rider-waite-smith-tarot-cards-cc0)
-资源包；其余三套历史牌面来自 Wikimedia Commons 的公共领域馆藏。
+经典韦特使用LuciellaES整理的 [Rider-Waite Smith Tarot Cards (CC0)](https://luciellaes.itch.io/rider-waite-smith-tarot-cards-cc0)；其余三套历史牌面来自Wikimedia Commons公共领域馆藏。
+
 逐套来源、映射与许可说明见各牌组目录中的 `SOURCE.md`。运行应用时不会从外部网站加载图片。
 
-如需重新获取历史牌面，可运行：
+重新获取历史牌面：
 
 ```powershell
 .\scripts\fetch_historic_decks.ps1
@@ -95,13 +107,11 @@ python run.py --no-browser
 - `Ctrl+Enter`：在准备页开始占卜。
 - `R`：牌阵发完后翻开全部牌。
 
-## 验证
-
-当前基础检查可以手动运行：
+## 当前基础验证
 
 ```powershell
 python -m unittest discover -s tests -v
 node tests\smoke_test.js
 ```
 
-后续完整验证入口会由项目脚本统一封装，并通过 CWapi 对固定 commit 在本地执行；应用本身不依赖 Node.js，也不使用 GitHub Actions。
+Phase M会建立统一的 `automation/validate.py`，并通过CWapi对固定commit执行。应用本身不依赖Node.js，也不使用GitHub Actions。
