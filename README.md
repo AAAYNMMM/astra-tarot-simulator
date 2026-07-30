@@ -52,16 +52,19 @@ python run.py --no-browser
 
 在规则引擎开发前，项目会先完成 Phase M 代码模块化，把当前大型 JavaScript、CSS 和数据文件拆成适合 GitHub 精确读取、审查和修改的职责模块。目标结构统一使用 `src/`，并把静态塔罗知识、临时页面状态、用户历史和 PWA 缓存分层管理。项目继续保持完全离线、无需 npm 构建即可运行。
 
+项目不使用 GitHub Actions。代码、数据、存储、缓存和发布相关验证统一复用 `AAAYNMMM/CWapi` 的本地 Runner，对固定 commit 执行测试并返回可审计 RESULT。
+
 后续开发代理进入项目后应首先读取：
 
 1. [`AGENTS.md`](AGENTS.md)：AI 接手顺序、“开始任务”和“继续任务”的执行规则。
 2. [`docs/DECISIONS.md`](docs/DECISIONS.md)：不可擅自改变的产品与技术决策。
 3. [`docs/MODULARIZATION_PLAN.md`](docs/MODULARIZATION_PLAN.md)：代码拆分、文件规模、目录结构和 Phase M 任务。
 4. [`docs/DATA_ARCHITECTURE.md`](docs/DATA_ARCHITECTURE.md)：静态知识、按需加载、IndexedDB 历史、版本和缓存策略。
-5. [`docs/ENGINE_ARCHITECTURE.md`](docs/ENGINE_ARCHITECTURE.md)：目标规则引擎架构。
-6. [`docs/CARD_DATA_STANDARD.md`](docs/CARD_DATA_STANDARD.md)：78 张牌达到 9.0/10 以上的资料标准。
-7. [`docs/ROADMAP.md`](docs/ROADMAP.md)：规则引擎分阶段任务、依赖与验收标准。
-8. [`docs/PROGRESS.md`](docs/PROGRESS.md)：当前开发进度和唯一下一任务。
+5. [`docs/ENGINEERING_GUARDS.md`](docs/ENGINEERING_GUARDS.md)：CWapi 本地验证、服务安全、资料治理、备份、Doctor 和许可证护栏。
+6. [`docs/ENGINE_ARCHITECTURE.md`](docs/ENGINE_ARCHITECTURE.md)：目标规则引擎架构。
+7. [`docs/CARD_DATA_STANDARD.md`](docs/CARD_DATA_STANDARD.md)：78 张牌达到 9.0/10 以上的资料标准。
+8. [`docs/ROADMAP.md`](docs/ROADMAP.md)：规则引擎分阶段任务、依赖与验收标准。
+9. [`docs/PROGRESS.md`](docs/PROGRESS.md)：当前开发进度和唯一下一任务。
 
 当前下一任务以 `docs/PROGRESS.md` 中标记为 `NEXT` 的任务为准。每次开发完成后必须同步更新该文件，避免项目进度被埋在某个聊天窗口里，成为数字考古遗址。
 
@@ -91,8 +94,11 @@ python run.py --no-browser
 
 ## 验证
 
+当前基础检查可以手动运行：
+
 ```powershell
 python -m unittest discover -s tests -v
+node tests\smoke_test.js
 ```
 
-如系统已经安装 Node.js，可额外运行 `node tests\smoke_test.js` 检查 78 张牌的数据契约；应用本身不依赖 Node.js。
+后续完整验证入口会由项目脚本统一封装，并通过 CWapi 对固定 commit 在本地执行；应用本身不依赖 Node.js，也不使用 GitHub Actions。
