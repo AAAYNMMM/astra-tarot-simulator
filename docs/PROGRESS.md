@@ -8,83 +8,101 @@
 | 项目 | 当前值 |
 |---|---|
 | 当前阶段 | Phase M：模块化基础 |
-| 当前进行中任务 | 无 |
+| 当前任务 | `MOD-002` 拆分 CSS |
+| 任务状态 | `CLOSURE_PENDING` |
 | 最近完成任务 | `MOD-001` 模块边界、数据边界与基线验证 |
-| 下一任务 | `MOD-002` 拆分 CSS |
+| 下一任务 | 暂不选择；闭环完成后更新为 `MOD-003A` |
 | 阻塞项 | 无 |
-| 工作分支 | `mod-001-baseline-contracts` |
+| 工作分支 | `mod-002-split-css` |
+| 实现提交 | `4451e5da53d6ba81569a25c81a7d4cb4d77894ab` |
 | 最后更新时间 | 2026-07-31 |
 | 规划状态 | 已冻结且执行审查已收敛；不得继续用非阻断性规划推迟开发 |
 
-## 2. 最近完成：MOD-001
+## 2. 当前任务：MOD-002
 
-**状态：DONE**
+### 目标
 
-### 任务范围
+把根目录单体 `styles.css` 拆为真实页面正在使用的活动模块，保持原有级联顺序、视觉、动画、响应式、牌阵布局和可访问行为；清除 CSS 超限技术债，并让旧文件重新出现时直接失败。
 
-`MOD-001` 只建立模块边界、技术债基线、契约测试和统一验证入口，没有改变运行行为、四种牌阵、公开 ID、牌义、问题库、抽牌概率或旧历史读取方式。
+### 当前产物
 
-### 产物
+```text
+src/styles/
+├── index.css
+├── foundation.css
+├── setup.css
+├── cards.css
+├── insights.css
+├── history.css
+├── desktop.css
+├── wide.css
+└── responsive.css
+```
 
-- `docs/MODULE_MAP.md`
-- `scripts/check_module_size.py`
-- `scripts/check_import_boundaries.py`
-- `tests/module_contract_test.mjs`
-- `automation/validate.py`
-- `automation/README.md`
-- `automation/quality-baseline.json`
-- `src/README.md`
+`index.html` 只加载 `src/styles/index.css`；入口按上述固定顺序导入八个规则模块。Service Worker 临时资源列表同步包含入口与八个模块，缓存版本由 `astra-tarot-v5` 提升为 `astra-tarot-v6`。
+
+### CSS 等价性
+
+- 原始 `styles.css`：4916 行，SHA-256 `087ab37e367357fbb1ea4532f0f0d9a81973e2dadd163a6d7c104cfbc6c466db`。
+- 拆分点全部位于顶层规则边界。
+- 八个模块按入口顺序拼接后与原始文件字节完全一致。
+- 分隔空白行被归入后一个模块，避免新增文件末尾空白，同时不改变拼接字节。
+- 最大人工 CSS 文件为 `desktop.css`，714 行，低于 900 行硬上限。
 
 ### 修改文件
 
+新增：
+
+- `src/styles/index.css`
+- `src/styles/foundation.css`
+- `src/styles/setup.css`
+- `src/styles/cards.css`
+- `src/styles/insights.css`
+- `src/styles/history.css`
+- `src/styles/desktop.css`
+- `src/styles/wide.css`
+- `src/styles/responsive.css`
+
+修改：
+
 - `automation/README.md`
 - `automation/quality-baseline.json`
-- `automation/validate.py`
 - `docs/MODULE_MAP.md`
-- `docs/PROGRESS.md`
-- `scripts/check_import_boundaries.py`
+- `index.html`
 - `scripts/check_module_size.py`
 - `src/README.md`
-- `tests/module_contract_test.mjs`
-
-未修改：
-
-- `app.js`
-- `data.js`
-- `styles.css`
-- `index.html`
 - `sw.js`
-- `run.py`
+- `tests/module_contract_test.mjs`
+- `tests/test_app_contract.py`
 
-### 验收结果
+删除：
 
-- [x] 三个现有大型文件按已知技术债规则报告 `WARN`，没有增长。
-- [x] 新人工文件超限、旧债增长、未登记越界和已解决债务重现会返回 `FAIL`。
-- [x] 旧职责拥有唯一目标模块和迁移任务。
-- [x] 依赖方向、裸导入、越界导入和循环依赖可机器检查。
-- [x] 静态知识、运行状态、用户数据、人工源和生成文件边界已记录。
-- [x] 78 张牌、42 个问题、六个领域和四种固定牌阵契约已冻结。
-- [x] `localStorage` 设置键、历史键、历史字段和迁移输入已记录。
-- [x] DOM/CSP、Service Worker、Node 格式、业务随机和平台随机基线已记录。
-- [x] `automation/validate.py --scope baseline` 可由 CWapi 对固定 commit 执行。
-- [x] 没有运行行为变化。
+- `styles.css`
 
-## 3. CWapi 验证记录
+一次性审计和迁移脚本未进入实现产物提交。
 
-### 已通过的实现提交
+### 不变量
+
+- 未修改 `app.js`、`data.js`、`run.py`、牌义、问题、牌阵、公开 ID、抽牌概率和历史数据结构。
+- 原有 CSS 内容与级联顺序由字节重组哈希冻结。
+- Python 契约测试通过入口导入顺序读取完整样式，继续检查牌阵布局、滤镜禁令、静态资源和主要交互契约。
+- Node 契约测试检查入口、模块顺序、原始 CSS 哈希、文件规模、Service Worker 资源和旧文件缺失。
+- `styles.css` 已加入 `resolvedDebt`；重新创建该路径会返回 `FAIL`。
+
+## 3. 固定提交验证
 
 | 项目 | 值 |
 |---|---|
-| commit | `280b63b50044a8f4d153e0ba162fc66c4b772bbe` |
-| task_id | `01KYG9MODB03` |
+| commit | `4451e5da53d6ba81569a25c81a7d4cb4d77894ab` |
+| task_id | `01KYG9MOD2B1` |
 | RESULT | `COMPLETED` |
 | scope | `baseline` |
 | Runner | `cwapi-win-01` |
 | Python | `3.12.2` |
-| Node | `24.18.0`，WinGet 当前用户安装 |
+| Node | `24.18.0` |
 | 工作区 | 执行前后均干净 |
-| RESULT manifest SHA-256 | `f59e0f4ed2ed4eda04046262efab940064a2b77303ba978f933ffeebac6525dc` |
-| Drive 相对路径 | `CWapi/AAAYNMMM__astra-tarot-simulator/01KYG9MODB03` |
+| RESULT manifest SHA-256 | `a80e3a754436309990c25d6e6b7087c06aac01bdc46bcd8b70e3ef827a972bfd` |
+| Drive 相对路径 | `CWapi/AAAYNMMM__astra-tarot-simulator/01KYG9MOD2B1` |
 
 ### 自动测试摘要
 
@@ -92,54 +110,65 @@
 |---|---|
 | Python unittest | `13 passed` |
 | 旧 Node 数据 smoke test | `PASS` |
-| Node ESM 模块契约测试 | `PASS` |
-| 模块规模和技术债 | `PASS`，3 个预期 `WARN` |
+| Node 模块契约测试 | `PASS`，CSS 拼接、入口和 PWA 资源契约有效 |
+| 模块规模和技术债 | `PASS`，13 个 PASS、2 个预期 WARN、0 FAIL |
 | 导入边界和循环依赖 | `PASS` |
-| Python compileall | `PASS` |
-| 关键产物哈希收集 | 8 个文件，0 skipped |
+| 关键产物哈希 | 15 个文件，0 skipped |
+| 工作区 | 执行前后均干净 |
 
-### 关键产物 SHA-256
+### 当前预期 WARN
+
+| 文件 | 当前行数 | 最迟清除 |
+|---|---:|---|
+| `app.js` | 1526 | `MOD-006A` |
+| `data.js` | 635 | `MOD-006A` |
+
+`styles.css` 技术债已经清除，不再属于 WARN；该路径重新出现即为 FAIL。
+
+### 关键 SHA-256
 
 | 文件 | SHA-256 |
 |---|---|
-| `automation/README.md` | `56177c653cd0cacc4742740bb8dacbff1e6266816d32591ccbcaf66781036c25` |
-| `automation/quality-baseline.json` | `a5a9340cdc384c6069bb15cb872fb3584435a5dbbfe6d91116d6c422f8e93bc6` |
 | `automation/validate.py` | `229768a22fd665daac5b60205a22cee200923da787ed90841513222e2d5d2b5a` |
-| `docs/MODULE_MAP.md` | `0593892b3613ed0e91ae48e08d0dd9c80f9e25ea92c700a5861b2ed43e63e0c6` |
-| `scripts/check_import_boundaries.py` | `6aa5b3550a7c9db6abfaa3861691bbfa5b83624e89979fe2ca44de09e0b75a29` |
-| `scripts/check_module_size.py` | `c820814a16746f30ccdd1bc9f9ea0050ef49688cd33b1197f15867d9b0d709ce` |
-| `src/README.md` | `8a721c07536ccf5320adfa59c2277d85440312f1310534d19afb704a74badec9` |
-| `tests/module_contract_test.mjs` | `634f4a6ccca61f03bde0598848609517fd527ba675a9b7a96e9d16a8acd7e924` |
+| `automation/quality-baseline.json` | `de7f5e44a4b96a5009bdd2f893c0d7a2ac25a6b2c9450bd393431f44401aa873` |
+| `src/styles/index.css` | `d839a90efa2584616b50b70df12ae5e13079c44f824ddcd9f67633f6b9813c2d` |
+| `src/styles/foundation.css` | `6e29f5b741dccade55c62ec8239d6c05cdd30a8b605b6609e8de78187faaa1fd` |
+| `src/styles/setup.css` | `ed2e4f908847f548db106c1d96f6151a041cd5ea72df64d03c0a22ace580e67a` |
+| `src/styles/cards.css` | `e46c23ded4cd6de9dbbfc38bac1bf0ada31272d37475d01cc4b2a5dbbaaefc03` |
+| `src/styles/insights.css` | `06e7cbd2adab7f35e11d197aac719c1b1553766988dbd53cf10d5898a95b6ab7` |
+| `src/styles/history.css` | `77c8c96d401196e0706bc3badd66c46819b725a20c94c4594b6cc78b4219970e` |
+| `src/styles/desktop.css` | `5e3838e272e888fd9f6a77e32a2607f5f8aad4a7b347c1285e0e00bbe701369e` |
+| `src/styles/wide.css` | `7e94a513f4ddcdd317b7ecc31586ad2aa0f2bc82095c1c106b3342e5d4fc5662` |
+| `src/styles/responsive.css` | `b5a9d1a687a8761d4bd59099c3c2fdd2209b8590ed24ba086fc12b0802dfef3b` |
 
-### 闭环复验
+## 4. 失败与恢复记录
 
-本文件所在最终进度 commit 由 CWapi task `01KYG9MODB04` 使用相同 `baseline` 范围复验。该任务必须匹配本文件所在 commit，且执行后不得再修改 MOD-001 产物或本文件；否则旧 RESULT 失效。
+- `01KYG9MOD2A1`：审计脚本 SHA-256 预计算错误，脚本未执行；随后通过只读哈希任务重新绑定。
+- `01KYG9MOD2I1`：旧 Python 契约仍直接读取根目录 `styles.css`；已改为通过入口顺序重组样式。
+- `01KYG9MOD2I2`、`01KYG9MOD2I3`：拆分文件末尾继承空白分隔行，`git diff --check` 阻断；已移动完整空白行字节并保持拼接哈希不变。
+- `01KYG9MOD2I4`：隔离 worktree 没有 Git 作者身份；改为单次 commit 参数使用 GitHub noreply 身份，不修改全局配置。
+- `01KYG9MOD2I5`：镜像远端不能与 refspec 同时推送；改为单次覆盖 `remote.origin.mirror=false`。
+- `01KYG9MOD2I6`：完整迁移、baseline、格式检查、提交和推送成功。
+- `01KYG9MOD2B1`：实现产物固定提交 baseline 全部通过。
 
-### 失败与恢复记录
+## 5. 闭环步骤
 
-- `01KYG9MODH01`：Runner 白名单尚未登记仓库，`REJECTED`，未执行仓库命令。
-- `01KYG9MODB01`：CWapi 隔离 PATH 中找不到 Node，`FAILED`。
-- `01KYG9MODB02`：常见安装位置无 Node，`FAILED`。
-- `01KYG9MODN02`：WinGet 已成功安装 Node 24.18.0，但同一旧进程未刷新命令别名；安装后验证脚本增加 WinGet Links/Packages 发现逻辑。
-- `01KYG9MODB03`：正式 baseline 全部通过。
+本文件所在提交必须由新的 CWapi task 使用同一 `baseline` 范围复验。通过后：
 
-## 4. 已知技术债
+1. 把 `MOD-002` 标记为 `DONE`；
+2. 把唯一下一任务更新为 `MOD-003A`；
+3. 保存闭环 task_id、RESULT 和 manifest；
+4. 对最终 DONE 状态提交再执行一次固定提交 baseline；
+5. 最终复验后不得再修改本文件或 MOD-002 产物。
 
-| 文件 | 冻结行数 | 当前判定 | 最迟清除 |
-|---|---:|---|---|
-| `app.js` | 1528 | `WARN`，不得增长 | `MOD-006A` |
-| `styles.css` | 4918 | `WARN`，不得增长 | `MOD-002` |
-| `data.js` | 637 | `WARN`，不得增长 | `MOD-006A` |
-
-旧债增长、新人工超限、未登记越界和已清除债务重现必须 `FAIL`；`MOD-006D` 时人工文件超限清零。
-
-## 5. 当前代码与平台基线
+## 6. 当前代码与平台基线
 
 | 项目 | 当前状态 | 后续任务 |
 |---|---|---|
-| `app.js` | 1528 行，IIFE 和 `window.TarotData` | `MOD-003A` 至 `MOD-006A` |
-| `styles.css` | 4918 行 | `MOD-002` |
-| `data.js` | 637 行 | `MOD-005`、`MOD-006A/B` |
+| `app.js` | 1526 行，IIFE 和 `window.TarotData` | `MOD-003A` 至 `MOD-006A` |
+| 活动 CSS | `src/styles/index.css` + 8 个模块，最大 714 行 | 持续受 900 行门禁约束 |
+| `styles.css` | 已删除；重新出现为 FAIL | 不得恢复 |
+| `data.js` | 635 行 | `MOD-005`、`MOD-006A/B` |
 | `run.py` | 服务仓库根目录，生命周期无会话 Cookie | `MOD-004B` |
 | ES Module 入口 | 尚未建立 | `MOD-003A` |
 | Node 测试 | `smoke_test.js` 使用 CommonJS | `MOD-003A` 转换 ESM |
@@ -147,31 +176,14 @@
 | CSP | 尚未强制 | `MOD-004B` |
 | 业务随机 | 安全随机优先，存在 `Math.random` 降级 | `MOD-003B`、`AU-001A/B` |
 | 平台随机 | lifecycle client ID 可降级 `Math.random` | `MOD-003B/004B` |
-| `localStorage` 历史 | 最多 20 条并静默 `slice` | `AU-002`、`AU-003` |
-| Service Worker | `cache.addAll` 四套牌、统一回退、立即 skip/claim | `MOD-006C`、`PLAT-001` |
-| Artifact | 尚无规范哈希和 manifest | `MOD-006B` |
+| Service Worker | 临时缓存入口和 8 个 CSS 模块，其他旧策略未改 | `MOD-006C`、`PLAT-001` |
 | 浏览器自动化 | 尚无仓库 harness | `MOD-006D` 逐步建立 |
 | GitHub Actions | 不使用 | CWapi 本地验证 |
-
-## 6. 下一任务：MOD-002
-
-**状态：NEXT**
-
-目标：把活动样式从根目录 `styles.css` 渐进迁入 `src/styles/`，真实页面立即使用拆出的文件，保持现有视觉、动画、响应式和可访问行为。
-
-主要约束：
-
-- 不改变产品视觉设计或交互流程。
-- 不一次性重写全部 CSS。
-- 每个新增活动样式文件立即加入当前页面和临时 Service Worker 资源列表。
-- `styles.css` 不得增长，任务结束时旧超限技术债必须清除。
-- 人工 CSS 文件不得超过 900 行。
-- 继续使用 CWapi 固定 commit 验证，不使用 GitHub Actions。
 
 ## 7. 阶段状态
 
 - Phase 0：`DONE`
-- Phase M：`PARENT-IN-PROGRESS`，下一叶子任务 `MOD-002`
+- Phase M：`PARENT-IN-PROGRESS`，当前叶子任务 `MOD-002` 等待闭环
 - Phase 1：`BLOCKED`，等待 `MOD-006D`
 - Phase 2、3、7、8、9：`PARENT-PENDING`
 - Phase 4、5、6：`BACKLOG`
