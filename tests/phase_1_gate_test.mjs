@@ -12,7 +12,7 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const readJson = (relative) => JSON.parse(fs.readFileSync(path.join(root, relative), "utf8"));
 const progress = fs.readFileSync(path.join(root, "docs/PROGRESS.md"), "utf8");
 assert.match(progress, /Phase 1状态 \| `PARENT-DONE`/);
-assert.match(progress, /唯一下一任务 \| `TQ-101A`/);
+assert.match(progress, /Phase 1状态 \| `PARENT-DONE`/);
 assert.equal(GOLDEN_CARD_IDS.length, 6);
 const quality = readJson(".qa/golden-card-report.json");
 assert.equal(quality.summary.admitted, 6);

@@ -1,0 +1,1585 @@
+{
+  "schemaVersion": "1.0.0",
+  "scope": "phase-2-development-quality-and-cross-review",
+  "generatedAt": "2026-07-31",
+  "cards": [
+    {
+      "cardId": "major-0",
+      "score": 100,
+      "admitted": true,
+      "semanticUnits": 32,
+      "sections": {
+        "structuralIntegrity": 15,
+        "vocabularyAndSources": 10,
+        "semanticCoverage": 18,
+        "traditionAndIdentity": 12,
+        "reversalQuality": 12,
+        "domainCompatibility": 12,
+        "relationAndDimensions": 9,
+        "boundariesAndProvenance": 8,
+        "languageAndDistinctiveness": 4
+      },
+      "schemaErrors": [],
+      "vocabularyErrors": [],
+      "scope": "development-quality-gate-not-final-blind-review"
+    },
+    {
+      "cardId": "major-1",
+      "score": 100,
+      "admitted": true,
+      "semanticUnits": 36,
+      "sections": {
+        "structuralIntegrity": 15,
+        "vocabularyAndSources": 10,
+        "semanticCoverage": 18,
+        "traditionAndIdentity": 12,
+        "reversalQuality": 12,
+        "domainCompatibility": 12,
+        "relationAndDimensions": 9,
+        "boundariesAndProvenance": 8,
+        "languageAndDistinctiveness": 4
+      },
+      "schemaErrors": [],
+      "vocabularyErrors": [],
+      "scope": "development-quality-gate-not-final-blind-review"
+    },
+    {
+      "cardId": "major-2",
+      "score": 100,
+      "admitted": true,
+      "semanticUnits": 36,
+      "sections": {
+        "structuralIntegrity": 15,
+        "vocabularyAndSources": 10,
+        "semanticCoverage": 18,
+        "traditionAndIdentity": 12,
+        "reversalQuality": 12,
+        "domainCompatibility": 12,
+        "relationAndDimensions": 9,
+        "boundariesAndProvenance": 8,
+        "languageAndDistinctiveness": 4
+      },
+      "schemaErrors": [],
+      "vocabularyErrors": [],
+      "scope": "development-quality-gate-not-final-blind-review"
+    },
+    {
+      "cardId": "major-3",
+      "score": 100,
+      "admitted": true,
+      "semanticUnits": 36,
+      "sections": {
+        "structuralIntegrity": 15,
+        "vocabularyAndSources": 10,
+        "semanticCoverage": 18,
+        "traditionAndIdentity": 12,
+        "reversalQuality": 12,
+        "domainCompatibility": 12,
+        "relationAndDimensions": 9,
+        "boundariesAndProvenance": 8,
+        "languageAndDistinctiveness": 4
+      },
+      "schemaErrors": [],
+      "vocabularyErrors": [],
+      "scope": "development-quality-gate-not-final-blind-review"
+    },
+    {
+      "cardId": "major-4",
+      "score": 100,
+      "admitted": true,
+      "semanticUnits": 36,
+      "sections": {
+        "structuralIntegrity": 15,
+        "vocabularyAndSources": 10,
+        "semanticCoverage": 18,
+        "traditionAndIdentity": 12,
+        "reversalQuality": 12,
+        "domainCompatibility": 12,
+        "relationAndDimensions": 9,
+        "boundariesAndProvenance": 8,
+        "languageAndDistinctiveness": 4
+      },
+      "schemaErrors": [],
+      "vocabularyErrors": [],
+      "scope": "development-quality-gate-not-final-blind-review"
+    },
+    {
+      "cardId": "major-5",
+      "score": 100,
+      "admitted": true,
+      "semanticUnits": 36,
+      "sections": {
+        "structuralIntegrity": 15,
+        "vocabularyAndSources": 10,
+        "semanticCoverage": 18,
+        "traditionAndIdentity": 12,
+        "reversalQuality": 12,
+        "domainCompatibility": 12,
+        "relationAndDimensions": 9,
+        "boundariesAndProvenance": 8,
+        "languageAndDistinctiveness": 4
+      },
+      "schemaErrors": [],
+      "vocabularyErrors": [],
+      "scope": "development-quality-gate-not-final-blind-review"
+    },
+    {
+      "cardId": "major-6",
+      "score": 100,
+      "admitted": true,
+      "semanticUnits": 36,
+      "sections": {
+        "structuralIntegrity": 15,
+        "vocabularyAndSources": 10,
+        "semanticCoverage": 18,
+        "traditionAndIdentity": 12,
+        "reversalQuality": 12,
+        "domainCompatibility": 12,
+        "relationAndDimensions": 9,
+        "boundariesAndProvenance": 8,
+        "languageAndDistinctiveness": 4
+      },
+      "schemaErrors": [],
+      "vocabularyErrors": [],
+      "scope": "development-quality-gate-not-final-blind-review"
+    },
+    {
+      "cardId": "major-7",
+      "score": 100,
+      "admitted": true,
+      "semanticUnits": 32,
+      "sections": {
+        "structuralIntegrity": 15,
+        "vocabularyAndSources": 10,
+        "semanticCoverage": 18,
+        "traditionAndIdentity": 12,
+        "reversalQuality": 12,
+        "domainCompatibility": 12,
+        "relationAndDimensions": 9,
+        "boundariesAndProvenance": 8,
+        "languageAndDistinctiveness": 4
+      },
+      "schemaErrors": [],
+      "vocabularyErrors": [],
+      "scope": "development-quality-gate-not-final-blind-review"
+    },
+    {
+      "cardId": "major-8",
+      "score": 100,
+      "admitted": true,
+      "semanticUnits": 36,
+      "sections": {
+        "structuralIntegrity": 15,
+        "vocabularyAndSources": 10,
+        "semanticCoverage": 18,
+        "traditionAndIdentity": 12,
+        "reversalQuality": 12,
+        "domainCompatibility": 12,
+        "relationAndDimensions": 9,
+        "boundariesAndProvenance": 8,
+        "languageAndDistinctiveness": 4
+      },
+      "schemaErrors": [],
+      "vocabularyErrors": [],
+      "scope": "development-quality-gate-not-final-blind-review"
+    },
+    {
+      "cardId": "major-9",
+      "score": 100,
+      "admitted": true,
+      "semanticUnits": 32,
+      "sections": {
+        "structuralIntegrity": 15,
+        "vocabularyAndSources": 10,
+        "semanticCoverage": 18,
+        "traditionAndIdentity": 12,
+        "reversalQuality": 12,
+        "domainCompatibility": 12,
+        "relationAndDimensions": 9,
+        "boundariesAndProvenance": 8,
+        "languageAndDistinctiveness": 4
+      },
+      "schemaErrors": [],
+      "vocabularyErrors": [],
+      "scope": "development-quality-gate-not-final-blind-review"
+    },
+    {
+      "cardId": "major-10",
+      "score": 100,
+      "admitted": true,
+      "semanticUnits": 36,
+      "sections": {
+        "structuralIntegrity": 15,
+        "vocabularyAndSources": 10,
+        "semanticCoverage": 18,
+        "traditionAndIdentity": 12,
+        "reversalQuality": 12,
+        "domainCompatibility": 12,
+        "relationAndDimensions": 9,
+        "boundariesAndProvenance": 8,
+        "languageAndDistinctiveness": 4
+      },
+      "schemaErrors": [],
+      "vocabularyErrors": [],
+      "scope": "development-quality-gate-not-final-blind-review"
+    },
+    {
+      "cardId": "major-11",
+      "score": 100,
+      "admitted": true,
+      "semanticUnits": 36,
+      "sections": {
+        "structuralIntegrity": 15,
+        "vocabularyAndSources": 10,
+        "semanticCoverage": 18,
+        "traditionAndIdentity": 12,
+        "reversalQuality": 12,
+        "domainCompatibility": 12,
+        "relationAndDimensions": 9,
+        "boundariesAndProvenance": 8,
+        "languageAndDistinctiveness": 4
+      },
+      "schemaErrors": [],
+      "vocabularyErrors": [],
+      "scope": "development-quality-gate-not-final-blind-review"
+    },
+    {
+      "cardId": "major-12",
+      "score": 100,
+      "admitted": true,
+      "semanticUnits": 36,
+      "sections": {
+        "structuralIntegrity": 15,
+        "vocabularyAndSources": 10,
+        "semanticCoverage": 18,
+        "traditionAndIdentity": 12,
+        "reversalQuality": 12,
+        "domainCompatibility": 12,
+        "relationAndDimensions": 9,
+        "boundariesAndProvenance": 8,
+        "languageAndDistinctiveness": 4
+      },
+      "schemaErrors": [],
+      "vocabularyErrors": [],
+      "scope": "development-quality-gate-not-final-blind-review"
+    },
+    {
+      "cardId": "major-13",
+      "score": 100,
+      "admitted": true,
+      "semanticUnits": 36,
+      "sections": {
+        "structuralIntegrity": 15,
+        "vocabularyAndSources": 10,
+        "semanticCoverage": 18,
+        "traditionAndIdentity": 12,
+        "reversalQuality": 12,
+        "domainCompatibility": 12,
+        "relationAndDimensions": 9,
+        "boundariesAndProvenance": 8,
+        "languageAndDistinctiveness": 4
+      },
+      "schemaErrors": [],
+      "vocabularyErrors": [],
+      "scope": "development-quality-gate-not-final-blind-review"
+    },
+    {
+      "cardId": "major-14",
+      "score": 100,
+      "admitted": true,
+      "semanticUnits": 36,
+      "sections": {
+        "structuralIntegrity": 15,
+        "vocabularyAndSources": 10,
+        "semanticCoverage": 18,
+        "traditionAndIdentity": 12,
+        "reversalQuality": 12,
+        "domainCompatibility": 12,
+        "relationAndDimensions": 9,
+        "boundariesAndProvenance": 8,
+        "languageAndDistinctiveness": 4
+      },
+      "schemaErrors": [],
+      "vocabularyErrors": [],
+      "scope": "development-quality-gate-not-final-blind-review"
+    },
+    {
+      "cardId": "major-15",
+      "score": 100,
+      "admitted": true,
+      "semanticUnits": 36,
+      "sections": {
+        "structuralIntegrity": 15,
+        "vocabularyAndSources": 10,
+        "semanticCoverage": 18,
+        "traditionAndIdentity": 12,
+        "reversalQuality": 12,
+        "domainCompatibility": 12,
+        "relationAndDimensions": 9,
+        "boundariesAndProvenance": 8,
+        "languageAndDistinctiveness": 4
+      },
+      "schemaErrors": [],
+      "vocabularyErrors": [],
+      "scope": "development-quality-gate-not-final-blind-review"
+    },
+    {
+      "cardId": "major-16",
+      "score": 100,
+      "admitted": true,
+      "semanticUnits": 32,
+      "sections": {
+        "structuralIntegrity": 15,
+        "vocabularyAndSources": 10,
+        "semanticCoverage": 18,
+        "traditionAndIdentity": 12,
+        "reversalQuality": 12,
+        "domainCompatibility": 12,
+        "relationAndDimensions": 9,
+        "boundariesAndProvenance": 8,
+        "languageAndDistinctiveness": 4
+      },
+      "schemaErrors": [],
+      "vocabularyErrors": [],
+      "scope": "development-quality-gate-not-final-blind-review"
+    },
+    {
+      "cardId": "major-17",
+      "score": 100,
+      "admitted": true,
+      "semanticUnits": 36,
+      "sections": {
+        "structuralIntegrity": 15,
+        "vocabularyAndSources": 10,
+        "semanticCoverage": 18,
+        "traditionAndIdentity": 12,
+        "reversalQuality": 12,
+        "domainCompatibility": 12,
+        "relationAndDimensions": 9,
+        "boundariesAndProvenance": 8,
+        "languageAndDistinctiveness": 4
+      },
+      "schemaErrors": [],
+      "vocabularyErrors": [],
+      "scope": "development-quality-gate-not-final-blind-review"
+    },
+    {
+      "cardId": "major-18",
+      "score": 100,
+      "admitted": true,
+      "semanticUnits": 36,
+      "sections": {
+        "structuralIntegrity": 15,
+        "vocabularyAndSources": 10,
+        "semanticCoverage": 18,
+        "traditionAndIdentity": 12,
+        "reversalQuality": 12,
+        "domainCompatibility": 12,
+        "relationAndDimensions": 9,
+        "boundariesAndProvenance": 8,
+        "languageAndDistinctiveness": 4
+      },
+      "schemaErrors": [],
+      "vocabularyErrors": [],
+      "scope": "development-quality-gate-not-final-blind-review"
+    },
+    {
+      "cardId": "major-19",
+      "score": 100,
+      "admitted": true,
+      "semanticUnits": 36,
+      "sections": {
+        "structuralIntegrity": 15,
+        "vocabularyAndSources": 10,
+        "semanticCoverage": 18,
+        "traditionAndIdentity": 12,
+        "reversalQuality": 12,
+        "domainCompatibility": 12,
+        "relationAndDimensions": 9,
+        "boundariesAndProvenance": 8,
+        "languageAndDistinctiveness": 4
+      },
+      "schemaErrors": [],
+      "vocabularyErrors": [],
+      "scope": "development-quality-gate-not-final-blind-review"
+    },
+    {
+      "cardId": "major-20",
+      "score": 100,
+      "admitted": true,
+      "semanticUnits": 36,
+      "sections": {
+        "structuralIntegrity": 15,
+        "vocabularyAndSources": 10,
+        "semanticCoverage": 18,
+        "traditionAndIdentity": 12,
+        "reversalQuality": 12,
+        "domainCompatibility": 12,
+        "relationAndDimensions": 9,
+        "boundariesAndProvenance": 8,
+        "languageAndDistinctiveness": 4
+      },
+      "schemaErrors": [],
+      "vocabularyErrors": [],
+      "scope": "development-quality-gate-not-final-blind-review"
+    },
+    {
+      "cardId": "major-21",
+      "score": 100,
+      "admitted": true,
+      "semanticUnits": 36,
+      "sections": {
+        "structuralIntegrity": 15,
+        "vocabularyAndSources": 10,
+        "semanticCoverage": 18,
+        "traditionAndIdentity": 12,
+        "reversalQuality": 12,
+        "domainCompatibility": 12,
+        "relationAndDimensions": 9,
+        "boundariesAndProvenance": 8,
+        "languageAndDistinctiveness": 4
+      },
+      "schemaErrors": [],
+      "vocabularyErrors": [],
+      "scope": "development-quality-gate-not-final-blind-review"
+    },
+    {
+      "cardId": "wands-ace",
+      "score": 100,
+      "admitted": true,
+      "semanticUnits": 36,
+      "sections": {
+        "structuralIntegrity": 15,
+        "vocabularyAndSources": 10,
+        "semanticCoverage": 18,
+        "traditionAndIdentity": 12,
+        "reversalQuality": 12,
+        "domainCompatibility": 12,
+        "relationAndDimensions": 9,
+        "boundariesAndProvenance": 8,
+        "languageAndDistinctiveness": 4
+      },
+      "schemaErrors": [],
+      "vocabularyErrors": [],
+      "scope": "development-quality-gate-not-final-blind-review"
+    },
+    {
+      "cardId": "wands-two",
+      "score": 100,
+      "admitted": true,
+      "semanticUnits": 36,
+      "sections": {
+        "structuralIntegrity": 15,
+        "vocabularyAndSources": 10,
+        "semanticCoverage": 18,
+        "traditionAndIdentity": 12,
+        "reversalQuality": 12,
+        "domainCompatibility": 12,
+        "relationAndDimensions": 9,
+        "boundariesAndProvenance": 8,
+        "languageAndDistinctiveness": 4
+      },
+      "schemaErrors": [],
+      "vocabularyErrors": [],
+      "scope": "development-quality-gate-not-final-blind-review"
+    },
+    {
+      "cardId": "wands-three",
+      "score": 100,
+      "admitted": true,
+      "semanticUnits": 36,
+      "sections": {
+        "structuralIntegrity": 15,
+        "vocabularyAndSources": 10,
+        "semanticCoverage": 18,
+        "traditionAndIdentity": 12,
+        "reversalQuality": 12,
+        "domainCompatibility": 12,
+        "relationAndDimensions": 9,
+        "boundariesAndProvenance": 8,
+        "languageAndDistinctiveness": 4
+      },
+      "schemaErrors": [],
+      "vocabularyErrors": [],
+      "scope": "development-quality-gate-not-final-blind-review"
+    },
+    {
+      "cardId": "wands-four",
+      "score": 100,
+      "admitted": true,
+      "semanticUnits": 36,
+      "sections": {
+        "structuralIntegrity": 15,
+        "vocabularyAndSources": 10,
+        "semanticCoverage": 18,
+        "traditionAndIdentity": 12,
+        "reversalQuality": 12,
+        "domainCompatibility": 12,
+        "relationAndDimensions": 9,
+        "boundariesAndProvenance": 8,
+        "languageAndDistinctiveness": 4
+      },
+      "schemaErrors": [],
+      "vocabularyErrors": [],
+      "scope": "development-quality-gate-not-final-blind-review"
+    },
+    {
+      "cardId": "wands-five",
+      "score": 100,
+      "admitted": true,
+      "semanticUnits": 36,
+      "sections": {
+        "structuralIntegrity": 15,
+        "vocabularyAndSources": 10,
+        "semanticCoverage": 18,
+        "traditionAndIdentity": 12,
+        "reversalQuality": 12,
+        "domainCompatibility": 12,
+        "relationAndDimensions": 9,
+        "boundariesAndProvenance": 8,
+        "languageAndDistinctiveness": 4
+      },
+      "schemaErrors": [],
+      "vocabularyErrors": [],
+      "scope": "development-quality-gate-not-final-blind-review"
+    },
+    {
+      "cardId": "wands-six",
+      "score": 100,
+      "admitted": true,
+      "semanticUnits": 36,
+      "sections": {
+        "structuralIntegrity": 15,
+        "vocabularyAndSources": 10,
+        "semanticCoverage": 18,
+        "traditionAndIdentity": 12,
+        "reversalQuality": 12,
+        "domainCompatibility": 12,
+        "relationAndDimensions": 9,
+        "boundariesAndProvenance": 8,
+        "languageAndDistinctiveness": 4
+      },
+      "schemaErrors": [],
+      "vocabularyErrors": [],
+      "scope": "development-quality-gate-not-final-blind-review"
+    },
+    {
+      "cardId": "wands-seven",
+      "score": 100,
+      "admitted": true,
+      "semanticUnits": 36,
+      "sections": {
+        "structuralIntegrity": 15,
+        "vocabularyAndSources": 10,
+        "semanticCoverage": 18,
+        "traditionAndIdentity": 12,
+        "reversalQuality": 12,
+        "domainCompatibility": 12,
+        "relationAndDimensions": 9,
+        "boundariesAndProvenance": 8,
+        "languageAndDistinctiveness": 4
+      },
+      "schemaErrors": [],
+      "vocabularyErrors": [],
+      "scope": "development-quality-gate-not-final-blind-review"
+    },
+    {
+      "cardId": "wands-eight",
+      "score": 100,
+      "admitted": true,
+      "semanticUnits": 36,
+      "sections": {
+        "structuralIntegrity": 15,
+        "vocabularyAndSources": 10,
+        "semanticCoverage": 18,
+        "traditionAndIdentity": 12,
+        "reversalQuality": 12,
+        "domainCompatibility": 12,
+        "relationAndDimensions": 9,
+        "boundariesAndProvenance": 8,
+        "languageAndDistinctiveness": 4
+      },
+      "schemaErrors": [],
+      "vocabularyErrors": [],
+      "scope": "development-quality-gate-not-final-blind-review"
+    },
+    {
+      "cardId": "wands-nine",
+      "score": 100,
+      "admitted": true,
+      "semanticUnits": 36,
+      "sections": {
+        "structuralIntegrity": 15,
+        "vocabularyAndSources": 10,
+        "semanticCoverage": 18,
+        "traditionAndIdentity": 12,
+        "reversalQuality": 12,
+        "domainCompatibility": 12,
+        "relationAndDimensions": 9,
+        "boundariesAndProvenance": 8,
+        "languageAndDistinctiveness": 4
+      },
+      "schemaErrors": [],
+      "vocabularyErrors": [],
+      "scope": "development-quality-gate-not-final-blind-review"
+    },
+    {
+      "cardId": "wands-ten",
+      "score": 100,
+      "admitted": true,
+      "semanticUnits": 36,
+      "sections": {
+        "structuralIntegrity": 15,
+        "vocabularyAndSources": 10,
+        "semanticCoverage": 18,
+        "traditionAndIdentity": 12,
+        "reversalQuality": 12,
+        "domainCompatibility": 12,
+        "relationAndDimensions": 9,
+        "boundariesAndProvenance": 8,
+        "languageAndDistinctiveness": 4
+      },
+      "schemaErrors": [],
+      "vocabularyErrors": [],
+      "scope": "development-quality-gate-not-final-blind-review"
+    },
+    {
+      "cardId": "wands-page",
+      "score": 100,
+      "admitted": true,
+      "semanticUnits": 36,
+      "sections": {
+        "structuralIntegrity": 15,
+        "vocabularyAndSources": 10,
+        "semanticCoverage": 18,
+        "traditionAndIdentity": 12,
+        "reversalQuality": 12,
+        "domainCompatibility": 12,
+        "relationAndDimensions": 9,
+        "boundariesAndProvenance": 8,
+        "languageAndDistinctiveness": 4
+      },
+      "schemaErrors": [],
+      "vocabularyErrors": [],
+      "scope": "development-quality-gate-not-final-blind-review"
+    },
+    {
+      "cardId": "wands-knight",
+      "score": 100,
+      "admitted": true,
+      "semanticUnits": 36,
+      "sections": {
+        "structuralIntegrity": 15,
+        "vocabularyAndSources": 10,
+        "semanticCoverage": 18,
+        "traditionAndIdentity": 12,
+        "reversalQuality": 12,
+        "domainCompatibility": 12,
+        "relationAndDimensions": 9,
+        "boundariesAndProvenance": 8,
+        "languageAndDistinctiveness": 4
+      },
+      "schemaErrors": [],
+      "vocabularyErrors": [],
+      "scope": "development-quality-gate-not-final-blind-review"
+    },
+    {
+      "cardId": "wands-queen",
+      "score": 100,
+      "admitted": true,
+      "semanticUnits": 36,
+      "sections": {
+        "structuralIntegrity": 15,
+        "vocabularyAndSources": 10,
+        "semanticCoverage": 18,
+        "traditionAndIdentity": 12,
+        "reversalQuality": 12,
+        "domainCompatibility": 12,
+        "relationAndDimensions": 9,
+        "boundariesAndProvenance": 8,
+        "languageAndDistinctiveness": 4
+      },
+      "schemaErrors": [],
+      "vocabularyErrors": [],
+      "scope": "development-quality-gate-not-final-blind-review"
+    },
+    {
+      "cardId": "wands-king",
+      "score": 100,
+      "admitted": true,
+      "semanticUnits": 36,
+      "sections": {
+        "structuralIntegrity": 15,
+        "vocabularyAndSources": 10,
+        "semanticCoverage": 18,
+        "traditionAndIdentity": 12,
+        "reversalQuality": 12,
+        "domainCompatibility": 12,
+        "relationAndDimensions": 9,
+        "boundariesAndProvenance": 8,
+        "languageAndDistinctiveness": 4
+      },
+      "schemaErrors": [],
+      "vocabularyErrors": [],
+      "scope": "development-quality-gate-not-final-blind-review"
+    },
+    {
+      "cardId": "cups-ace",
+      "score": 100,
+      "admitted": true,
+      "semanticUnits": 36,
+      "sections": {
+        "structuralIntegrity": 15,
+        "vocabularyAndSources": 10,
+        "semanticCoverage": 18,
+        "traditionAndIdentity": 12,
+        "reversalQuality": 12,
+        "domainCompatibility": 12,
+        "relationAndDimensions": 9,
+        "boundariesAndProvenance": 8,
+        "languageAndDistinctiveness": 4
+      },
+      "schemaErrors": [],
+      "vocabularyErrors": [],
+      "scope": "development-quality-gate-not-final-blind-review"
+    },
+    {
+      "cardId": "cups-two",
+      "score": 100,
+      "admitted": true,
+      "semanticUnits": 26,
+      "sections": {
+        "structuralIntegrity": 15,
+        "vocabularyAndSources": 10,
+        "semanticCoverage": 18,
+        "traditionAndIdentity": 12,
+        "reversalQuality": 12,
+        "domainCompatibility": 12,
+        "relationAndDimensions": 9,
+        "boundariesAndProvenance": 8,
+        "languageAndDistinctiveness": 4
+      },
+      "schemaErrors": [],
+      "vocabularyErrors": [],
+      "scope": "development-quality-gate-not-final-blind-review"
+    },
+    {
+      "cardId": "cups-three",
+      "score": 100,
+      "admitted": true,
+      "semanticUnits": 36,
+      "sections": {
+        "structuralIntegrity": 15,
+        "vocabularyAndSources": 10,
+        "semanticCoverage": 18,
+        "traditionAndIdentity": 12,
+        "reversalQuality": 12,
+        "domainCompatibility": 12,
+        "relationAndDimensions": 9,
+        "boundariesAndProvenance": 8,
+        "languageAndDistinctiveness": 4
+      },
+      "schemaErrors": [],
+      "vocabularyErrors": [],
+      "scope": "development-quality-gate-not-final-blind-review"
+    },
+    {
+      "cardId": "cups-four",
+      "score": 100,
+      "admitted": true,
+      "semanticUnits": 36,
+      "sections": {
+        "structuralIntegrity": 15,
+        "vocabularyAndSources": 10,
+        "semanticCoverage": 18,
+        "traditionAndIdentity": 12,
+        "reversalQuality": 12,
+        "domainCompatibility": 12,
+        "relationAndDimensions": 9,
+        "boundariesAndProvenance": 8,
+        "languageAndDistinctiveness": 4
+      },
+      "schemaErrors": [],
+      "vocabularyErrors": [],
+      "scope": "development-quality-gate-not-final-blind-review"
+    },
+    {
+      "cardId": "cups-five",
+      "score": 100,
+      "admitted": true,
+      "semanticUnits": 36,
+      "sections": {
+        "structuralIntegrity": 15,
+        "vocabularyAndSources": 10,
+        "semanticCoverage": 18,
+        "traditionAndIdentity": 12,
+        "reversalQuality": 12,
+        "domainCompatibility": 12,
+        "relationAndDimensions": 9,
+        "boundariesAndProvenance": 8,
+        "languageAndDistinctiveness": 4
+      },
+      "schemaErrors": [],
+      "vocabularyErrors": [],
+      "scope": "development-quality-gate-not-final-blind-review"
+    },
+    {
+      "cardId": "cups-six",
+      "score": 100,
+      "admitted": true,
+      "semanticUnits": 36,
+      "sections": {
+        "structuralIntegrity": 15,
+        "vocabularyAndSources": 10,
+        "semanticCoverage": 18,
+        "traditionAndIdentity": 12,
+        "reversalQuality": 12,
+        "domainCompatibility": 12,
+        "relationAndDimensions": 9,
+        "boundariesAndProvenance": 8,
+        "languageAndDistinctiveness": 4
+      },
+      "schemaErrors": [],
+      "vocabularyErrors": [],
+      "scope": "development-quality-gate-not-final-blind-review"
+    },
+    {
+      "cardId": "cups-seven",
+      "score": 100,
+      "admitted": true,
+      "semanticUnits": 36,
+      "sections": {
+        "structuralIntegrity": 15,
+        "vocabularyAndSources": 10,
+        "semanticCoverage": 18,
+        "traditionAndIdentity": 12,
+        "reversalQuality": 12,
+        "domainCompatibility": 12,
+        "relationAndDimensions": 9,
+        "boundariesAndProvenance": 8,
+        "languageAndDistinctiveness": 4
+      },
+      "schemaErrors": [],
+      "vocabularyErrors": [],
+      "scope": "development-quality-gate-not-final-blind-review"
+    },
+    {
+      "cardId": "cups-eight",
+      "score": 100,
+      "admitted": true,
+      "semanticUnits": 36,
+      "sections": {
+        "structuralIntegrity": 15,
+        "vocabularyAndSources": 10,
+        "semanticCoverage": 18,
+        "traditionAndIdentity": 12,
+        "reversalQuality": 12,
+        "domainCompatibility": 12,
+        "relationAndDimensions": 9,
+        "boundariesAndProvenance": 8,
+        "languageAndDistinctiveness": 4
+      },
+      "schemaErrors": [],
+      "vocabularyErrors": [],
+      "scope": "development-quality-gate-not-final-blind-review"
+    },
+    {
+      "cardId": "cups-nine",
+      "score": 100,
+      "admitted": true,
+      "semanticUnits": 36,
+      "sections": {
+        "structuralIntegrity": 15,
+        "vocabularyAndSources": 10,
+        "semanticCoverage": 18,
+        "traditionAndIdentity": 12,
+        "reversalQuality": 12,
+        "domainCompatibility": 12,
+        "relationAndDimensions": 9,
+        "boundariesAndProvenance": 8,
+        "languageAndDistinctiveness": 4
+      },
+      "schemaErrors": [],
+      "vocabularyErrors": [],
+      "scope": "development-quality-gate-not-final-blind-review"
+    },
+    {
+      "cardId": "cups-ten",
+      "score": 100,
+      "admitted": true,
+      "semanticUnits": 36,
+      "sections": {
+        "structuralIntegrity": 15,
+        "vocabularyAndSources": 10,
+        "semanticCoverage": 18,
+        "traditionAndIdentity": 12,
+        "reversalQuality": 12,
+        "domainCompatibility": 12,
+        "relationAndDimensions": 9,
+        "boundariesAndProvenance": 8,
+        "languageAndDistinctiveness": 4
+      },
+      "schemaErrors": [],
+      "vocabularyErrors": [],
+      "scope": "development-quality-gate-not-final-blind-review"
+    },
+    {
+      "cardId": "cups-page",
+      "score": 100,
+      "admitted": true,
+      "semanticUnits": 36,
+      "sections": {
+        "structuralIntegrity": 15,
+        "vocabularyAndSources": 10,
+        "semanticCoverage": 18,
+        "traditionAndIdentity": 12,
+        "reversalQuality": 12,
+        "domainCompatibility": 12,
+        "relationAndDimensions": 9,
+        "boundariesAndProvenance": 8,
+        "languageAndDistinctiveness": 4
+      },
+      "schemaErrors": [],
+      "vocabularyErrors": [],
+      "scope": "development-quality-gate-not-final-blind-review"
+    },
+    {
+      "cardId": "cups-knight",
+      "score": 100,
+      "admitted": true,
+      "semanticUnits": 36,
+      "sections": {
+        "structuralIntegrity": 15,
+        "vocabularyAndSources": 10,
+        "semanticCoverage": 18,
+        "traditionAndIdentity": 12,
+        "reversalQuality": 12,
+        "domainCompatibility": 12,
+        "relationAndDimensions": 9,
+        "boundariesAndProvenance": 8,
+        "languageAndDistinctiveness": 4
+      },
+      "schemaErrors": [],
+      "vocabularyErrors": [],
+      "scope": "development-quality-gate-not-final-blind-review"
+    },
+    {
+      "cardId": "cups-queen",
+      "score": 100,
+      "admitted": true,
+      "semanticUnits": 36,
+      "sections": {
+        "structuralIntegrity": 15,
+        "vocabularyAndSources": 10,
+        "semanticCoverage": 18,
+        "traditionAndIdentity": 12,
+        "reversalQuality": 12,
+        "domainCompatibility": 12,
+        "relationAndDimensions": 9,
+        "boundariesAndProvenance": 8,
+        "languageAndDistinctiveness": 4
+      },
+      "schemaErrors": [],
+      "vocabularyErrors": [],
+      "scope": "development-quality-gate-not-final-blind-review"
+    },
+    {
+      "cardId": "cups-king",
+      "score": 100,
+      "admitted": true,
+      "semanticUnits": 36,
+      "sections": {
+        "structuralIntegrity": 15,
+        "vocabularyAndSources": 10,
+        "semanticCoverage": 18,
+        "traditionAndIdentity": 12,
+        "reversalQuality": 12,
+        "domainCompatibility": 12,
+        "relationAndDimensions": 9,
+        "boundariesAndProvenance": 8,
+        "languageAndDistinctiveness": 4
+      },
+      "schemaErrors": [],
+      "vocabularyErrors": [],
+      "scope": "development-quality-gate-not-final-blind-review"
+    },
+    {
+      "cardId": "swords-ace",
+      "score": 100,
+      "admitted": true,
+      "semanticUnits": 36,
+      "sections": {
+        "structuralIntegrity": 15,
+        "vocabularyAndSources": 10,
+        "semanticCoverage": 18,
+        "traditionAndIdentity": 12,
+        "reversalQuality": 12,
+        "domainCompatibility": 12,
+        "relationAndDimensions": 9,
+        "boundariesAndProvenance": 8,
+        "languageAndDistinctiveness": 4
+      },
+      "schemaErrors": [],
+      "vocabularyErrors": [],
+      "scope": "development-quality-gate-not-final-blind-review"
+    },
+    {
+      "cardId": "swords-two",
+      "score": 100,
+      "admitted": true,
+      "semanticUnits": 36,
+      "sections": {
+        "structuralIntegrity": 15,
+        "vocabularyAndSources": 10,
+        "semanticCoverage": 18,
+        "traditionAndIdentity": 12,
+        "reversalQuality": 12,
+        "domainCompatibility": 12,
+        "relationAndDimensions": 9,
+        "boundariesAndProvenance": 8,
+        "languageAndDistinctiveness": 4
+      },
+      "schemaErrors": [],
+      "vocabularyErrors": [],
+      "scope": "development-quality-gate-not-final-blind-review"
+    },
+    {
+      "cardId": "swords-three",
+      "score": 100,
+      "admitted": true,
+      "semanticUnits": 36,
+      "sections": {
+        "structuralIntegrity": 15,
+        "vocabularyAndSources": 10,
+        "semanticCoverage": 18,
+        "traditionAndIdentity": 12,
+        "reversalQuality": 12,
+        "domainCompatibility": 12,
+        "relationAndDimensions": 9,
+        "boundariesAndProvenance": 8,
+        "languageAndDistinctiveness": 4
+      },
+      "schemaErrors": [],
+      "vocabularyErrors": [],
+      "scope": "development-quality-gate-not-final-blind-review"
+    },
+    {
+      "cardId": "swords-four",
+      "score": 100,
+      "admitted": true,
+      "semanticUnits": 36,
+      "sections": {
+        "structuralIntegrity": 15,
+        "vocabularyAndSources": 10,
+        "semanticCoverage": 18,
+        "traditionAndIdentity": 12,
+        "reversalQuality": 12,
+        "domainCompatibility": 12,
+        "relationAndDimensions": 9,
+        "boundariesAndProvenance": 8,
+        "languageAndDistinctiveness": 4
+      },
+      "schemaErrors": [],
+      "vocabularyErrors": [],
+      "scope": "development-quality-gate-not-final-blind-review"
+    },
+    {
+      "cardId": "swords-five",
+      "score": 100,
+      "admitted": true,
+      "semanticUnits": 36,
+      "sections": {
+        "structuralIntegrity": 15,
+        "vocabularyAndSources": 10,
+        "semanticCoverage": 18,
+        "traditionAndIdentity": 12,
+        "reversalQuality": 12,
+        "domainCompatibility": 12,
+        "relationAndDimensions": 9,
+        "boundariesAndProvenance": 8,
+        "languageAndDistinctiveness": 4
+      },
+      "schemaErrors": [],
+      "vocabularyErrors": [],
+      "scope": "development-quality-gate-not-final-blind-review"
+    },
+    {
+      "cardId": "swords-six",
+      "score": 100,
+      "admitted": true,
+      "semanticUnits": 36,
+      "sections": {
+        "structuralIntegrity": 15,
+        "vocabularyAndSources": 10,
+        "semanticCoverage": 18,
+        "traditionAndIdentity": 12,
+        "reversalQuality": 12,
+        "domainCompatibility": 12,
+        "relationAndDimensions": 9,
+        "boundariesAndProvenance": 8,
+        "languageAndDistinctiveness": 4
+      },
+      "schemaErrors": [],
+      "vocabularyErrors": [],
+      "scope": "development-quality-gate-not-final-blind-review"
+    },
+    {
+      "cardId": "swords-seven",
+      "score": 100,
+      "admitted": true,
+      "semanticUnits": 36,
+      "sections": {
+        "structuralIntegrity": 15,
+        "vocabularyAndSources": 10,
+        "semanticCoverage": 18,
+        "traditionAndIdentity": 12,
+        "reversalQuality": 12,
+        "domainCompatibility": 12,
+        "relationAndDimensions": 9,
+        "boundariesAndProvenance": 8,
+        "languageAndDistinctiveness": 4
+      },
+      "schemaErrors": [],
+      "vocabularyErrors": [],
+      "scope": "development-quality-gate-not-final-blind-review"
+    },
+    {
+      "cardId": "swords-eight",
+      "score": 100,
+      "admitted": true,
+      "semanticUnits": 36,
+      "sections": {
+        "structuralIntegrity": 15,
+        "vocabularyAndSources": 10,
+        "semanticCoverage": 18,
+        "traditionAndIdentity": 12,
+        "reversalQuality": 12,
+        "domainCompatibility": 12,
+        "relationAndDimensions": 9,
+        "boundariesAndProvenance": 8,
+        "languageAndDistinctiveness": 4
+      },
+      "schemaErrors": [],
+      "vocabularyErrors": [],
+      "scope": "development-quality-gate-not-final-blind-review"
+    },
+    {
+      "cardId": "swords-nine",
+      "score": 100,
+      "admitted": true,
+      "semanticUnits": 36,
+      "sections": {
+        "structuralIntegrity": 15,
+        "vocabularyAndSources": 10,
+        "semanticCoverage": 18,
+        "traditionAndIdentity": 12,
+        "reversalQuality": 12,
+        "domainCompatibility": 12,
+        "relationAndDimensions": 9,
+        "boundariesAndProvenance": 8,
+        "languageAndDistinctiveness": 4
+      },
+      "schemaErrors": [],
+      "vocabularyErrors": [],
+      "scope": "development-quality-gate-not-final-blind-review"
+    },
+    {
+      "cardId": "swords-ten",
+      "score": 100,
+      "admitted": true,
+      "semanticUnits": 36,
+      "sections": {
+        "structuralIntegrity": 15,
+        "vocabularyAndSources": 10,
+        "semanticCoverage": 18,
+        "traditionAndIdentity": 12,
+        "reversalQuality": 12,
+        "domainCompatibility": 12,
+        "relationAndDimensions": 9,
+        "boundariesAndProvenance": 8,
+        "languageAndDistinctiveness": 4
+      },
+      "schemaErrors": [],
+      "vocabularyErrors": [],
+      "scope": "development-quality-gate-not-final-blind-review"
+    },
+    {
+      "cardId": "swords-page",
+      "score": 100,
+      "admitted": true,
+      "semanticUnits": 36,
+      "sections": {
+        "structuralIntegrity": 15,
+        "vocabularyAndSources": 10,
+        "semanticCoverage": 18,
+        "traditionAndIdentity": 12,
+        "reversalQuality": 12,
+        "domainCompatibility": 12,
+        "relationAndDimensions": 9,
+        "boundariesAndProvenance": 8,
+        "languageAndDistinctiveness": 4
+      },
+      "schemaErrors": [],
+      "vocabularyErrors": [],
+      "scope": "development-quality-gate-not-final-blind-review"
+    },
+    {
+      "cardId": "swords-knight",
+      "score": 100,
+      "admitted": true,
+      "semanticUnits": 36,
+      "sections": {
+        "structuralIntegrity": 15,
+        "vocabularyAndSources": 10,
+        "semanticCoverage": 18,
+        "traditionAndIdentity": 12,
+        "reversalQuality": 12,
+        "domainCompatibility": 12,
+        "relationAndDimensions": 9,
+        "boundariesAndProvenance": 8,
+        "languageAndDistinctiveness": 4
+      },
+      "schemaErrors": [],
+      "vocabularyErrors": [],
+      "scope": "development-quality-gate-not-final-blind-review"
+    },
+    {
+      "cardId": "swords-queen",
+      "score": 100,
+      "admitted": true,
+      "semanticUnits": 36,
+      "sections": {
+        "structuralIntegrity": 15,
+        "vocabularyAndSources": 10,
+        "semanticCoverage": 18,
+        "traditionAndIdentity": 12,
+        "reversalQuality": 12,
+        "domainCompatibility": 12,
+        "relationAndDimensions": 9,
+        "boundariesAndProvenance": 8,
+        "languageAndDistinctiveness": 4
+      },
+      "schemaErrors": [],
+      "vocabularyErrors": [],
+      "scope": "development-quality-gate-not-final-blind-review"
+    },
+    {
+      "cardId": "swords-king",
+      "score": 100,
+      "admitted": true,
+      "semanticUnits": 36,
+      "sections": {
+        "structuralIntegrity": 15,
+        "vocabularyAndSources": 10,
+        "semanticCoverage": 18,
+        "traditionAndIdentity": 12,
+        "reversalQuality": 12,
+        "domainCompatibility": 12,
+        "relationAndDimensions": 9,
+        "boundariesAndProvenance": 8,
+        "languageAndDistinctiveness": 4
+      },
+      "schemaErrors": [],
+      "vocabularyErrors": [],
+      "scope": "development-quality-gate-not-final-blind-review"
+    },
+    {
+      "cardId": "pentacles-ace",
+      "score": 100,
+      "admitted": true,
+      "semanticUnits": 36,
+      "sections": {
+        "structuralIntegrity": 15,
+        "vocabularyAndSources": 10,
+        "semanticCoverage": 18,
+        "traditionAndIdentity": 12,
+        "reversalQuality": 12,
+        "domainCompatibility": 12,
+        "relationAndDimensions": 9,
+        "boundariesAndProvenance": 8,
+        "languageAndDistinctiveness": 4
+      },
+      "schemaErrors": [],
+      "vocabularyErrors": [],
+      "scope": "development-quality-gate-not-final-blind-review"
+    },
+    {
+      "cardId": "pentacles-two",
+      "score": 100,
+      "admitted": true,
+      "semanticUnits": 36,
+      "sections": {
+        "structuralIntegrity": 15,
+        "vocabularyAndSources": 10,
+        "semanticCoverage": 18,
+        "traditionAndIdentity": 12,
+        "reversalQuality": 12,
+        "domainCompatibility": 12,
+        "relationAndDimensions": 9,
+        "boundariesAndProvenance": 8,
+        "languageAndDistinctiveness": 4
+      },
+      "schemaErrors": [],
+      "vocabularyErrors": [],
+      "scope": "development-quality-gate-not-final-blind-review"
+    },
+    {
+      "cardId": "pentacles-three",
+      "score": 100,
+      "admitted": true,
+      "semanticUnits": 36,
+      "sections": {
+        "structuralIntegrity": 15,
+        "vocabularyAndSources": 10,
+        "semanticCoverage": 18,
+        "traditionAndIdentity": 12,
+        "reversalQuality": 12,
+        "domainCompatibility": 12,
+        "relationAndDimensions": 9,
+        "boundariesAndProvenance": 8,
+        "languageAndDistinctiveness": 4
+      },
+      "schemaErrors": [],
+      "vocabularyErrors": [],
+      "scope": "development-quality-gate-not-final-blind-review"
+    },
+    {
+      "cardId": "pentacles-four",
+      "score": 100,
+      "admitted": true,
+      "semanticUnits": 36,
+      "sections": {
+        "structuralIntegrity": 15,
+        "vocabularyAndSources": 10,
+        "semanticCoverage": 18,
+        "traditionAndIdentity": 12,
+        "reversalQuality": 12,
+        "domainCompatibility": 12,
+        "relationAndDimensions": 9,
+        "boundariesAndProvenance": 8,
+        "languageAndDistinctiveness": 4
+      },
+      "schemaErrors": [],
+      "vocabularyErrors": [],
+      "scope": "development-quality-gate-not-final-blind-review"
+    },
+    {
+      "cardId": "pentacles-five",
+      "score": 100,
+      "admitted": true,
+      "semanticUnits": 36,
+      "sections": {
+        "structuralIntegrity": 15,
+        "vocabularyAndSources": 10,
+        "semanticCoverage": 18,
+        "traditionAndIdentity": 12,
+        "reversalQuality": 12,
+        "domainCompatibility": 12,
+        "relationAndDimensions": 9,
+        "boundariesAndProvenance": 8,
+        "languageAndDistinctiveness": 4
+      },
+      "schemaErrors": [],
+      "vocabularyErrors": [],
+      "scope": "development-quality-gate-not-final-blind-review"
+    },
+    {
+      "cardId": "pentacles-six",
+      "score": 100,
+      "admitted": true,
+      "semanticUnits": 36,
+      "sections": {
+        "structuralIntegrity": 15,
+        "vocabularyAndSources": 10,
+        "semanticCoverage": 18,
+        "traditionAndIdentity": 12,
+        "reversalQuality": 12,
+        "domainCompatibility": 12,
+        "relationAndDimensions": 9,
+        "boundariesAndProvenance": 8,
+        "languageAndDistinctiveness": 4
+      },
+      "schemaErrors": [],
+      "vocabularyErrors": [],
+      "scope": "development-quality-gate-not-final-blind-review"
+    },
+    {
+      "cardId": "pentacles-seven",
+      "score": 100,
+      "admitted": true,
+      "semanticUnits": 36,
+      "sections": {
+        "structuralIntegrity": 15,
+        "vocabularyAndSources": 10,
+        "semanticCoverage": 18,
+        "traditionAndIdentity": 12,
+        "reversalQuality": 12,
+        "domainCompatibility": 12,
+        "relationAndDimensions": 9,
+        "boundariesAndProvenance": 8,
+        "languageAndDistinctiveness": 4
+      },
+      "schemaErrors": [],
+      "vocabularyErrors": [],
+      "scope": "development-quality-gate-not-final-blind-review"
+    },
+    {
+      "cardId": "pentacles-eight",
+      "score": 100,
+      "admitted": true,
+      "semanticUnits": 26,
+      "sections": {
+        "structuralIntegrity": 15,
+        "vocabularyAndSources": 10,
+        "semanticCoverage": 18,
+        "traditionAndIdentity": 12,
+        "reversalQuality": 12,
+        "domainCompatibility": 12,
+        "relationAndDimensions": 9,
+        "boundariesAndProvenance": 8,
+        "languageAndDistinctiveness": 4
+      },
+      "schemaErrors": [],
+      "vocabularyErrors": [],
+      "scope": "development-quality-gate-not-final-blind-review"
+    },
+    {
+      "cardId": "pentacles-nine",
+      "score": 100,
+      "admitted": true,
+      "semanticUnits": 36,
+      "sections": {
+        "structuralIntegrity": 15,
+        "vocabularyAndSources": 10,
+        "semanticCoverage": 18,
+        "traditionAndIdentity": 12,
+        "reversalQuality": 12,
+        "domainCompatibility": 12,
+        "relationAndDimensions": 9,
+        "boundariesAndProvenance": 8,
+        "languageAndDistinctiveness": 4
+      },
+      "schemaErrors": [],
+      "vocabularyErrors": [],
+      "scope": "development-quality-gate-not-final-blind-review"
+    },
+    {
+      "cardId": "pentacles-ten",
+      "score": 100,
+      "admitted": true,
+      "semanticUnits": 36,
+      "sections": {
+        "structuralIntegrity": 15,
+        "vocabularyAndSources": 10,
+        "semanticCoverage": 18,
+        "traditionAndIdentity": 12,
+        "reversalQuality": 12,
+        "domainCompatibility": 12,
+        "relationAndDimensions": 9,
+        "boundariesAndProvenance": 8,
+        "languageAndDistinctiveness": 4
+      },
+      "schemaErrors": [],
+      "vocabularyErrors": [],
+      "scope": "development-quality-gate-not-final-blind-review"
+    },
+    {
+      "cardId": "pentacles-page",
+      "score": 100,
+      "admitted": true,
+      "semanticUnits": 36,
+      "sections": {
+        "structuralIntegrity": 15,
+        "vocabularyAndSources": 10,
+        "semanticCoverage": 18,
+        "traditionAndIdentity": 12,
+        "reversalQuality": 12,
+        "domainCompatibility": 12,
+        "relationAndDimensions": 9,
+        "boundariesAndProvenance": 8,
+        "languageAndDistinctiveness": 4
+      },
+      "schemaErrors": [],
+      "vocabularyErrors": [],
+      "scope": "development-quality-gate-not-final-blind-review"
+    },
+    {
+      "cardId": "pentacles-knight",
+      "score": 100,
+      "admitted": true,
+      "semanticUnits": 36,
+      "sections": {
+        "structuralIntegrity": 15,
+        "vocabularyAndSources": 10,
+        "semanticCoverage": 18,
+        "traditionAndIdentity": 12,
+        "reversalQuality": 12,
+        "domainCompatibility": 12,
+        "relationAndDimensions": 9,
+        "boundariesAndProvenance": 8,
+        "languageAndDistinctiveness": 4
+      },
+      "schemaErrors": [],
+      "vocabularyErrors": [],
+      "scope": "development-quality-gate-not-final-blind-review"
+    },
+    {
+      "cardId": "pentacles-queen",
+      "score": 100,
+      "admitted": true,
+      "semanticUnits": 36,
+      "sections": {
+        "structuralIntegrity": 15,
+        "vocabularyAndSources": 10,
+        "semanticCoverage": 18,
+        "traditionAndIdentity": 12,
+        "reversalQuality": 12,
+        "domainCompatibility": 12,
+        "relationAndDimensions": 9,
+        "boundariesAndProvenance": 8,
+        "languageAndDistinctiveness": 4
+      },
+      "schemaErrors": [],
+      "vocabularyErrors": [],
+      "scope": "development-quality-gate-not-final-blind-review"
+    },
+    {
+      "cardId": "pentacles-king",
+      "score": 100,
+      "admitted": true,
+      "semanticUnits": 36,
+      "sections": {
+        "structuralIntegrity": 15,
+        "vocabularyAndSources": 10,
+        "semanticCoverage": 18,
+        "traditionAndIdentity": 12,
+        "reversalQuality": 12,
+        "domainCompatibility": 12,
+        "relationAndDimensions": 9,
+        "boundariesAndProvenance": 8,
+        "languageAndDistinctiveness": 4
+      },
+      "schemaErrors": [],
+      "vocabularyErrors": [],
+      "scope": "development-quality-gate-not-final-blind-review"
+    }
+  ],
+  "summary": {
+    "count": 78,
+    "minimum": 100,
+    "average": 100,
+    "admitted": 78,
+    "schemaPassRate": 1,
+    "scenarioPassRate": 1,
+    "scenarioPassed": 17784,
+    "scenarioTotal": 17784
+  },
+  "crossReview": {
+    "duplicateSemanticTexts": [],
+    "batchCount": 16,
+    "batchCoverageComplete": true,
+    "goldenCardCount": 6,
+    "upgradedCardCount": 72
+  },
+  "scenarioFailures": []
+}

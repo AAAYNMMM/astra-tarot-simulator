@@ -216,6 +216,9 @@ def baseline_steps(node: str) -> list[tuple[str, list[str]]]:
         ("node-position-operator-contract", [node, "tests/position_operator_contract_test.mjs"]),
         ("node-consumer-fixture-contract", [node, "tests/consumer_fixture_contract_test.mjs"]),
         ("node-consumer-validation", [node, "tests/consumer_validation_test.mjs"]),
+        ("phase-2-card-report-check", [node, "scripts/score_all_cards.mjs", "--check"]),
+        ("node-phase-2-golden-freeze", [node, "tests/phase_2_golden_freeze_test.mjs"]),
+        ("node-phase-2-card-profiles", [node, "tests/phase_2_card_profiles_test.mjs"]),
         (
             "node-application-contract",
             [node, "tests/application_contract_test.mjs"],
@@ -264,6 +267,7 @@ def full_steps(node: str) -> list[tuple[str, list[str]]]:
     return [
         ("phase-m-terminal-gate", [node, "tests/phase_m_gate_test.mjs"]),
         ("phase-1-terminal-gate", [node, "tests/phase_1_gate_test.mjs"]),
+        ("phase-2-terminal-gate", [node, "tests/phase_2_gate_test.mjs"]),
         ("browser-harness", [python, "tests/browser_harness.py"]),
         (
             "module-size-strict",

@@ -8,4 +8,5 @@ __pycache__/
 !.qa/evaluation/rubric.json
 !.qa/golden-card-report.json
 !.qa/question-coverage.json
+!.qa/card-profile-report.json
 design-qa.md
