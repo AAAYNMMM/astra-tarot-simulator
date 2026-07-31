@@ -21,9 +21,15 @@ def build_application(source: str) -> str:
     application = previous_build(source)
     old = "\n    ction requestNewReading() {"
     new = "\n    async function requestNewReading() {"
-    if application.count(old) != 1:
-        raise RuntimeError(f"requestNewReading repair anchor count: {application.count(old)}")
-    return application.replace(old, new, 1)
+    old_count = application.count(old)
+    new_count = application.count(new)
+    if old_count == 1 and new_count == 0:
+        return application.replace(old, new, 1)
+    if old_count == 0 and new_count == 1:
+        return application
+    raise RuntimeError(
+        f"requestNewReading repair state invalid: old={old_count} new={new_count}"
+    )
 
 
 v4.module.build_application = build_application
