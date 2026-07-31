@@ -9,7 +9,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 CHUNKS = [ROOT / "automation" / f"phase_5_payload_{index:02d}.txt" for index in range(4)]
-EXPECTED_SHA256 = "ef34b8c17b0284e03e653110a7312a03063d3b9c827d434898161a156385326f"
+EXPECTED_SHA256 = "f27de853e3e1abcfeef837d06a83c6caf7dfe17f7f93867c7da4177da8197dc4"
 INNER = ROOT / "automation" / ".phase_5_complete_inner.py"
 
 encoded = "".join(path.read_text(encoding="utf-8").strip() for path in CHUNKS)
