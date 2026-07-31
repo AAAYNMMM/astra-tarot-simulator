@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Apply MOD-006A with the final malformed legacy declaration repaired."""
+"""Apply MOD-006A with final declaration and storage-factory wiring repairs."""
 
 from __future__ import annotations
 
@@ -17,19 +17,52 @@ spec.loader.exec_module(v4)
 previous_build = v4.build_application
 
 
+def replace_once(source: str, old: str, new: str, label: str) -> str:
+    count = source.count(old)
+    if count != 1:
+        raise RuntimeError(f"{label}: expected one match, found {count}")
+    return source.replace(old, new, 1)
+
+
 def build_application(source: str) -> str:
     application = previous_build(source)
-    old = "ction requestNewReading() {"
-    new = "async function requestNewReading() {"
-    old_count = application.count(old)
-    new_count = application.count(new)
+
+    old_declaration = "ction requestNewReading() {"
+    new_declaration = "async function requestNewReading() {"
+    old_count = application.count(old_declaration)
+    new_count = application.count(new_declaration)
     if old_count == 1 and new_count == 0:
-        return application.replace(old, new, 1)
-    if old_count == 0 and new_count == 1:
-        return application
-    raise RuntimeError(
-        f"requestNewReading repair state invalid: old={old_count} new={new_count}"
+        application = application.replace(old_declaration, new_declaration, 1)
+    elif not (old_count == 0 and new_count == 1):
+        raise RuntimeError(
+            f"requestNewReading repair state invalid: old={old_count} new={new_count}"
+        )
+
+    application = replace_once(
+        application,
+        'import { loadHistory, writeHistory as writeHistoryToStorage } from "../storage/legacy-history.js";',
+        'import { createLegacyHistoryStore } from "../storage/legacy-history.js";',
+        "history store import",
     )
+    application = replace_once(
+        application,
+        'import { loadSettings, saveSettings } from "../storage/settings.js";',
+        'import { createSettingsStore } from "../storage/settings.js";',
+        "settings store import",
+    )
+    application = replace_once(
+        application,
+        "  const document = documentRef;\n",
+        "  const document = documentRef;\n"
+        "  const historyStore = createLegacyHistoryStore(window.localStorage);\n"
+        "  const loadHistory = historyStore.load;\n"
+        "  const writeHistoryToStorage = historyStore.write;\n"
+        "  const settingsStore = createSettingsStore(window.localStorage);\n"
+        "  const loadSettings = settingsStore.load;\n"
+        "  const saveSettings = settingsStore.save;\n",
+        "storage store wiring",
+    )
+    return application
 
 
 v4.module.build_application = build_application
