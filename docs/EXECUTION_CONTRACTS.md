@@ -353,3 +353,30 @@ MOD-001：模块边界、数据边界与基线验证
 固定顺序：`QP-003A`至`QP-003F`分别扩展relationship、career、finance、growth、decision和daily领域；`QP-004A`至`QP-004F`完成六领域的single、timeline、cross和celtic适配；终态统一执行近义去重、高风险边界和跨牌位消费验证。
 
 阶段出口：保留原42题及其Profile字节，问题总数84至96、六领域覆盖均衡，高度近义问题不超过5%，高风险边界完整，四牌阵全部可回答，当前commit取得CWapi full RESULT。
+
+## 18. Phase 4：固定结构图与Observation Engine
+
+固定顺序：
+
+```text
+PO-002A single与timeline固定结构图
+→ PO-002B cross固定结构图
+→ PO-002C celtic固定结构图
+→ PO-002D 四牌阵图验证与冻结
+→ PO-003A Observation Schema和模型
+→ PO-003B 问题维度、牌位职责与语义选择
+→ PO-003C 逆位机制、有限评分与稳定排序
+→ PO-003D 完整牌阵Observation消费
+→ PO-003E 全矩阵报告和终态门禁
+```
+
+边界：
+
+- `PO-002`只冻结四牌阵节点、固定结构边和2–4条主线，不生成Relation。
+- `PO-003`只生成局部Observation，不生成Claim、最终结论或渲染文本。
+- 每个Observation必须保存真实`semanticUnitRef`、来源、问题职责、牌位角色、逆位模式、有限维度和分数分解。
+- `createMinimalObservation`保留兼容入口，但不得维护第二套选择算法。
+- 同输入必须确定性一致；业务排序不得依赖对象遍历、本地化字符串或随机数。
+- Card、Question、Position或固定图变化会使Phase 4报告失效并重跑。
+
+阶段出口：4图19节点21固定边合法；90题×19牌位及78牌×19牌位的正逆位场景Schema、确定性和真实引用通过率100%；同牌不同牌位路径差异通过率100%；当前commit取得CWapi full RESULT。

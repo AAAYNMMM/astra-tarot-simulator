@@ -1,9 +1,9 @@
 {
   "appVersion": "2.0.0-dev",
-  "engineManifestHash": "f1dd9b7cc893e907a1b5bc59ce41124fc997c95e1565ec022d9e6602940caf9c",
+  "engineManifestHash": "9d4f4fdb7ac103400b27e5c0bba7a33a21b451eaa1586690ad7bdfdf2bfc5f66",
   "generatorHash": "efeb76569667843ead911adb0e64c4608c5779d779c74e5c9f3a964861b3e8f8",
   "generatorVersion": "1.0.0",
-  "knowledgeManifestHash": "48df2fe4e8413e3fb826c217f0c178485a1023e07c3ab235fd77650b9d073c92",
+  "knowledgeManifestHash": "bd93f68c374515c5b7a15475ed2e89970f8b3500571d29994412ccfd29fe3d06",
   "modules": {
     "cards": {
       "cups-ace": "5da4dd626711dd55de568368c296fa4ab16b9d8a67e432a3edfa47f2a7c4c243",
@@ -188,6 +188,7 @@
       "src/knowledge/schemas/card-semantic-profile.schema.json": "1f959083cb64f5ce6c49e28375e4a01e54b49a9780edb70fd0243648974e0399",
       "src/knowledge/schemas/consumer-fixture.schema.json": "096ba93a1ee3d9ca8716a030fe537361c1a6ee166b849f8a56707be07f1ceb7a",
       "src/knowledge/schemas/evaluation-case.schema.json": "b9c0522f368171057a811682b6c38071a9c17174840894b5f7a1fd39a3d7703c",
+      "src/knowledge/schemas/observation.schema.json": "11d7fe8cbb16e050302c0af47587e69f0673e6bd311e7dd84cdd876688c56bf6",
       "src/knowledge/schemas/position-operator.schema.json": "af1b46b47f2a1b2548859cafd7fb157b66c9abba259b47649f4402a4ef6ce5e9",
       "src/knowledge/schemas/question-profile.schema.json": "64a4621fb90bd642cb59a6c004613d9a3302176ca3cd373fc1a43e05d7888ad7"
     },
@@ -227,15 +228,20 @@
     "src/core/random/business-random.js": "31fa1d1d8addacea924c7a47b4860b3459df82b9e61b63c38050a12c4daed70b",
     "src/engine/legacy/card-reading.js": "8cb14ef15e014bc00b58f5b8156cbb4cf106d2c48f65ffd1c134bfbf29e73cba",
     "src/engine/legacy/synthesis.js": "586a2a578dfa3410c6c6933c397432544666a1da51f499050824d1b12919caac",
-    "src/engine/observations/minimal-consumer.js": "635f48e92ae182e948bc5d608f1fcbb130b4f7b5b18bdcfe1708652aeb8d46cc",
+    "src/engine/observations/dimension-facet-map.js": "4e61fa7b140218c4f1fb80ff16e1ba5a7652a9710128c596c747352c6f4fda20",
+    "src/engine/observations/minimal-consumer.js": "bb702860889b7af848f0a9a589cbd3634730c0127542effeef8c1c2eaa28e4a5",
+    "src/engine/observations/observation-engine.js": "3d6d4f1a3d42280d579f1b485e4e7eac3b401e9cfb547f874dfab6c82a2b6e8e",
+    "src/engine/observations/semantic-selector.js": "0ae48fec20b06d52bb3c94197cc96b66ffac11ebf605be5e10b52a50a15dea42",
+    "src/engine/observations/spread-graphs.js": "6b83b17ad16ffd62e4729b232e0559f459c0925fea8c7031f934ee0bf3c0a444",
     "src/engine/validation/card-profile-validator.js": "fdc881c76f43e9538cb19fb999b392f3aa6ba128d8d4360bc22511911a507770",
     "src/engine/validation/card-quality-gate.js": "64ef43c1f06df10782bad17320e11af8ce0123097164afe194c119e00db4508f",
+    "src/engine/validation/observation-validator.js": "ea679d06ad5b044628340c79226242e4106b756e42330a31451e9f5a2ac5b5e4",
     "src/engine/validation/position-operator-validator.js": "e20e09a2de5ad3022286245db8ca207082544ab6f6ad4715e969fef970112d79",
     "src/engine/validation/question-profile-validator.js": "ce971b0ea337f0ebf840862564b9fdabd841fa10e90674d0a94fab6e98d4f8a2",
     "src/engine/validation/schema-validator.js": "c89f1e12e4d09e23f708447623997d16feca69ccd13623c392bfb0d44b03cfd5",
     "src/engine/validation/vocabulary-validator.js": "fea9c497ea5f49f322b38bbe6104833ec1d53a2f7cca7ab620e61a5397619d58",
     "src/generated/card-catalog.js": "d27d0e79a507718813a0fb3ff049ed5036fffba748f5e98073866fd921385c5e",
-    "src/generated/knowledge-manifest.json": "48df2fe4e8413e3fb826c217f0c178485a1023e07c3ab235fd77650b9d073c92",
+    "src/generated/knowledge-manifest.json": "bd93f68c374515c5b7a15475ed2e89970f8b3500571d29994412ccfd29fe3d06",
     "src/generated/knowledge-registry.js": "42aa45fd6c628d1e3b13153e2e4f3d5c81a2f5c9e5b187a2d24ea57d7534aa82",
     "src/generated/question-catalog.js": "d1fc45f8e436bcae2c6e44ecb24295c70f72f0cfbab3a73112978f9f229a4e14",
     "src/knowledge/cards/create-complete-profile.js": "5152a4e83c31b205574be0c6b733010754bf732c87e77ed70bf68707f81df65b",
@@ -423,6 +429,7 @@
     "src/knowledge/schemas/card-semantic-profile.schema.json": "1f959083cb64f5ce6c49e28375e4a01e54b49a9780edb70fd0243648974e0399",
     "src/knowledge/schemas/consumer-fixture.schema.json": "096ba93a1ee3d9ca8716a030fe537361c1a6ee166b849f8a56707be07f1ceb7a",
     "src/knowledge/schemas/evaluation-case.schema.json": "b9c0522f368171057a811682b6c38071a9c17174840894b5f7a1fd39a3d7703c",
+    "src/knowledge/schemas/observation.schema.json": "11d7fe8cbb16e050302c0af47587e69f0673e6bd311e7dd84cdd876688c56bf6",
     "src/knowledge/schemas/position-operator.schema.json": "af1b46b47f2a1b2548859cafd7fb157b66c9abba259b47649f4402a4ef6ce5e9",
     "src/knowledge/schemas/question-profile.schema.json": "64a4621fb90bd642cb59a6c004613d9a3302176ca3cd373fc1a43e05d7888ad7",
     "src/knowledge/spreads/definitions.js": "e2d01ff57fe684364b641adc9f1fc7867f1555ac66783792de339956c3b714e6",
@@ -472,5 +479,5 @@
     "sw.js": "0032b0963cb1bf03d6355e763c5e0e01600c3b4fda48fff33b453793cbb3af99"
   },
   "schemaVersion": "1.0.0",
-  "sourceSetHash": "1822f68d3671c84c8c3644f2da419fbb82fa4d8f65b6d023b6ebfea03653e7a6"
+  "sourceSetHash": "1efff5adcd7e4254977ebd4b89bd1dd8f51dd8ff2126a57630de4c96c61bae39"
 }

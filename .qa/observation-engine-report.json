@@ -1,0 +1,39 @@
+{
+  "schemaVersion": "1.0.0",
+  "scope": "phase-4-fixed-graphs-and-observation-engine",
+  "generatedAt": "2026-07-31",
+  "summary": {
+    "totalCards": 78,
+    "totalQuestions": 90,
+    "totalPositions": 19,
+    "graphCount": 4,
+    "graphNodes": 19,
+    "graphEdges": 21,
+    "questionPositionScenarios": 3420,
+    "cardPositionScenarios": 2964,
+    "totalScenarios": 6384,
+    "directMatchScenarios": 6163,
+    "positionMediatedScenarios": 221,
+    "schemaPassRate": 1,
+    "deterministicPassRate": 1,
+    "semanticReferencePassRate": 1,
+    "positionDifferentiationPassed": 234,
+    "positionDifferentiationTotal": 234,
+    "positionDifferentiationPassRate": 1,
+    "reversalModeCoverage": [
+      "avoided",
+      "blocked",
+      "deficient",
+      "delayed",
+      "distorted",
+      "excessive",
+      "internalized",
+      "loss-of-control",
+      "misdirected",
+      "released"
+    ]
+  },
+  "graphFailures": [],
+  "validationFailures": [],
+  "differentiationFailures": []
+}

@@ -221,6 +221,10 @@ def baseline_steps(node: str) -> list[tuple[str, list[str]]]:
         ("phase-3-question-report-check", [node, "scripts/score_question_library.mjs", "--check"]),
         ("node-phase-3-question-library", [node, "tests/phase_3_question_library_test.mjs"]),
         ("node-phase-3-spread-adaptation", [node, "tests/phase_3_spread_adaptation_test.mjs"]),
+        ("phase-4-observation-report-check", [node, "scripts/score_observation_engine.mjs", "--check"]),
+        ("node-phase-4-spread-graphs", [node, "tests/phase_4_spread_graph_test.mjs"]),
+        ("node-observation-schema", [node, "tests/observation_schema_contract_test.mjs"]),
+        ("node-observation-engine", [node, "tests/observation_engine_test.mjs"]),
         ("node-phase-2-golden-freeze", [node, "tests/phase_2_golden_freeze_test.mjs"]),
         ("node-phase-2-card-profiles", [node, "tests/phase_2_card_profiles_test.mjs"]),
         (
@@ -273,6 +277,7 @@ def full_steps(node: str) -> list[tuple[str, list[str]]]:
         ("phase-1-terminal-gate", [node, "tests/phase_1_gate_test.mjs"]),
         ("phase-2-terminal-gate", [node, "tests/phase_2_gate_test.mjs"]),
         ("phase-3-terminal-gate", [node, "tests/phase_3_gate_test.mjs"]),
+        ("phase-4-terminal-gate", [node, "tests/phase_4_gate_test.mjs"]),
         ("browser-harness", [python, "tests/browser_harness.py"]),
         (
             "module-size-strict",

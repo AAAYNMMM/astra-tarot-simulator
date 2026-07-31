@@ -11,3 +11,4 @@ __pycache__/
 !.qa/card-profile-report.json
 design-qa.md
 !.qa/question-library-report.json
+!.qa/observation-engine-report.json
