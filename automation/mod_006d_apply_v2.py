@@ -55,3 +55,11 @@ namespace = {
 }
 exec(compile(source, str(ORIGINAL), "exec"), namespace)
 namespace["main"]()
+
+gate_path = ROOT / "tests" / "phase_m_gate_test.mjs"
+gate = gate_path.read_text(encoding="utf-8")
+old_gate = 'assert.match(bootstrap, /dataset\\.astraBoot = "ready"/);'
+new_gate = 'assert.match(bootstrap, /dataset\\.astraBoot = result\\.started \\? "ready" : "skipped"/);'
+if gate.count(old_gate) != 1:
+    raise RuntimeError("MOD-006D browser ready assertion anchor changed")
+gate_path.write_text(gate.replace(old_gate, new_gate, 1), encoding="utf-8", newline="\n")
