@@ -28,6 +28,18 @@ const requiredFiles = [
   "package.json",
   "src/app/bootstrap.js",
   "src/app/legacy-runtime.js",
+  "tests/foundation_contract_test.mjs",
+  "src/config/decks.js",
+  "src/config/legacy-storage.js",
+  "src/core/html.js",
+  "src/core/random/business-random.js",
+  "src/platform/assets.js",
+  "src/platform/entropy.js",
+  "src/platform/lifecycle-client.js",
+  "src/platform/pwa-client.js",
+  "src/storage/settings.js",
+  "src/storage/legacy-history.js",
+  "src/storage/legacy-record.js",
 ];
 
 for (const relativePath of requiredFiles) {
@@ -41,12 +53,15 @@ assert.equal("dependencies" in packageMetadata, false, "MOD-003A may not add run
 assert.equal("devDependencies" in packageMetadata, false, "MOD-003A may not add development dependencies");
 assert.equal(packageMetadata.scripts["test:smoke"], "node tests/smoke_test.js");
 assert.equal(packageMetadata.scripts["test:contracts"], "node tests/module_contract_test.mjs");
+assert.equal(packageMetadata.scripts["test:foundation"], "node tests/foundation_contract_test.mjs");
 
 const runtimeModule = await import(
   pathToFileURL(path.join(root, "src/app/legacy-runtime.js")).href
 );
 assert.deepEqual([...runtimeModule.LEGACY_SCRIPT_PATHS], ["../../data.js", "../../app.js"]);
 assert.equal(runtimeModule.LEGACY_GLOBAL_NAME, "TarotData");
+assert.equal(runtimeModule.LEGACY_RUNTIME_GLOBAL_NAME, "AstraRuntime");
+assert.equal(typeof runtimeModule.createLegacyRuntimeBindings, "function");
 assert.equal(typeof runtimeModule.startLegacyRuntime, "function");
 const bootstrapModule = await import(
   pathToFileURL(path.join(root, "src/app/bootstrap.js")).href
@@ -128,11 +143,25 @@ assert.deepEqual(
 );
 
 const appSource = read("app.js");
-assert.match(appSource, /astra-tarot-history-v1/, "Legacy history storage key changed");
-assert.match(appSource, /astra-tarot-settings-v1/, "Legacy settings storage key changed");
-assert.match(appSource, /const HISTORY_LIMIT = 20;/, "Legacy history limit baseline changed");
-assert.match(appSource, /window\.TarotData/, "Legacy app must remain behind the MOD-003A bridge until MOD-006A");
-assert.match(appSource, /Math\.random\(\)/, "Current random fallback must be recorded until MOD-003B");
+const storageConfigSource = read("src/config/legacy-storage.js");
+assert.match(storageConfigSource, /astra-tarot-history-v1/, "Legacy history storage key changed");
+assert.match(storageConfigSource, /astra-tarot-settings-v1/, "Legacy settings storage key changed");
+assert.match(storageConfigSource, /HISTORY_LIMIT = 20/, "Legacy history limit baseline changed");
+assert.match(appSource, /window\.TarotData/, "Legacy app must remain behind the bridge until MOD-006A");
+assert.match(appSource, /window\.AstraRuntime/, "Legacy app must consume MOD-003B runtime bindings");
+for (const extractedImplementation of [
+  "function loadSettings",
+  "function loadHistory",
+  "function randomUnit",
+  "function secureShuffle",
+  "function resolveDeckStyle",
+  "function cardImagePath",
+  "function escapeHtml",
+  "function lifecycleEndpoint",
+]) {
+  assert.equal(appSource.includes(extractedImplementation), false, `${extractedImplementation} still lives in app.js`);
+}
+assert.equal(appSource.includes("Math.random"), false, "app.js still mixes platform and business random");
 
 const indexSource = read("index.html");
 assert.ok(
@@ -148,6 +177,8 @@ const legacyRuntimeSource = read("src/app/legacy-runtime.js");
 assert.match(legacyRuntimeSource, /LEGACY_SCRIPT_PATHS/);
 assert.match(legacyRuntimeSource, /data\.js/);
 assert.match(legacyRuntimeSource, /app\.js/);
+assert.match(legacyRuntimeSource, /createLegacyRuntimeBindings/);
+assert.match(legacyRuntimeSource, /AstraRuntime/);
 
 assert.ok(
   indexSource.includes('<link rel="stylesheet" href="src/styles/index.css" />'),
@@ -183,12 +214,23 @@ for (const relativePath of cssImports) {
 
 const serviceWorkerSource = read("sw.js");
 assert.match(serviceWorkerSource, /cache\.addAll\(CORE_FILES\)/, "Current precache baseline changed");
-assert.match(serviceWorkerSource, /astra-tarot-v7/, "MOD-003A must bump the cache version");
+assert.match(serviceWorkerSource, /astra-tarot-v8/, "MOD-003B must bump the cache version");
 for (const relativePath of [
   "src/styles/index.css",
   ...cssImports,
   "src/app/bootstrap.js",
   "src/app/legacy-runtime.js",
+  "src/config/decks.js",
+  "src/config/legacy-storage.js",
+  "src/core/html.js",
+  "src/core/random/business-random.js",
+  "src/platform/assets.js",
+  "src/platform/entropy.js",
+  "src/platform/lifecycle-client.js",
+  "src/platform/pwa-client.js",
+  "src/storage/settings.js",
+  "src/storage/legacy-history.js",
+  "src/storage/legacy-record.js",
   "data.js",
   "app.js",
 ]) {
@@ -208,7 +250,7 @@ assert.equal(qualityBaseline.schemaVersion, 1);
 assert.deepEqual(
   qualityBaseline.knownDebt.map((item) => [item.path, item.baselineLines, item.expiresAfterTask]),
   [
-    ["app.js", 1528, "MOD-006A"],
+    ["app.js", 1353, "MOD-006A"],
     ["data.js", 637, "MOD-006A"],
   ],
 );
@@ -234,5 +276,5 @@ for (const requiredText of [
 }
 
 console.log(
-  "MOD-003A module contract passed: native ESM entry, controlled legacy bridge, Node format, CSS cascade, and PWA resources are preserved.",
+  "MOD-003B module contract passed: foundation modules are wired through the controlled bridge while public IDs, CSS, and PWA resources remain stable.",
 );

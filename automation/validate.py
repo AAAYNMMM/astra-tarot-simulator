@@ -191,6 +191,10 @@ def baseline_steps(node: str) -> list[tuple[str, list[str]]]:
             [node, "tests/smoke_test.js"],
         ),
         (
+            "node-foundation-contract",
+            [node, "tests/foundation_contract_test.mjs"],
+        ),
+        (
             "node-module-contract",
             [node, "tests/module_contract_test.mjs"],
         ),

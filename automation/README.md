@@ -4,7 +4,7 @@
 
 ## 当前实现范围
 
-Phase M 的 `MOD-001`、`MOD-002` 与 `MOD-003A` 当前实现：
+Phase M 的 `MOD-001`、`MOD-002`、`MOD-003A` 与 `MOD-003B` 当前实现：
 
 ```text
 python automation/validate.py --scope baseline
@@ -14,9 +14,10 @@ python automation/validate.py --scope baseline
 
 1. `python -m unittest discover -s tests -v`
 2. `node tests/smoke_test.js`
-3. `node tests/module_contract_test.mjs`
-4. `python scripts/check_module_size.py --mode baseline --format json`
-5. `python scripts/check_import_boundaries.py --format json`
+3. `node tests/foundation_contract_test.mjs`
+4. `node tests/module_contract_test.mjs`
+5. `python scripts/check_module_size.py --mode baseline --format json`
+6. `python scripts/check_import_boundaries.py --format json`
 
 脚本不使用 shell 拼接，不修改源码，并设置 `PYTHONDONTWRITEBYTECODE=1`。最终在标准输出中写出：
 
@@ -96,3 +97,12 @@ Node 缺失属于验证失败，不得静默跳过。`package.json` 仅声明 `p
 - `MOD-006D`：`--scope full`、浏览器回归和 Phase M 收口。
 
 未实现的 scope 不得用 baseline 冒充。
+
+
+## MOD-003B 基础边界
+
+- `app.js` 当前基线下调为 1353 行，仍为 `MOD-006A` 前必须清除的 WARN。
+- 业务随机位于 `src/core/random/business-random.js`，保留Web Crypto优先和显式普通随机回退，可注入测试源。
+- 平台安全熵位于 `src/platform/entropy.js`，生命周期ID不得使用 `Math.random`；无安全熵时禁用生命周期信号。
+- 配置、资源、设置、历史、旧ReadingRecord、PWA注册和生命周期均由真实兼容桥注入旧应用。
+- `tests/foundation_contract_test.mjs` 直接验证这些模块，不需要浏览器或npm依赖。

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "task": "MOD-003A",
+  "task": "MOD-003B",
   "manualFileLimits": {
     "javascript": 600,
     "css": 900,
@@ -25,7 +25,7 @@
     {
       "path": "app.js",
       "kind": "javascript",
-      "baselineLines": 1528,
+      "baselineLines": 1353,
       "hardLimit": 600,
       "statusAtOrBelowBaseline": "WARN",
       "mustNotGrow": true,

@@ -129,3 +129,8 @@ src/app/
 ```
 
 `bootstrap.js` 是 `index.html` 的唯一脚本入口。`legacy-runtime.js` 顺序加载根目录 `data.js` 和 `app.js`，并验证 `window.TarotData` 已建立。两个模块不引入依赖、不使用裸导入，并可被 Node 安全导入；旧全局和大型文件继续受 `MOD-006A` 删除门禁约束。
+
+
+## 当前活动JavaScript基础模块
+
+`MOD-003B` 已让配置、核心工具、平台客户端和存储适配器通过 `src/app/legacy-runtime.js` 被真实页面使用。业务随机位于core层；安全熵、生命周期和PWA位于platform层；设置与旧历史位于storage层。旧 `app.js` 只通过受控 `window.AstraRuntime` 消费这些能力。

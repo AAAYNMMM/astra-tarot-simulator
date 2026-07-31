@@ -497,3 +497,29 @@ Service Worker临时资源列表已同步并提升缓存版本。根目录旧样
 - `tests/smoke_test.js` 已转换为 ESM，原命令 `node tests/smoke_test.js` 保持可用。
 - Service Worker 临时清单缓存模块入口、兼容桥及两个旧脚本。
 - 兼容桥与 `window.TarotData` 的删除任务仍为 `MOD-006A`。
+
+
+---
+
+## 15. MOD-003B 已接线基础模块
+
+当前真实页面在兼容桥加载 `app.js` 前安装冻结的 `window.AstraRuntime`：
+
+```text
+src/config/decks.js
+src/config/legacy-storage.js
+src/core/html.js
+src/core/random/business-random.js
+src/platform/assets.js
+src/platform/entropy.js
+src/platform/lifecycle-client.js
+src/platform/pwa-client.js
+src/storage/settings.js
+src/storage/legacy-history.js
+src/storage/legacy-record.js
+```
+
+- `app.js` 不再实现以上能力，当前基线为 1353 行。
+- 业务随机与平台安全熵分开；仅业务随机允许显式普通随机回退。
+- 平台安全熵不可用时，本地生命周期客户端禁用，不使用弱随机伪装安全ID。
+- 旧 `window.TarotData` 和 `window.AstraRuntime` 只属于Phase M兼容层，删除任务为 `MOD-006A`。

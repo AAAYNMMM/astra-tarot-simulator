@@ -55,6 +55,17 @@ class TarotAppContractTests(unittest.TestCase):
         self.assertFalse((ROOT / "styles.css").exists())
         self.assertTrue((ROOT / "src/app/bootstrap.js").is_file())
         self.assertTrue((ROOT / "src/app/legacy-runtime.js").is_file())
+        self.assertTrue((ROOT / "src/config/decks.js").is_file())
+        self.assertTrue((ROOT / "src/config/legacy-storage.js").is_file())
+        self.assertTrue((ROOT / "src/core/html.js").is_file())
+        self.assertTrue((ROOT / "src/core/random/business-random.js").is_file())
+        self.assertTrue((ROOT / "src/platform/assets.js").is_file())
+        self.assertTrue((ROOT / "src/platform/entropy.js").is_file())
+        self.assertTrue((ROOT / "src/platform/lifecycle-client.js").is_file())
+        self.assertTrue((ROOT / "src/platform/pwa-client.js").is_file())
+        self.assertTrue((ROOT / "src/storage/settings.js").is_file())
+        self.assertTrue((ROOT / "src/storage/legacy-history.js").is_file())
+        self.assertTrue((ROOT / "src/storage/legacy-record.js").is_file())
 
     def test_html_has_primary_interaction_contract(self) -> None:
         html = (ROOT / "index.html").read_text(encoding="utf-8")
@@ -198,6 +209,8 @@ class TarotAppContractTests(unittest.TestCase):
 
     def test_deck_selection_switches_real_faces_and_backs_without_color_filters(self) -> None:
         app_source = (ROOT / "app.js").read_text(encoding="utf-8")
+        deck_source = (ROOT / "src/config/decks.js").read_text(encoding="utf-8")
+        asset_source = (ROOT / "src/platform/assets.js").read_text(encoding="utf-8")
         styles = read_styles()
         html = (ROOT / "index.html").read_text(encoding="utf-8")
         for deck_id, deck_name, asset_directory in (
@@ -206,11 +219,12 @@ class TarotAppContractTests(unittest.TestCase):
             ("swiss", "瑞士 1JJ", "assets/decks/swiss-1jj"),
             ("piedmont", "皮埃蒙特", "assets/decks/piedmont"),
         ):
-            self.assertIn(f'id: "{deck_id}"', app_source)
-            self.assertIn(f'name: "{deck_name}"', app_source)
-            self.assertIn(f'assetDirectory: "{asset_directory}"', app_source)
+            self.assertIn(f'id: "{deck_id}"', deck_source)
+            self.assertIn(f'name: "{deck_name}"', deck_source)
+            self.assertIn(f'assetDirectory: "{asset_directory}"', deck_source)
         self.assertIn("cardImagePath(card.id, deckStyle)", app_source)
         self.assertIn("cardBackPath(deckStyle)", app_source)
+        self.assertIn("resolveDeckStyle", asset_source)
         self.assertIn('class="tarot-face-art"', app_source)
         self.assertIn("选择牌面", html)
         self.assertIn("正面与牌背一一对应", html)
@@ -229,6 +243,17 @@ class TarotAppContractTests(unittest.TestCase):
             "app.js",
             "src/app/bootstrap.js",
             "src/app/legacy-runtime.js",
+            "src/config/decks.js",
+            "src/config/legacy-storage.js",
+            "src/core/html.js",
+            "src/core/random/business-random.js",
+            "src/platform/assets.js",
+            "src/platform/entropy.js",
+            "src/platform/lifecycle-client.js",
+            "src/platform/pwa-client.js",
+            "src/storage/settings.js",
+            "src/storage/legacy-history.js",
+            "src/storage/legacy-record.js",
         ):
             content = (ROOT / filename).read_text(encoding="utf-8")
             self.assertNotIn("https://cdn.", content)
@@ -291,14 +316,18 @@ class TarotAppContractTests(unittest.TestCase):
             serving_thread.join(timeout=2)
             monitor_thread.join(timeout=1)
 
-    def test_page_lifecycle_stream_is_wired_end_to_end(self) -> None:
-        app_source = (ROOT / "app.js").read_text(encoding="utf-8")
-        launcher_source = (ROOT / "run.py").read_text(encoding="utf-8")
-        worker_source = (ROOT / "sw.js").read_text(encoding="utf-8")
-        self.assertIn("new EventSource", app_source)
-        self.assertIn("/__astra/events", launcher_source)
-        self.assertIn('startsWith("/__astra/")', worker_source)
-
+        def test_page_lifecycle_stream_is_wired_end_to_end(self) -> None:
+            app_source = (ROOT / "app.js").read_text(encoding="utf-8")
+            lifecycle_source = (ROOT / "src/platform/lifecycle-client.js").read_text(encoding="utf-8")
+            entropy_source = (ROOT / "src/platform/entropy.js").read_text(encoding="utf-8")
+            launcher_source = (ROOT / "run.py").read_text(encoding="utf-8")
+            worker_source = (ROOT / "sw.js").read_text(encoding="utf-8")
+            self.assertIn("registerLocalLifecycle", app_source)
+            self.assertIn("new EventSourceCtor", lifecycle_source)
+            self.assertNotIn("Math.random", lifecycle_source)
+            self.assertNotIn("Math.random", entropy_source)
+            self.assertIn("/__astra/events", launcher_source)
+            self.assertIn('startsWith("/__astra/")', worker_source)
 
 if __name__ == "__main__":
     unittest.main()

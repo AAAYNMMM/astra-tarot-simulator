@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "test:smoke": "node tests/smoke_test.js",
-    "test:contracts": "node tests/module_contract_test.mjs"
+    "test:contracts": "node tests/module_contract_test.mjs",
+    "test:foundation": "node tests/foundation_contract_test.mjs"
   }
 }

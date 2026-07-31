@@ -1,4 +1,4 @@
-const CACHE_NAME = "astra-tarot-v7";
+const CACHE_NAME = "astra-tarot-v8";
 const CARD_RANKS = [
   "ace",
   "two",
@@ -47,6 +47,17 @@ const CORE_FILES = [
   "./src/styles/responsive.css",
   "./src/app/bootstrap.js",
   "./src/app/legacy-runtime.js",
+  "./src/config/decks.js",
+  "./src/config/legacy-storage.js",
+  "./src/core/html.js",
+  "./src/core/random/business-random.js",
+  "./src/platform/assets.js",
+  "./src/platform/entropy.js",
+  "./src/platform/lifecycle-client.js",
+  "./src/platform/pwa-client.js",
+  "./src/storage/settings.js",
+  "./src/storage/legacy-history.js",
+  "./src/storage/legacy-record.js",
   "./data.js",
   "./app.js",
   "./icon.svg",

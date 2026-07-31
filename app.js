@@ -1,64 +1,35 @@
 (() => {
   "use strict";
 
-  const { deck, categories, spreads } = window.TarotData;
-  const HISTORY_KEY = "astra-tarot-history-v1";
-  const SETTINGS_KEY = "astra-tarot-settings-v1";
-  const HISTORY_LIMIT = 20;
-  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-  const lifecycleClientId =
-    window.crypto?.randomUUID?.() ||
-    `astra-${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
-  const DECK_STYLES = Object.freeze([
-    {
-      id: "rws",
-      name: "经典韦特",
-      description: "1909 · 象征叙事",
-      assetDirectory: "assets/rws",
-      faceExtension: "jpg",
-      cardBack: "assets/rws/card-back-rws.jpg",
-      previewCard: "major-17",
-    },
-    {
-      id: "arnoult",
-      name: "阿尔诺古典",
-      description: "1748 · 木刻原色",
-      assetDirectory: "assets/decks/arnoult",
-      faceExtension: "png",
-      cardBack: "assets/decks/arnoult/card-back.jpg",
-      previewCard: "major-2",
-    },
-    {
-      id: "swiss",
-      name: "瑞士 1JJ",
-      description: "19 世纪 · 明快原色",
-      assetDirectory: "assets/decks/swiss-1jj",
-      faceExtension: "jpg",
-      faceExtensions: Object.freeze({ "major-5": "png" }),
-      cardBack: "assets/decks/swiss-1jj/card-back.png",
-      previewCard: "major-18",
-    },
-    {
-      id: "piedmont",
-      name: "皮埃蒙特",
-      description: "1865 · 意式双头",
-      assetDirectory: "assets/decks/piedmont",
-      faceExtension: "jpg",
-      cardBack: "assets/decks/piedmont/card-back.jpg",
-      previewCard: "major-19",
-    },
-  ]);
-  const LEGACY_DECK_IDS = Object.freeze({
-    vintage: "arnoult",
-    moonlit: "swiss",
-    rose: "piedmont",
-  });
-  const storedDeckStyle = LEGACY_DECK_IDS[loadSettings().deckStyle] || loadSettings().deckStyle;
-  const initialDeckStyle = DECK_STYLES.some((style) => style.id === storedDeckStyle)
-    ? storedDeckStyle
-    : "rws";
+const { deck, categories, spreads } = window.TarotData;
+const runtime = window.AstraRuntime;
+if (!runtime) throw new Error("AstraRuntime bindings were not installed.");
+const {
+  config: { DECK_STYLES, LEGACY_DECK_IDS },
+  core: { escapeHtml, randomUnit, secureShuffle },
+  platform: {
+    resolveDeckStyle,
+    cardImagePath,
+    cardBackPath,
+    registerServiceWorker,
+    registerLocalLifecycle,
+  },
+  storage: {
+    loadSettings,
+    saveSettings,
+    loadHistory,
+    writeHistory: writeHistoryToStorage,
+    readingRecord,
+  },
+} = runtime;
+const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+const storedSettings = loadSettings();
+const storedDeckStyle = LEGACY_DECK_IDS[storedSettings.deckStyle] || storedSettings.deckStyle;
+const initialDeckStyle = DECK_STYLES.some((style) => style.id === storedDeckStyle)
+  ? storedDeckStyle
+  : "rws";
 
-  const byId = (id) => document.getElementById(id);
+const byId = (id) => document.getElementById(id);
   const dom = {
     brandHome: byId("brandHome"),
     categoryGrid: byId("categoryGrid"),
@@ -123,63 +94,13 @@
     confirmResolver: null,
     installPrompt: null,
   };
-  let lifecycleStream = null;
+function writeHistory(records) {
+  const saved = writeHistoryToStorage(records);
+  if (!saved) showToast("浏览器阻止了本地存储，本次记录未保存", "!");
+  return saved;
+}
 
-  function loadSettings() {
-    try {
-      return JSON.parse(localStorage.getItem(SETTINGS_KEY) || "{}");
-    } catch {
-      return {};
-    }
-  }
-
-  function saveSettings(patch) {
-    try {
-      const next = { ...loadSettings(), ...patch };
-      localStorage.setItem(SETTINGS_KEY, JSON.stringify(next));
-    } catch {
-      // The app remains fully usable when browser storage is unavailable.
-    }
-  }
-
-  function loadHistory() {
-    try {
-      const parsed = JSON.parse(localStorage.getItem(HISTORY_KEY) || "[]");
-      return Array.isArray(parsed) ? parsed : [];
-    } catch {
-      return [];
-    }
-  }
-
-  function writeHistory(records) {
-    try {
-      localStorage.setItem(HISTORY_KEY, JSON.stringify(records.slice(0, HISTORY_LIMIT)));
-      return true;
-    } catch {
-      showToast("浏览器阻止了本地存储，本次记录未保存", "!");
-      return false;
-    }
-  }
-
-  function randomUnit() {
-    if (window.crypto?.getRandomValues) {
-      const buffer = new Uint32Array(1);
-      window.crypto.getRandomValues(buffer);
-      return buffer[0] / 4294967296;
-    }
-    return Math.random();
-  }
-
-  function secureShuffle(items) {
-    const result = [...items];
-    for (let index = result.length - 1; index > 0; index -= 1) {
-      const target = Math.floor(randomUnit() * (index + 1));
-      [result[index], result[target]] = [result[target], result[index]];
-    }
-    return result;
-  }
-
-  function delay(milliseconds) {
+function delay(milliseconds) {
     const duration = reducedMotion.matches ? Math.min(milliseconds, 35) : milliseconds;
     return new Promise((resolve) => window.setTimeout(resolve, duration));
   }
@@ -199,31 +120,6 @@
 
   function currentDeckStyle() {
     return DECK_STYLES.find((style) => style.id === state.deckStyleId) || DECK_STYLES[0];
-  }
-
-  function resolveDeckStyle(style) {
-    const requestedId = typeof style === "string" ? style : style?.id;
-    const deckId = LEGACY_DECK_IDS[requestedId] || requestedId;
-    return DECK_STYLES.find((item) => item.id === deckId) || DECK_STYLES[0];
-  }
-
-  function cardImagePath(cardId, style = currentDeckStyle()) {
-    const deckStyle = resolveDeckStyle(style);
-    const extension = deckStyle.faceExtensions?.[cardId] || deckStyle.faceExtension;
-    return `${deckStyle.assetDirectory}/${cardId}.${extension}`;
-  }
-
-  function cardBackPath(style = currentDeckStyle()) {
-    return resolveDeckStyle(style).cardBack;
-  }
-
-  function escapeHtml(value) {
-    return String(value)
-      .replaceAll("&", "&amp;")
-      .replaceAll("<", "&lt;")
-      .replaceAll(">", "&gt;")
-      .replaceAll('"', "&quot;")
-      .replaceAll("'", "&#039;");
   }
 
   function renderCategories() {
@@ -1112,26 +1008,6 @@
     });
   }
 
-  function readingRecord(reading) {
-    return {
-      id: reading.id,
-      createdAt: reading.createdAt,
-      categoryId: reading.category.id,
-      categoryName: reading.category.name,
-      categoryIcon: reading.category.icon,
-      categoryAccent: reading.category.accent,
-      question: reading.question.text,
-      spreadName: reading.spread.name,
-      deckName: resolveDeckStyle(reading.deckStyle).name,
-      cards: reading.draws.map((draw) => ({
-        name: draw.card.name,
-        orientation: draw.reversed ? "逆位" : "正位",
-        position: draw.position.name,
-      })),
-      headline: reading.synthesis?.headline || "",
-    };
-  }
-
   function persistCurrentReading() {
     if (!state.reading?.synthesis) return;
     const records = loadHistory();
@@ -1457,55 +1333,6 @@
         }
       }
     });
-  }
-
-  function registerServiceWorker() {
-    if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
-      navigator.serviceWorker.register("./sw.js").catch(() => {
-        // Offline installation is an enhancement; the simulator itself needs no service worker.
-      });
-    }
-  }
-
-  function lifecycleEndpoint(action) {
-    const localHosts = new Set(["127.0.0.1", "localhost", "::1"]);
-    if (location.protocol !== "http:" || !localHosts.has(location.hostname)) return null;
-    return `/__astra/${action}?client=${encodeURIComponent(lifecycleClientId)}`;
-  }
-
-  function notifyLocalLifecycle(action) {
-    const endpoint = lifecycleEndpoint(action);
-    if (!endpoint) return;
-    if (action === "close" && navigator.sendBeacon) {
-      const queued = navigator.sendBeacon(endpoint);
-      if (queued) return;
-    }
-    fetch(endpoint, {
-      method: "POST",
-      cache: "no-store",
-      keepalive: true,
-    }).catch(() => {
-      // Lifecycle signaling is only available when launched through run.py.
-    });
-  }
-
-  function registerLocalLifecycle() {
-    if (!lifecycleEndpoint("open")) return;
-    notifyLocalLifecycle("open");
-    if (window.EventSource) {
-      lifecycleStream = new EventSource(
-        `/__astra/events?client=${encodeURIComponent(lifecycleClientId)}`,
-      );
-    }
-    window.addEventListener("pageshow", () => notifyLocalLifecycle("open"));
-    window.addEventListener("focus", () => notifyLocalLifecycle("open"));
-    window.setInterval(() => notifyLocalLifecycle("open"), 10000);
-    const notifyClose = () => {
-      lifecycleStream?.close();
-      notifyLocalLifecycle("close");
-    };
-    window.addEventListener("beforeunload", notifyClose);
-    window.addEventListener("pagehide", notifyClose);
   }
 
   function initialize() {
