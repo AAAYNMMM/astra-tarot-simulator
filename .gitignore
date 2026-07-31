@@ -12,3 +12,7 @@ __pycache__/
 design-qa.md
 !.qa/question-library-report.json
 !.qa/observation-engine-report.json
+!.qa/evaluation/multi-card-corpus.json
+!.qa/evaluation/human-review-packet.json
+!.qa/evaluation/phase-8-evaluation-report.json
+!.qa/evaluation/blind-result.json

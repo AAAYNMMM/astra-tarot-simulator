@@ -1,0 +1,794 @@
+[
+  {
+    "cardIds": [
+      "major-0",
+      "major-5",
+      "major-10"
+    ],
+    "group": "multi-card",
+    "id": "multi-love-1",
+    "orientations": [
+      "upright",
+      "reversed",
+      "upright"
+    ],
+    "questionId": "love-current",
+    "spreadId": "timeline"
+  },
+  {
+    "cardIds": [
+      "major-7",
+      "major-12",
+      "major-17",
+      "wands-ace",
+      "wands-six"
+    ],
+    "group": "multi-card",
+    "id": "multi-love-2",
+    "orientations": [
+      "reversed",
+      "upright",
+      "upright",
+      "reversed",
+      "upright"
+    ],
+    "questionId": "love-boundaries",
+    "spreadId": "cross"
+  },
+  {
+    "cardIds": [
+      "major-14",
+      "major-19",
+      "wands-three",
+      "wands-eight",
+      "cups-three",
+      "cups-eight",
+      "swords-three",
+      "swords-eight",
+      "pentacles-three",
+      "pentacles-eight"
+    ],
+    "group": "multi-card",
+    "id": "multi-love-3",
+    "orientations": [
+      "upright",
+      "upright",
+      "reversed",
+      "upright",
+      "upright",
+      "reversed",
+      "upright",
+      "upright",
+      "reversed",
+      "upright"
+    ],
+    "questionId": "love-trust",
+    "spreadId": "celtic"
+  },
+  {
+    "cardIds": [
+      "major-21",
+      "wands-five",
+      "wands-ten"
+    ],
+    "group": "multi-card",
+    "id": "multi-love-4",
+    "orientations": [
+      "upright",
+      "reversed",
+      "upright"
+    ],
+    "questionId": "love-choice",
+    "spreadId": "timeline"
+  },
+  {
+    "cardIds": [
+      "wands-seven",
+      "cups-two",
+      "cups-seven",
+      "swords-two",
+      "swords-seven"
+    ],
+    "group": "multi-card",
+    "id": "multi-love-5",
+    "orientations": [
+      "reversed",
+      "upright",
+      "upright",
+      "reversed",
+      "upright"
+    ],
+    "questionId": "love-repair",
+    "spreadId": "cross"
+  },
+  {
+    "cardIds": [
+      "cups-four",
+      "cups-nine",
+      "swords-four",
+      "swords-nine",
+      "pentacles-four",
+      "pentacles-nine",
+      "major-3",
+      "major-8",
+      "major-13",
+      "major-18"
+    ],
+    "group": "multi-card",
+    "id": "multi-love-6",
+    "orientations": [
+      "upright",
+      "upright",
+      "reversed",
+      "upright",
+      "upright",
+      "reversed",
+      "upright",
+      "upright",
+      "reversed",
+      "upright"
+    ],
+    "questionId": "love-third-party",
+    "spreadId": "celtic"
+  },
+  {
+    "cardIds": [
+      "swords-ace",
+      "swords-six",
+      "pentacles-ace"
+    ],
+    "group": "multi-card",
+    "id": "multi-career-1",
+    "orientations": [
+      "upright",
+      "reversed",
+      "upright"
+    ],
+    "questionId": "career-focus",
+    "spreadId": "timeline"
+  },
+  {
+    "cardIds": [
+      "swords-eight",
+      "pentacles-three",
+      "pentacles-eight",
+      "major-2",
+      "major-7"
+    ],
+    "group": "multi-card",
+    "id": "multi-career-2",
+    "orientations": [
+      "reversed",
+      "upright",
+      "upright",
+      "reversed",
+      "upright"
+    ],
+    "questionId": "career-change",
+    "spreadId": "cross"
+  },
+  {
+    "cardIds": [
+      "pentacles-five",
+      "pentacles-ten",
+      "major-4",
+      "major-9",
+      "major-14",
+      "major-19",
+      "wands-three",
+      "wands-eight",
+      "cups-three",
+      "cups-eight"
+    ],
+    "group": "multi-card",
+    "id": "multi-career-3",
+    "orientations": [
+      "upright",
+      "upright",
+      "reversed",
+      "upright",
+      "upright",
+      "reversed",
+      "upright",
+      "upright",
+      "reversed",
+      "upright"
+    ],
+    "questionId": "career-growth",
+    "spreadId": "celtic"
+  },
+  {
+    "cardIds": [
+      "major-1",
+      "major-6",
+      "major-11"
+    ],
+    "group": "multi-card",
+    "id": "multi-career-4",
+    "orientations": [
+      "upright",
+      "reversed",
+      "upright"
+    ],
+    "questionId": "career-conflict",
+    "spreadId": "timeline"
+  },
+  {
+    "cardIds": [
+      "major-8",
+      "major-13",
+      "major-18",
+      "wands-two",
+      "wands-seven"
+    ],
+    "group": "multi-card",
+    "id": "multi-career-5",
+    "orientations": [
+      "reversed",
+      "upright",
+      "upright",
+      "reversed",
+      "upright"
+    ],
+    "questionId": "career-burnout",
+    "spreadId": "cross"
+  },
+  {
+    "cardIds": [
+      "major-15",
+      "major-20",
+      "wands-four",
+      "wands-nine",
+      "cups-four",
+      "cups-nine",
+      "swords-four",
+      "swords-nine",
+      "pentacles-four",
+      "pentacles-nine"
+    ],
+    "group": "multi-card",
+    "id": "multi-career-6",
+    "orientations": [
+      "upright",
+      "upright",
+      "reversed",
+      "upright",
+      "upright",
+      "reversed",
+      "upright",
+      "upright",
+      "reversed",
+      "upright"
+    ],
+    "questionId": "career-portfolio",
+    "spreadId": "celtic"
+  },
+  {
+    "cardIds": [
+      "wands-ace",
+      "wands-six",
+      "cups-ace"
+    ],
+    "group": "multi-card",
+    "id": "multi-wealth-1",
+    "orientations": [
+      "upright",
+      "reversed",
+      "upright"
+    ],
+    "questionId": "wealth-state",
+    "spreadId": "timeline"
+  },
+  {
+    "cardIds": [
+      "wands-eight",
+      "cups-three",
+      "cups-eight",
+      "swords-three",
+      "swords-eight"
+    ],
+    "group": "multi-card",
+    "id": "multi-wealth-2",
+    "orientations": [
+      "reversed",
+      "upright",
+      "upright",
+      "reversed",
+      "upright"
+    ],
+    "questionId": "wealth-risk",
+    "spreadId": "cross"
+  },
+  {
+    "cardIds": [
+      "cups-five",
+      "cups-ten",
+      "swords-five",
+      "swords-ten",
+      "pentacles-five",
+      "pentacles-ten",
+      "major-4",
+      "major-9",
+      "major-14",
+      "major-19"
+    ],
+    "group": "multi-card",
+    "id": "multi-wealth-3",
+    "orientations": [
+      "upright",
+      "upright",
+      "reversed",
+      "upright",
+      "upright",
+      "reversed",
+      "upright",
+      "upright",
+      "reversed",
+      "upright"
+    ],
+    "questionId": "wealth-budget",
+    "spreadId": "celtic"
+  },
+  {
+    "cardIds": [
+      "swords-two",
+      "swords-seven",
+      "pentacles-two"
+    ],
+    "group": "multi-card",
+    "id": "multi-wealth-4",
+    "orientations": [
+      "upright",
+      "reversed",
+      "upright"
+    ],
+    "questionId": "wealth-investment",
+    "spreadId": "timeline"
+  },
+  {
+    "cardIds": [
+      "swords-nine",
+      "pentacles-four",
+      "pentacles-nine",
+      "major-3",
+      "major-8"
+    ],
+    "group": "multi-card",
+    "id": "multi-wealth-5",
+    "orientations": [
+      "reversed",
+      "upright",
+      "upright",
+      "reversed",
+      "upright"
+    ],
+    "questionId": "wealth-loss",
+    "spreadId": "cross"
+  },
+  {
+    "cardIds": [
+      "pentacles-six",
+      "major-0",
+      "major-5",
+      "major-10",
+      "major-15",
+      "major-20",
+      "wands-four",
+      "wands-nine",
+      "cups-four",
+      "cups-nine"
+    ],
+    "group": "multi-card",
+    "id": "multi-wealth-6",
+    "orientations": [
+      "upright",
+      "upright",
+      "reversed",
+      "upright",
+      "upright",
+      "reversed",
+      "upright",
+      "upright",
+      "reversed",
+      "upright"
+    ],
+    "questionId": "wealth-purchase",
+    "spreadId": "celtic"
+  },
+  {
+    "cardIds": [
+      "major-2",
+      "major-7",
+      "major-12"
+    ],
+    "group": "multi-card",
+    "id": "multi-growth-1",
+    "orientations": [
+      "upright",
+      "reversed",
+      "upright"
+    ],
+    "questionId": "growth-lesson",
+    "spreadId": "timeline"
+  },
+  {
+    "cardIds": [
+      "major-9",
+      "major-14",
+      "major-19",
+      "wands-three",
+      "wands-eight"
+    ],
+    "group": "multi-card",
+    "id": "multi-growth-2",
+    "orientations": [
+      "reversed",
+      "upright",
+      "upright",
+      "reversed",
+      "upright"
+    ],
+    "questionId": "growth-boundary",
+    "spreadId": "cross"
+  },
+  {
+    "cardIds": [
+      "major-16",
+      "major-21",
+      "wands-five",
+      "wands-ten",
+      "cups-five",
+      "cups-ten",
+      "swords-five",
+      "swords-ten",
+      "pentacles-five",
+      "pentacles-ten"
+    ],
+    "group": "multi-card",
+    "id": "multi-growth-3",
+    "orientations": [
+      "upright",
+      "upright",
+      "reversed",
+      "upright",
+      "upright",
+      "reversed",
+      "upright",
+      "upright",
+      "reversed",
+      "upright"
+    ],
+    "questionId": "growth-emotion",
+    "spreadId": "celtic"
+  },
+  {
+    "cardIds": [
+      "wands-two",
+      "wands-seven",
+      "cups-two"
+    ],
+    "group": "multi-card",
+    "id": "multi-growth-4",
+    "orientations": [
+      "upright",
+      "reversed",
+      "upright"
+    ],
+    "questionId": "growth-identity",
+    "spreadId": "timeline"
+  },
+  {
+    "cardIds": [
+      "wands-nine",
+      "cups-four",
+      "cups-nine",
+      "swords-four",
+      "swords-nine"
+    ],
+    "group": "multi-card",
+    "id": "multi-growth-5",
+    "orientations": [
+      "reversed",
+      "upright",
+      "upright",
+      "reversed",
+      "upright"
+    ],
+    "questionId": "growth-practice",
+    "spreadId": "cross"
+  },
+  {
+    "cardIds": [
+      "cups-six",
+      "swords-ace",
+      "swords-six",
+      "pentacles-ace",
+      "pentacles-six",
+      "major-0",
+      "major-5",
+      "major-10",
+      "major-15",
+      "major-20"
+    ],
+    "group": "multi-card",
+    "id": "multi-growth-6",
+    "orientations": [
+      "upright",
+      "upright",
+      "reversed",
+      "upright",
+      "upright",
+      "reversed",
+      "upright",
+      "upright",
+      "reversed",
+      "upright"
+    ],
+    "questionId": "growth-help",
+    "spreadId": "celtic"
+  },
+  {
+    "cardIds": [
+      "swords-three",
+      "swords-eight",
+      "pentacles-three"
+    ],
+    "group": "multi-card",
+    "id": "multi-decision-1",
+    "orientations": [
+      "upright",
+      "reversed",
+      "upright"
+    ],
+    "questionId": "decision-see",
+    "spreadId": "timeline"
+  },
+  {
+    "cardIds": [
+      "swords-ten",
+      "pentacles-five",
+      "pentacles-ten",
+      "major-4",
+      "major-9"
+    ],
+    "group": "multi-card",
+    "id": "multi-decision-2",
+    "orientations": [
+      "reversed",
+      "upright",
+      "upright",
+      "reversed",
+      "upright"
+    ],
+    "questionId": "decision-change",
+    "spreadId": "cross"
+  },
+  {
+    "cardIds": [
+      "pentacles-seven",
+      "major-1",
+      "major-6",
+      "major-11",
+      "major-16",
+      "major-21",
+      "wands-five",
+      "wands-ten",
+      "cups-five",
+      "cups-ten"
+    ],
+    "group": "multi-card",
+    "id": "multi-decision-3",
+    "orientations": [
+      "upright",
+      "upright",
+      "reversed",
+      "upright",
+      "upright",
+      "reversed",
+      "upright",
+      "upright",
+      "reversed",
+      "upright"
+    ],
+    "questionId": "decision-evidence",
+    "spreadId": "celtic"
+  },
+  {
+    "cardIds": [
+      "major-3",
+      "major-8",
+      "major-13"
+    ],
+    "group": "multi-card",
+    "id": "multi-decision-4",
+    "orientations": [
+      "upright",
+      "reversed",
+      "upright"
+    ],
+    "questionId": "decision-reversible",
+    "spreadId": "timeline"
+  },
+  {
+    "cardIds": [
+      "major-10",
+      "major-15",
+      "major-20",
+      "wands-four",
+      "wands-nine"
+    ],
+    "group": "multi-card",
+    "id": "multi-decision-5",
+    "orientations": [
+      "reversed",
+      "upright",
+      "upright",
+      "reversed",
+      "upright"
+    ],
+    "questionId": "decision-safety",
+    "spreadId": "cross"
+  },
+  {
+    "cardIds": [
+      "major-17",
+      "wands-ace",
+      "wands-six",
+      "cups-ace",
+      "cups-six",
+      "swords-ace",
+      "swords-six",
+      "pentacles-ace",
+      "pentacles-six",
+      "major-0"
+    ],
+    "group": "multi-card",
+    "id": "multi-decision-6",
+    "orientations": [
+      "upright",
+      "upright",
+      "reversed",
+      "upright",
+      "upright",
+      "reversed",
+      "upright",
+      "upright",
+      "reversed",
+      "upright"
+    ],
+    "questionId": "decision-commitment",
+    "spreadId": "celtic"
+  },
+  {
+    "cardIds": [
+      "wands-three",
+      "wands-eight",
+      "cups-three"
+    ],
+    "group": "multi-card",
+    "id": "multi-daily-1",
+    "orientations": [
+      "upright",
+      "reversed",
+      "upright"
+    ],
+    "questionId": "daily-energy",
+    "spreadId": "timeline"
+  },
+  {
+    "cardIds": [
+      "wands-ten",
+      "cups-five",
+      "cups-ten",
+      "swords-five",
+      "swords-ten"
+    ],
+    "group": "multi-card",
+    "id": "multi-daily-2",
+    "orientations": [
+      "reversed",
+      "upright",
+      "upright",
+      "reversed",
+      "upright"
+    ],
+    "questionId": "daily-focus",
+    "spreadId": "cross"
+  },
+  {
+    "cardIds": [
+      "cups-seven",
+      "swords-two",
+      "swords-seven",
+      "pentacles-two",
+      "pentacles-seven",
+      "major-1",
+      "major-6",
+      "major-11",
+      "major-16",
+      "major-21"
+    ],
+    "group": "multi-card",
+    "id": "multi-daily-3",
+    "orientations": [
+      "upright",
+      "upright",
+      "reversed",
+      "upright",
+      "upright",
+      "reversed",
+      "upright",
+      "upright",
+      "reversed",
+      "upright"
+    ],
+    "questionId": "daily-priority",
+    "spreadId": "celtic"
+  },
+  {
+    "cardIds": [
+      "swords-four",
+      "swords-nine",
+      "pentacles-four"
+    ],
+    "group": "multi-card",
+    "id": "multi-daily-4",
+    "orientations": [
+      "upright",
+      "reversed",
+      "upright"
+    ],
+    "questionId": "daily-boundary",
+    "spreadId": "timeline"
+  },
+  {
+    "cardIds": [
+      "pentacles-ace",
+      "pentacles-six",
+      "major-0",
+      "major-5",
+      "major-10"
+    ],
+    "group": "multi-card",
+    "id": "multi-daily-5",
+    "orientations": [
+      "reversed",
+      "upright",
+      "upright",
+      "reversed",
+      "upright"
+    ],
+    "questionId": "daily-learning",
+    "spreadId": "cross"
+  },
+  {
+    "cardIds": [
+      "pentacles-eight",
+      "major-2",
+      "major-7",
+      "major-12",
+      "major-17",
+      "wands-ace",
+      "wands-six",
+      "cups-ace",
+      "cups-six",
+      "swords-ace"
+    ],
+    "group": "multi-card",
+    "id": "multi-daily-6",
+    "orientations": [
+      "upright",
+      "upright",
+      "reversed",
+      "upright",
+      "upright",
+      "reversed",
+      "upright",
+      "upright",
+      "reversed",
+      "upright"
+    ],
+    "questionId": "daily-uncertainty",
+    "spreadId": "celtic"
+  }
+]

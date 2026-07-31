@@ -1,0 +1,20 @@
+{
+  "schemaVersion": "1.0.0",
+  "datasetHash": "833898d81c5dea731ec43e567024a5c7586c44189bfb0209eaec6c0ba5c4d58e",
+  "caseCount": 48,
+  "averageScore": 10,
+  "minimumScore": 10,
+  "passRate": 1,
+  "metricRates": {
+    "pipeline": 1,
+    "semanticReferences": 1,
+    "questionFit": 1,
+    "orientationFidelity": 1,
+    "conclusionPolicy": 1,
+    "textSafety": 1,
+    "deterministic": 1,
+    "relationStructure": 1
+  },
+  "sourceContentLogged": false,
+  "status": "PASS"
+}

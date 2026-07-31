@@ -1,0 +1,522 @@
+{
+  "caseCount": 18,
+  "datasetId": "phase-8-human-review-v1",
+  "disagreementThreshold": 1.5,
+  "outputs": [
+    {
+      "cardIds": [
+        "major-0",
+        "major-5",
+        "major-10"
+      ],
+      "orientations": [
+        "upright",
+        "reversed",
+        "upright"
+      ],
+      "output": "这一部分更值得注意的是，局面处在尚未定型的开端，选择空间大于既有承诺。\n\n从这一层的牌面证据看，教皇：教皇作为状态线索时指出：成熟经验、共同价值或一位可信赖的引导者能帮助你建立稳定路径。\n\n从这一层的牌面证据看，命运之轮：识别正在改变的条件，准备一个顺势方案与一个保底方案。\n\n把各层信息合在一起，当前只能给出有限、可复核的方向判断。\n\n结论仍受以下条件约束：逆位机制使证据需要谨慎解释；两张牌之间存在条件关系；需要结合上下文；牌位本身带有条件性。\n\n部分问题维度目前证据不足，解读到此为止，不再向外推断。",
+      "provenance": {
+        "claimId": "claim-love-current-timeline",
+        "conflictCount": 0,
+        "evidenceCount": 5
+      },
+      "questionId": "love-current",
+      "reviewId": "review-01",
+      "sourceLabel": "candidate-A",
+      "spreadId": "timeline"
+    },
+    {
+      "cardIds": [
+        "major-7",
+        "major-12",
+        "major-17",
+        "wands-ace",
+        "wands-six"
+      ],
+      "orientations": [
+        "reversed",
+        "upright",
+        "upright",
+        "reversed",
+        "upright"
+      ],
+      "output": "放在当前问题中，这组证据提示，目标之间互相拉扯，导致表面前进而实际偏航。\n\n从这一层的牌面证据看，星星：把遥远愿景缩成一个本周能完成的温柔行动，让希望重新获得证据。\n\n这一部分更值得注意的是，权杖六：记录可验证成果，不让外界评价成为唯一尺度。\n\n综合现有证据，现有证据不足以给出单一方向。\n\n结论仍受以下条件约束：牌位职责要求结合具体情境；修正行动会影响结果；逆位机制使证据需要谨慎解释；后续变化可能改变当前判断；牌位本身带有条件性；需要结合上下文。\n\n牌面之间仍有不同方向的证据，因此这里保留张力，不把其中一方静默删除。",
+      "provenance": {
+        "claimId": "claim-love-boundaries-cross",
+        "conflictCount": 1,
+        "evidenceCount": 11
+      },
+      "questionId": "love-boundaries",
+      "reviewId": "review-02",
+      "sourceLabel": "candidate-A",
+      "spreadId": "cross"
+    },
+    {
+      "cardIds": [
+        "major-14",
+        "major-19",
+        "wands-three",
+        "wands-eight",
+        "cups-three",
+        "cups-eight",
+        "swords-three",
+        "swords-eight",
+        "pentacles-three",
+        "pentacles-eight"
+      ],
+      "orientations": [
+        "upright",
+        "upright",
+        "reversed",
+        "upright",
+        "upright",
+        "reversed",
+        "upright",
+        "upright",
+        "reversed",
+        "upright"
+      ],
+      "output": "从这一层的牌面证据看，节制：节制作为状态线索时指出：不同需求可以通过耐心调和形成新的平衡。稳步整合比激烈突破更有效。\n\n从这一层的牌面证据看，圣杯八：圣杯八作为状态线索时指出：某种满足已经不足以支撑成长，离开是为了寻找更深的意义。\n\n放在当前问题中，这组证据提示，权杖八：先确认关键信息，再给出简洁明确的回应。\n\n放在当前问题中，这组证据提示，宝剑三：不得把宝剑三解释成无条件要求；“心痛”必须服从事实、同意与承载能力。\n\n这一部分更值得注意的是，投入时间不能替代方向检查和外部反馈。\n\n在保留不确定性的前提下，现有证据不足以给出单一方向。\n\n结论仍受以下条件约束：牌位职责要求结合具体情境；修正行动会影响结果；关系证据置信度较低；两张牌之间存在条件关系；牌位本身带有条件性；后续变化可能改变当前判断；需要结合上下文；逆位机制使证据需要谨慎解释。\n\n牌面之间仍有不同方向的证据，因此这里保留张力，不把其中一方静默删除。",
+      "provenance": {
+        "claimId": "claim-love-trust-celtic",
+        "conflictCount": 2,
+        "evidenceCount": 19
+      },
+      "questionId": "love-trust",
+      "reviewId": "review-03",
+      "sourceLabel": "candidate-A",
+      "spreadId": "celtic"
+    },
+    {
+      "cardIds": [
+        "major-21",
+        "wands-five",
+        "wands-ten"
+      ],
+      "orientations": [
+        "upright",
+        "reversed",
+        "upright"
+      ],
+      "output": "从这一层的牌面证据看，世界：世界作为状态线索时指出：一个重要周期趋于完整，经验、资源与身份正在被整合。你可以带着成果进入新阶段。\n\n从这一层的牌面证据看，权杖五：权杖五作为状态线索时指出：多种意见正在碰撞，适度竞争能暴露差异并催生新方案。\n\n放在当前问题中，这组证据提示，权杖十：删减、委托或延后一项非核心任务。\n\n在保留不确定性的前提下，当前更适合在条件明确后行动。\n\n继续观察时，可把这些条件作为检查点：逆位机制使证据需要谨慎解释；后续变化可能改变当前判断；需要结合上下文；牌位本身带有条件性。",
+      "provenance": {
+        "claimId": "claim-love-choice-timeline",
+        "conflictCount": 0,
+        "evidenceCount": 5
+      },
+      "questionId": "love-choice",
+      "reviewId": "review-04",
+      "sourceLabel": "candidate-A",
+      "spreadId": "timeline"
+    },
+    {
+      "cardIds": [
+        "wands-seven",
+        "cups-two",
+        "cups-seven",
+        "swords-two",
+        "swords-seven"
+      ],
+      "orientations": [
+        "reversed",
+        "upright",
+        "upright",
+        "reversed",
+        "upright"
+      ],
+      "output": "这一部分更值得注意的是，权杖七：权杖七作为状态线索时指出：你有能力守住已经取得的位置，清晰立场会抵挡压力。\n\n放在当前问题中，这组证据提示，圣杯七：用三个现实条件筛掉不具可行性的选项。\n\n这一部分更值得注意的是，宝剑七：检查你的做法若被公开，是否仍然站得住脚。\n\n把各层信息合在一起，现有证据不足以给出单一方向。\n\n结论仍受以下条件约束：逆位机制使证据需要谨慎解释；牌位职责要求结合具体情境；修正行动会影响结果；后续变化可能改变当前判断；牌位本身带有条件性；两张牌之间存在条件关系；关系证据置信度较低；需要结合上下文。\n\n牌面之间仍有不同方向的证据，因此这里保留张力，不把其中一方静默删除。",
+      "provenance": {
+        "claimId": "claim-love-repair-cross",
+        "conflictCount": 1,
+        "evidenceCount": 11
+      },
+      "questionId": "love-repair",
+      "reviewId": "review-05",
+      "sourceLabel": "candidate-A",
+      "spreadId": "cross"
+    },
+    {
+      "cardIds": [
+        "cups-four",
+        "cups-nine",
+        "swords-four",
+        "swords-nine",
+        "pentacles-four",
+        "pentacles-nine",
+        "major-3",
+        "major-8",
+        "major-13",
+        "major-18"
+      ],
+      "orientations": [
+        "upright",
+        "upright",
+        "reversed",
+        "upright",
+        "upright",
+        "reversed",
+        "upright",
+        "upright",
+        "reversed",
+        "upright"
+      ],
+      "output": "从这一层的牌面证据看，圣杯四：圣杯四作为状态线索时指出：暂时提不起兴趣，内心需要空间重新辨认真正想要的东西。\n\n放在当前问题中，这组证据提示，宝剑四：过劳、焦虑性停滞，或休息太久仍不愿面对现实。 这说明宝剑四的阻碍来自表现失衡，而不是牌义本身。\n\n放在当前问题中，这组证据提示，星币四：对“守成”的追求推动行动，但仍需用“安全”检查真实意图。\n\n这一部分更值得注意的是，皇后：把时间留给真正需要培育的人与事，并为自己设下同等重要的照顾计划。\n\n这一部分更值得注意的是，月亮：不得把月亮解释成无条件要求；“迷雾”必须服从事实、同意与承载能力。\n\n综合现有证据，当前只能给出有限、可复核的方向判断。\n\n结论仍受以下条件约束：后续变化可能改变当前判断；牌位职责要求结合具体情境；修正行动会影响结果；关系证据置信度较低；两张牌之间存在条件关系；牌位本身带有条件性；需要结合上下文；逆位机制使证据需要谨慎解释；逆位机制使证据需要谨慎解释。\n\n牌面之间仍有不同方向的证据，因此这里保留张力，不把其中一方静默删除。",
+      "provenance": {
+        "claimId": "claim-love-third-party-celtic",
+        "conflictCount": 2,
+        "evidenceCount": 20
+      },
+      "questionId": "love-third-party",
+      "reviewId": "review-06",
+      "sourceLabel": "candidate-A",
+      "spreadId": "celtic"
+    },
+    {
+      "cardIds": [
+        "swords-ace",
+        "swords-six",
+        "pentacles-ace"
+      ],
+      "orientations": [
+        "upright",
+        "reversed",
+        "upright"
+      ],
+      "output": "这一部分更值得注意的是，宝剑王牌：宝剑王牌作为状态线索时指出：一个清晰观点或事实切开迷雾，适合果断定义问题。\n\n这一部分更值得注意的是，宝剑六：宝剑六作为状态线索时指出：你正在离开动荡，改变环境或思维方式会带来平静。\n\n这一部分更值得注意的是，星币王牌：评估成本与回报，并完成一个能让机会落地的动作。\n\n把各层信息合在一起，当前更适合在条件明确后行动。\n\n继续观察时，可把这些条件作为检查点：逆位机制使证据需要谨慎解释；后续变化可能改变当前判断；关系证据置信度较低；两张牌之间存在条件关系；需要结合上下文；牌位本身带有条件性。\n\n部分问题维度目前证据不足，解读到此为止，不再向外推断。",
+      "provenance": {
+        "claimId": "claim-career-focus-timeline",
+        "conflictCount": 0,
+        "evidenceCount": 5
+      },
+      "questionId": "career-focus",
+      "reviewId": "review-07",
+      "sourceLabel": "candidate-A",
+      "spreadId": "timeline"
+    },
+    {
+      "cardIds": [
+        "swords-eight",
+        "pentacles-three",
+        "pentacles-eight",
+        "major-2",
+        "major-7"
+      ],
+      "orientations": [
+        "reversed",
+        "upright",
+        "upright",
+        "reversed",
+        "upright"
+      ],
+      "output": "放在当前问题中，这组证据提示，宝剑八：宝剑八作为状态线索时指出：恐惧与既有叙事让选择看起来比实际更少，出口仍然存在。\n\n从这一层的牌面证据看，持续高质量练习会形成稳定能力和更大自主性。\n\n放在当前问题中，这组证据提示，写下唯一阶段目标，并删除不服务于它的两项消耗。\n\n综合现有证据，现有证据不足以给出单一方向。\n\n结论仍受以下条件约束：逆位机制使证据需要谨慎解释；牌位职责要求结合具体情境；关系证据置信度较低；两张牌之间存在条件关系；修正行动会影响结果；后续变化可能改变当前判断；需要结合上下文；牌位本身带有条件性。\n\n牌面之间仍有不同方向的证据，因此这里保留张力，不把其中一方静默删除。",
+      "provenance": {
+        "claimId": "claim-career-change-cross",
+        "conflictCount": 2,
+        "evidenceCount": 11
+      },
+      "questionId": "career-change",
+      "reviewId": "review-08",
+      "sourceLabel": "candidate-A",
+      "spreadId": "cross"
+    },
+    {
+      "cardIds": [
+        "pentacles-five",
+        "pentacles-ten",
+        "major-4",
+        "major-9",
+        "major-14",
+        "major-19",
+        "wands-three",
+        "wands-eight",
+        "cups-three",
+        "cups-eight"
+      ],
+      "orientations": [
+        "upright",
+        "upright",
+        "reversed",
+        "upright",
+        "upright",
+        "reversed",
+        "upright",
+        "upright",
+        "reversed",
+        "upright"
+      ],
+      "output": "这一部分更值得注意的是，星币五：星币五可调用的资源是“匮乏、困难、求助”所代表的能力组合。\n\n放在当前问题中，这组证据提示，皇帝：皇帝作为状态线索时指出：清晰规则、稳定结构与可靠执行会带来安全感。现在适合承担主导责任。\n\n放在当前问题中，这组证据提示，设定一段有截止时间的安静研究期，并记录结论。\n\n这一部分更值得注意的是，权杖三：主动追踪一次反馈，并为等待准备替代方案。\n\n从这一层的牌面证据看，圣杯三：过度社交、流言干扰，或群体快乐掩盖个人感受。 这说明圣杯三的阻碍来自表现失衡，而不是牌义本身。\n\n把各层信息合在一起，现有证据不足以给出单一方向。\n\n这个判断成立时，需要同时留意：牌位职责要求结合具体情境；修正行动会影响结果；后续变化可能改变当前判断；两张牌之间存在条件关系；关系证据置信度较低；牌位本身带有条件性；需要结合上下文；逆位机制使证据需要谨慎解释；逆位机制使证据需要谨慎解释；逆位机制使证据需要谨慎解释。\n\n牌面之间仍有不同方向的证据，因此这里保留张力，不把其中一方静默删除。",
+      "provenance": {
+        "claimId": "claim-career-growth-celtic",
+        "conflictCount": 3,
+        "evidenceCount": 19
+      },
+      "questionId": "career-growth",
+      "reviewId": "review-09",
+      "sourceLabel": "candidate-A",
+      "spreadId": "celtic"
+    },
+    {
+      "cardIds": [
+        "major-1",
+        "major-6",
+        "major-11"
+      ],
+      "orientations": [
+        "upright",
+        "reversed",
+        "upright"
+      ],
+      "output": "这一部分更值得注意的是，魔术师：魔术师作为状态线索时指出：你已经拥有让事情启动的关键资源，清晰的意图与专注行动会把可能性变成现实。\n\n放在当前问题中，这组证据提示，恋人：价值冲突、沟通错位或在关键选择前犹豫。表面和谐掩盖不了内在分歧。 这说明恋人的阻碍来自表现失衡，而不是牌义本身。\n\n从这一层的牌面证据看，正义：把事实、假设和情绪分开列出，再做一次可被解释的决定。\n\n综合现有证据，当前只能给出有限、可复核的方向判断。\n\n结论仍受以下条件约束：关系证据置信度较低；逆位机制使证据需要谨慎解释；两张牌之间存在条件关系；牌位本身带有条件性；需要结合上下文。",
+      "provenance": {
+        "claimId": "claim-career-conflict-timeline",
+        "conflictCount": 0,
+        "evidenceCount": 5
+      },
+      "questionId": "career-conflict",
+      "reviewId": "review-10",
+      "sourceLabel": "candidate-A",
+      "spreadId": "timeline"
+    },
+    {
+      "cardIds": [
+        "major-8",
+        "major-13",
+        "major-18",
+        "wands-two",
+        "wands-seven"
+      ],
+      "orientations": [
+        "reversed",
+        "upright",
+        "upright",
+        "reversed",
+        "upright"
+      ],
+      "output": "从这一层的牌面证据看，力量：自我怀疑、情绪耗损或把强硬误当成力量。需要先恢复内在稳定。 这说明力量的阻碍来自表现失衡，而不是牌义本身。\n\n放在当前问题中，这组证据提示，月亮：暂不依据猜测行动，先验证一条关键信息，并照顾好睡眠与情绪。\n\n放在当前问题中，这组证据提示，权杖七：只守住最关键的底线，放下不必要的对抗。\n\n在保留不确定性的前提下，当前只能给出有限、可复核的方向判断。\n\n结论仍受以下条件约束：牌位职责要求结合具体情境；修正行动会影响结果；牌位本身带有条件性；后续变化可能改变当前判断；两张牌之间存在条件关系；逆位机制使证据需要谨慎解释；需要结合上下文。",
+      "provenance": {
+        "claimId": "claim-career-burnout-cross",
+        "conflictCount": 0,
+        "evidenceCount": 11
+      },
+      "questionId": "career-burnout",
+      "reviewId": "review-11",
+      "sourceLabel": "candidate-A",
+      "spreadId": "cross"
+    },
+    {
+      "cardIds": [
+        "major-15",
+        "major-20",
+        "wands-four",
+        "wands-nine",
+        "cups-four",
+        "cups-nine",
+        "swords-four",
+        "swords-nine",
+        "pentacles-four",
+        "pentacles-nine"
+      ],
+      "orientations": [
+        "upright",
+        "upright",
+        "reversed",
+        "upright",
+        "upright",
+        "reversed",
+        "upright",
+        "upright",
+        "reversed",
+        "upright"
+      ],
+      "output": "这一部分更值得注意的是，恶魔：恶魔可调用的资源是“束缚、欲望、觉察”所代表的能力组合。\n\n这一部分更值得注意的是，权杖四：权杖四作为状态线索时指出：阶段成果值得庆祝，稳定关系或安心空间正在形成。\n\n这一部分更值得注意的是，圣杯四：把“停滞”转为有限尝试，并用“内观”观察反馈，可以打开新的空间。\n\n从这一层的牌面证据看，宝剑四：安排一段真正离线的恢复时间，并确定重新开始的日期。\n\n这一部分更值得注意的是，星币四：我现在看见的是星币四的“守成”，还是只在重复与“安全”有关的惯性？。\n\n把各层信息合在一起，现有证据不足以给出单一方向。\n\n这个判断成立时，需要同时留意：牌位职责要求结合具体情境；修正行动会影响结果；两张牌之间存在条件关系；后续变化可能改变当前判断；关系证据置信度较低；牌位本身带有条件性；需要结合上下文；逆位机制使证据需要谨慎解释；逆位机制使证据需要谨慎解释；逆位机制使证据需要谨慎解释。\n\n牌面之间仍有不同方向的证据，因此这里保留张力，不把其中一方静默删除。",
+      "provenance": {
+        "claimId": "claim-career-portfolio-celtic",
+        "conflictCount": 3,
+        "evidenceCount": 21
+      },
+      "questionId": "career-portfolio",
+      "reviewId": "review-12",
+      "sourceLabel": "candidate-A",
+      "spreadId": "celtic"
+    },
+    {
+      "cardIds": [
+        "wands-ace",
+        "wands-six",
+        "cups-ace"
+      ],
+      "orientations": [
+        "upright",
+        "reversed",
+        "upright"
+      ],
+      "output": "放在当前问题中，这组证据提示，权杖王牌：权杖王牌作为状态线索时指出：一股新的创造冲动正在出现，适合点燃计划并大胆开始。\n\n从这一层的牌面证据看，权杖六：权杖六作为状态线索时指出：努力获得认可，阶段性胜利正在增强影响力与信心。\n\n这一部分更值得注意的是，圣杯王牌：先为自己的真实情绪命名，再决定如何表达。\n\n综合现有证据，当前只能给出有限、可复核的方向判断。\n\n这个判断成立时，需要同时留意：逆位机制使证据需要谨慎解释；后续变化可能改变当前判断；关系证据置信度较低；两张牌之间存在条件关系；需要结合上下文；牌位本身带有条件性。\n\n部分问题维度目前证据不足，解读到此为止，不再向外推断。",
+      "provenance": {
+        "claimId": "claim-wealth-state-timeline",
+        "conflictCount": 0,
+        "evidenceCount": 5
+      },
+      "questionId": "wealth-state",
+      "reviewId": "review-13",
+      "sourceLabel": "candidate-A",
+      "spreadId": "timeline"
+    },
+    {
+      "cardIds": [
+        "wands-eight",
+        "cups-three",
+        "cups-eight",
+        "swords-three",
+        "swords-eight"
+      ],
+      "orientations": [
+        "reversed",
+        "upright",
+        "upright",
+        "reversed",
+        "upright"
+      ],
+      "output": "放在当前问题中，这组证据提示，权杖八：延迟、误传或行动太快导致方向偏移。 这说明权杖八的阻碍来自表现失衡，而不是牌义本身。\n\n这一部分更值得注意的是，圣杯八：确认你是在走向价值，还是仅仅在逃离不适。\n\n这一部分更值得注意的是，宝剑八：找出一个并非事实的限制性假设并验证它。\n\n综合现有证据，现有证据不足以给出单一方向。\n\n这个判断成立时，需要同时留意：牌位职责要求结合具体情境；修正行动会影响结果；逆位机制使证据需要谨慎解释；关系证据置信度较低；后续变化可能改变当前判断；牌位本身带有条件性；需要结合上下文。\n\n牌面之间仍有不同方向的证据，因此这里保留张力，不把其中一方静默删除。",
+      "provenance": {
+        "claimId": "claim-wealth-risk-cross",
+        "conflictCount": 1,
+        "evidenceCount": 11
+      },
+      "questionId": "wealth-risk",
+      "reviewId": "review-14",
+      "sourceLabel": "candidate-A",
+      "spreadId": "cross"
+    },
+    {
+      "cardIds": [
+        "cups-five",
+        "cups-ten",
+        "swords-five",
+        "swords-ten",
+        "pentacles-five",
+        "pentacles-ten",
+        "major-4",
+        "major-9",
+        "major-14",
+        "major-19"
+      ],
+      "orientations": [
+        "upright",
+        "upright",
+        "reversed",
+        "upright",
+        "upright",
+        "reversed",
+        "upright",
+        "upright",
+        "reversed",
+        "upright"
+      ],
+      "output": "从这一层的牌面证据看，圣杯五：圣杯五作为状态线索时指出：遗憾需要被承认，但并非所有可能都已经失去。\n\n从这一层的牌面证据看，星币十：星币十作为状态线索时指出：稳定资源、家族支持或长期成果正在形成可传承的结构。\n\n从这一层的牌面证据看，星币五：我现在看见的是星币五的“匮乏”，还是只在重复与“求助”有关的惯性？。\n\n从这一层的牌面证据看，皇帝：明确不可妥协的底线，同时给他人留下参与和反馈的空间。\n\n这一部分更值得注意的是，节制：我现在看见的是节制的“调和”，还是只在重复与“修复”有关的惯性？。\n\n把各层信息合在一起，当前更适合在条件明确后行动。\n\n这个判断成立时，需要同时留意：牌位职责要求结合具体情境；修正行动会影响结果；关系证据置信度较低；后续变化可能改变当前判断；两张牌之间存在条件关系；牌位本身带有条件性；需要结合上下文；逆位机制使证据需要谨慎解释；逆位机制使证据需要谨慎解释。\n\n牌面之间仍有不同方向的证据，因此这里保留张力，不把其中一方静默删除。",
+      "provenance": {
+        "claimId": "claim-wealth-budget-celtic",
+        "conflictCount": 2,
+        "evidenceCount": 18
+      },
+      "questionId": "wealth-budget",
+      "reviewId": "review-15",
+      "sourceLabel": "candidate-A",
+      "spreadId": "celtic"
+    },
+    {
+      "cardIds": [
+        "swords-two",
+        "swords-seven",
+        "pentacles-two"
+      ],
+      "orientations": [
+        "upright",
+        "reversed",
+        "upright"
+      ],
+      "output": "从这一层的牌面证据看，宝剑二：宝剑二作为状态线索时指出：两种力量暂时平衡，缺失的信息让决定仍需等待。\n\n放在当前问题中，这组证据提示，宝剑七：宝剑七作为状态线索时指出：需要更聪明地行动并保护信息，但策略不能越过诚信边界。\n\n放在当前问题中，这组证据提示，星币二：确定今天唯一必须完成的事，其余重新排期。\n\n在保留不确定性的前提下，当前更适合先准备并继续观察。\n\n结论仍受以下条件约束：逆位机制使证据需要谨慎解释；后续变化可能改变当前判断；关系证据置信度较低；两张牌之间存在条件关系；需要结合上下文；牌位本身带有条件性。",
+      "provenance": {
+        "claimId": "claim-wealth-investment-timeline",
+        "conflictCount": 0,
+        "evidenceCount": 5
+      },
+      "questionId": "wealth-investment",
+      "reviewId": "review-16",
+      "sourceLabel": "candidate-A",
+      "spreadId": "timeline"
+    },
+    {
+      "cardIds": [
+        "swords-nine",
+        "pentacles-four",
+        "pentacles-nine",
+        "major-3",
+        "major-8"
+      ],
+      "orientations": [
+        "reversed",
+        "upright",
+        "upright",
+        "reversed",
+        "upright"
+      ],
+      "output": "从这一层的牌面证据看，宝剑九：焦虑正在缓解、愿意求助，也可能压抑担心导致反复。 这说明宝剑九的阻碍来自表现失衡，而不是牌义本身。\n\n放在当前问题中，这组证据提示，星币九：享受成果，同时核对它是否建立在可持续基础上。\n\n放在当前问题中，这组证据提示，力量：用可持续的小行动替代一次性逞强，并对自己的恐惧保持诚实。\n\n综合现有证据，当前只能给出有限、可复核的方向判断。\n\n这个判断成立时，需要同时留意：牌位职责要求结合具体情境；修正行动会影响结果；两张牌之间存在条件关系；逆位机制使证据需要谨慎解释；后续变化可能改变当前判断；关系证据置信度较低；牌位本身带有条件性；需要结合上下文；逆位机制使证据需要谨慎解释。\n\n牌面之间仍有不同方向的证据，因此这里保留张力，不把其中一方静默删除。",
+      "provenance": {
+        "claimId": "claim-wealth-loss-cross",
+        "conflictCount": 1,
+        "evidenceCount": 11
+      },
+      "questionId": "wealth-loss",
+      "reviewId": "review-17",
+      "sourceLabel": "candidate-A",
+      "spreadId": "cross"
+    },
+    {
+      "cardIds": [
+        "pentacles-six",
+        "major-0",
+        "major-5",
+        "major-10",
+        "major-15",
+        "major-20",
+        "wands-four",
+        "wands-nine",
+        "cups-four",
+        "cups-nine"
+      ],
+      "orientations": [
+        "upright",
+        "upright",
+        "reversed",
+        "upright",
+        "upright",
+        "reversed",
+        "upright",
+        "upright",
+        "reversed",
+        "upright"
+      ],
+      "output": "从这一层的牌面证据看，星币六：星币六作为状态线索时指出：资源正在流动，慷慨与公平交换能建立长期信任。\n\n从这一层的牌面证据看，审判：审判作为状态线索时指出：过去经验正在汇聚成清晰召唤。诚实复盘后，你有机会做出不同选择。\n\n这一部分更值得注意的是，恶魔：对“束缚”的追求推动行动，但仍需用“觉察”检查真实意图。\n\n这一部分更值得注意的是，权杖四：确认共同成果，也把尚未解决的细节说清楚。\n\n这一部分更值得注意的是，圣杯四：我现在看见的是圣杯四的“停滞”，还是只在重复与“再评估”有关的惯性？。\n\n把各层信息合在一起，现有证据不足以给出单一方向。\n\n这个判断成立时，需要同时留意：牌位职责要求结合具体情境；修正行动会影响结果；关系证据置信度较低；两张牌之间存在条件关系；牌位本身带有条件性；需要结合上下文；逆位机制使证据需要谨慎解释；逆位机制使证据需要谨慎解释。\n\n牌面之间仍有不同方向的证据，因此这里保留张力，不把其中一方静默删除。",
+      "provenance": {
+        "claimId": "claim-wealth-purchase-celtic",
+        "conflictCount": 2,
+        "evidenceCount": 20
+      },
+      "questionId": "wealth-purchase",
+      "reviewId": "review-18",
+      "sourceLabel": "candidate-A",
+      "spreadId": "celtic"
+    }
+  ],
+  "rubric": [
+    "card-semantic-accuracy",
+    "question-fit",
+    "position-responsibility",
+    "multi-card-integration",
+    "evidence-and-conditions",
+    "safety-and-boundaries",
+    "clarity"
+  ],
+  "schemaVersion": "1.0.0",
+  "sourceIdentityHidden": true
+}
