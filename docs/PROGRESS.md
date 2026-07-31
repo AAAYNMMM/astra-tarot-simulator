@@ -28,13 +28,14 @@
 - `MR-003`：主题、facet、维度、状态、行动与逆位机制完成有限语义判定。
 - `MR-004`：元素、数字、宫廷、阶段和正逆位辅助信号只附着于现有结构边。
 - `MR-005`：90题×4牌阵×正逆位全量复现、候选限制、稳定顺序和终态门禁完成。
-- CWapi任务：`01KYW9W53S4MQ68GMF6E9HCH98`，scope：`full`；最终commit以终态RESULT和远端分支核验为准。
+- 阶段实现CWapi任务：`01KYWCA3QGW9JYGB5JPNX9GGNG`。
+- 最终full复验CWapi任务：`01KYWCR5F2Q8M7V4N6D9H3J0XA`；最终commit以终态RESULT和远端分支核验为准。
 
 ## 冻结不变量
 
 - 78张牌、90题、四种牌阵、19个Position Operator和21条固定边保持不变。
 - Relation不得脱离结构图建立非结构边，不做凯尔特十字全量两两组合。
-- 最终2 问题维度�一任务 结构候选集合；辅助关系不得越过候选限制。
+- 最终Relation类型必须同时满足问题维度职责与结构候选集合；辅助关系不得越过候选限制。
 - Observation仍是局部证据；Relation不生成Claim或文本。
 - `automation/validate.py --scope full` 是完整回归入口。
 
