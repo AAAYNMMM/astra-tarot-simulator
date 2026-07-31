@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "task": "MOD-001",
+  "manualFileLimits": {
+    "javascript": 600,
+    "css": 900,
+    "entryJavascriptRecommended": 200
+  },
+  "scan": {
+    "extensions": [
+      ".js",
+      ".mjs",
+      ".cjs",
+      ".css"
+    ],
+    "excludedDirectories": [
+      ".git",
+      ".github",
+      "assets",
+      "node_modules",
+      "src/generated"
+    ]
+  },
+  "knownDebt": [
+    {
+      "path": "app.js",
+      "kind": "javascript",
+      "baselineLines": 1528,
+      "hardLimit": 600,
+      "statusAtOrBelowBaseline": "WARN",
+      "mustNotGrow": true,
+      "expiresAfterTask": "MOD-006A"
+    },
+    {
+      "path": "styles.css",
+      "kind": "css",
+      "baselineLines": 4918,
+      "hardLimit": 900,
+      "statusAtOrBelowBaseline": "WARN",
+      "mustNotGrow": true,
+      "expiresAfterTask": "MOD-002"
+    },
+    {
+      "path": "data.js",
+      "kind": "javascript",
+      "baselineLines": 637,
+      "hardLimit": 600,
+      "statusAtOrBelowBaseline": "WARN",
+      "mustNotGrow": true,
+      "expiresAfterTask": "MOD-006A"
+    }
+  ],
+  "policy": {
+    "knownDebtAtOrBelowBaseline": "WARN",
+    "knownDebtGrowth": "FAIL",
+    "newUnregisteredOverLimitFile": "FAIL",
+    "expiredDebtStillOverLimit": "FAIL",
+    "resolvedDebtReintroduced": "FAIL",
+    "fullScopeRequiresNoOverLimitManualFiles": true
+  }
+}
