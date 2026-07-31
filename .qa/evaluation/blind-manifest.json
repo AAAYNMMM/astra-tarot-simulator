@@ -1,0 +1,17 @@
+{
+  "caseCount": 0,
+  "contentHash": null,
+  "custody": "CWapi-controlled external storage",
+  "invalidatedBy": [
+    "card-profile",
+    "question-profile",
+    "position-operator",
+    "engine-rule",
+    "weight",
+    "template",
+    "adapter"
+  ],
+  "repositoryContainsCaseContent": false,
+  "schemaVersion": "1.0.0",
+  "status": "not-created"
+}

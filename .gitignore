@@ -1,5 +1,11 @@
 __pycache__/
 *.py[cod]
 .DS_Store
-.qa/
+.qa/*
+!.qa/evaluation/
+.qa/evaluation/*
+!.qa/evaluation/blind-manifest.json
+!.qa/evaluation/rubric.json
+!.qa/golden-card-report.json
+!.qa/question-coverage.json
 design-qa.md

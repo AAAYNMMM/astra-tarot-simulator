@@ -207,6 +207,7 @@ def baseline_steps(node: str) -> list[tuple[str, list[str]]]:
             [node, "tests/card_schema_contract_test.mjs"],
         ),
         ("node-vocabulary-contract", [node, "tests/vocabulary_contract_test.mjs"]),
+        ("phase-1-reports-check", [node, "scripts/generate_phase_1_reports.mjs", "--check"]),
         ("node-evaluation-protocol", [node, "tests/evaluation_protocol_test.mjs"]),
         ("node-golden-cards-contract", [node, "tests/golden_cards_contract_test.mjs"]),
         ("golden-quality-report-check", [node, "scripts/score_golden_cards.mjs", "--check"]),

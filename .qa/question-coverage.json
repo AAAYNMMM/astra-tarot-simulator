@@ -1,0 +1,48 @@
+{
+  "domains": {
+    "career": 7,
+    "daily": 7,
+    "decision": 7,
+    "finance": 7,
+    "growth": 7,
+    "relationship": 7
+  },
+  "highRisk": [
+    "wealth-risk",
+    "wealth-project"
+  ],
+  "intents": {
+    "alternative-option": 1,
+    "balance-regulation": 1,
+    "boundary-guidance": 1,
+    "capability-development": 1,
+    "change-decision": 3,
+    "collaboration-guidance": 1,
+    "communication-guidance": 2,
+    "cost-review": 1,
+    "daily-guidance": 2,
+    "direction-selection": 1,
+    "hidden-factor": 4,
+    "identity-growth": 2,
+    "improvement-guidance": 2,
+    "obstacle-diagnosis": 1,
+    "opportunity-discovery": 3,
+    "pattern-reflection": 2,
+    "resource-planning": 2,
+    "risk-assessment": 2,
+    "self-care": 3,
+    "status-assessment": 3,
+    "timing-decision": 1,
+    "trend-forecast": 2,
+    "value-alignment": 1
+  },
+  "schemaVersion": "1.0.0",
+  "timeframes": {
+    "long-term": 2,
+    "near-term": 11,
+    "open": 8,
+    "present": 14,
+    "today": 7
+  },
+  "totalQuestions": 42
+}

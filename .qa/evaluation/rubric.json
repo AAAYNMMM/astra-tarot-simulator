@@ -1,0 +1,16 @@
+{
+  "dimensions": {
+    "actionability": 6,
+    "dataIntegrity": 5,
+    "dimensionConsistency": 6,
+    "languageDistinctiveness": 5,
+    "positionCompatibility": 10,
+    "questionCompatibility": 10,
+    "relationComputability": 10,
+    "reversalQuality": 14,
+    "semanticCoverage": 18,
+    "traditionalAccuracy": 16
+  },
+  "total": 100,
+  "version": "1.0.0"
+}

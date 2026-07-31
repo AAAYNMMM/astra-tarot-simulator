@@ -3,7 +3,9 @@
   "private": true,
   "scripts": {
     "check:generated": "node scripts/generate_artifacts.mjs --check",
+    "check:phase-1-reports": "node scripts/generate_phase_1_reports.mjs --check",
     "generate": "node scripts/generate_artifacts.mjs",
+    "generate:phase-1-reports": "node scripts/generate_phase_1_reports.mjs",
     "score:golden": "node scripts/score_golden_cards.mjs --write",
     "test:application": "node tests/application_contract_test.mjs",
     "test:browser": "python tests/browser_harness.py",
