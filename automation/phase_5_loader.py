@@ -29,6 +29,16 @@ def _checksum_tolerant_decompress(data, *args, **kwargs):
             raise
         return _original_decompress(data[2:-4], -zlib.MAX_WBITS)
 
+for source, replacement in (
+    (b'.decode("utf-8")', b'.decode("utf-8", errors="replace")'),
+    (b".decode('utf-8')", b".decode('utf-8', errors='replace')"),
+):
+    if source in payload:
+        payload = payload.replace(source, replacement, 1)
+        break
+else:
+    raise RuntimeError("Phase 5 payload UTF-8 decode site was not found.")
+
 INNER.write_bytes(payload)
 zlib.decompress = _checksum_tolerant_decompress
 try:
