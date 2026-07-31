@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Repair Phase 8 view fidelity and historical gates, then bind retry metadata."""
+"""Repair Phase 8 view fidelity and historical gates, preserving completed custody."""
 
 from pathlib import Path
 
@@ -53,14 +53,52 @@ if new_module not in module:
     module = module.replace(old_module, new_module, 1)
 write_lf(module_path, module)
 
+phase1_path = ROOT / "scripts" / "generate_phase_1_reports.mjs"
+phase1 = phase1_path.read_text(encoding="utf-8")
+old_phase1 = '''const blind = {
+  schemaVersion: "1.0.0",
+  status: "not-created",
+  caseCount: 0,
+  contentHash: null,
+  custody: "CWapi-controlled external storage",
+  repositoryContainsCaseContent: false,
+  invalidatedBy: [
+    "card-profile", "question-profile", "position-operator", "engine-rule",
+    "weight", "template", "adapter",
+  ],
+};'''
+new_phase1 = '''const initialBlindManifest = {
+  schemaVersion: "1.0.0",
+  status: "not-created",
+  caseCount: 0,
+  contentHash: null,
+  custody: "CWapi-controlled external storage",
+  repositoryContainsCaseContent: false,
+  invalidatedBy: [
+    "card-profile", "question-profile", "position-operator", "engine-rule",
+    "weight", "template", "adapter",
+  ],
+};
+const blindPath = path.join(root, ".qa/evaluation/blind-manifest.json");
+let blind = initialBlindManifest;
+if (fs.existsSync(blindPath)) {
+  const currentBlind = JSON.parse(fs.readFileSync(blindPath, "utf8"));
+  if (currentBlind.status === "completed") blind = currentBlind;
+}'''
+if new_phase1 not in phase1:
+    if old_phase1 not in phase1:
+        raise RuntimeError("Phase 1 blind manifest generator marker not found.")
+    phase1 = phase1.replace(old_phase1, new_phase1, 1)
+write_lf(phase1_path, phase1)
+
 progress_path = ROOT / "docs" / "PROGRESS.md"
 progress = progress_path.read_text(encoding="utf-8")
 old_task = "01KYWJ8G4M9T6R2C7V5P0N3XQA"
-new_task = "01KYWM2R6T9C4H8N1V5Q7P0ZAB"
+new_task = "01KYWN5T8C2M7R4H9V1Q6P0ZAD"
 if old_task in progress:
     progress = progress.replace(old_task, new_task, 1)
 elif new_task not in progress:
     raise RuntimeError("Phase 8 implementation task metadata was not found.")
 write_lf(progress_path, progress)
 
-print("Phase 8 view fidelity, custody lifecycle, CSS freeze, and retry metadata repaired.")
+print("Phase 8 view fidelity, custody lifecycle, CSS freeze, Phase 1 preservation, and retry metadata repaired.")
