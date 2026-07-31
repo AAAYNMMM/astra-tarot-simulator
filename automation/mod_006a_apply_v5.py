@@ -19,8 +19,8 @@ previous_build = v4.build_application
 
 def build_application(source: str) -> str:
     application = previous_build(source)
-    old = "\n    ction requestNewReading() {"
-    new = "\n    async function requestNewReading() {"
+    old = "ction requestNewReading() {"
+    new = "async function requestNewReading() {"
     old_count = application.count(old)
     new_count = application.count(new)
     if old_count == 1 and new_count == 0:
