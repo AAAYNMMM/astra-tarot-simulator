@@ -79,4 +79,8 @@ module.KNOWLEDGE_TEST = module.KNOWLEDGE_TEST.replace(
     'assert.match(categoryLens(reading.draws[0], reading), /核心讯息/);',
     'assert.match(categoryLens(reading.draws[0], reading), /这张牌浓缩了问题最需要被看见的能量/);',
 )
+module.KNOWLEDGE_TEST = module.KNOWLEDGE_TEST.replace(
+    'const reading = {\n  category: TarotData.categories[0],\n  spread: TarotData.spreads[0],',
+    'const reading = {\n  category: TarotData.categories[0],\n  question: TarotData.categories[0].questions[0],\n  spread: TarotData.spreads[0],',
+)
 module.main()
