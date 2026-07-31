@@ -1,0 +1,144 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://astra.local/schemas/observation.schema.json",
+  "title": "Observation",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "id",
+    "cardId",
+    "questionId",
+    "spreadId",
+    "positionId",
+    "orientation",
+    "semanticUnitRef",
+    "semanticText",
+    "sourceRefs",
+    "selectedFacet",
+    "selectedReversalMode",
+    "reversalMechanism",
+    "semanticTags",
+    "questionDimensions",
+    "matchedDimensions",
+    "positionRole",
+    "dimensions",
+    "scoreBreakdown",
+    "localScore",
+    "evidenceType",
+    "selectionTrace"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "1.0.0" },
+    "id": { "type": "string", "pattern": "^obs-[a-z0-9]+(?:-[a-z0-9]+)*$" },
+    "cardId": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+    "questionId": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+    "spreadId": { "enum": ["single", "timeline", "cross", "celtic"] },
+    "positionId": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+    "orientation": { "enum": ["upright", "reversed"] },
+    "semanticUnitRef": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*#[a-z]+\\.[a-z0-9-]+$" },
+    "semanticText": { "type": "string", "minLength": 1, "maxLength": 300 },
+    "sourceRefs": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" }
+    },
+    "selectedFacet": {
+      "enum": [
+        "state",
+        "cause",
+        "motivation",
+        "obstacle",
+        "opportunity",
+        "resource",
+        "relationship",
+        "action",
+        "boundary",
+        "trend",
+        "outcome",
+        "reflection"
+      ]
+    },
+    "selectedReversalMode": { "type": ["string", "null"] },
+    "reversalMechanism": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["applied", "mode", "modeFacetRefs"],
+      "properties": {
+        "applied": { "type": "boolean" },
+        "mode": { "type": ["string", "null"] },
+        "modeFacetRefs": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "pattern": "^[a-z]+\\.[a-z0-9-]+$" }
+        }
+      }
+    },
+    "semanticTags": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "questionDimensions": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" }
+    },
+    "matchedDimensions": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" }
+    },
+    "positionRole": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tense", "subjectScope", "conditionality", "actionTransform", "evidencePriority"],
+      "properties": {
+        "tense": { "type": "string" },
+        "subjectScope": { "type": "string" },
+        "conditionality": { "type": "string" },
+        "actionTransform": { "type": "string" },
+        "evidencePriority": { "type": "string" }
+      }
+    },
+    "dimensions": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": { "type": "number", "minimum": -10, "maximum": 10 }
+    },
+    "scoreBreakdown": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["positionWeight", "questionMatch", "semanticStrength", "orientationFit", "dataQuality"],
+      "properties": {
+        "positionWeight": { "type": "number", "minimum": 0, "maximum": 2 },
+        "questionMatch": { "type": "number", "minimum": 0, "maximum": 1 },
+        "semanticStrength": { "type": "number", "minimum": 0, "maximum": 1 },
+        "orientationFit": { "type": "number", "minimum": 0, "maximum": 1 },
+        "dataQuality": { "type": "number", "minimum": 0, "maximum": 1 }
+      }
+    },
+    "localScore": { "type": "number", "minimum": 0, "maximum": 2 },
+    "evidenceType": { "enum": ["core", "primary", "secondary", "contextual"] },
+    "selectionTrace": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["rank", "semanticUnitRef", "facet", "score"],
+        "properties": {
+          "rank": { "type": "integer", "minimum": 1, "maximum": 3 },
+          "semanticUnitRef": { "type": "string" },
+          "facet": { "type": "string" },
+          "score": { "type": "number" }
+        }
+      }
+    }
+  }
+}
