@@ -51,7 +51,7 @@ PO-002A single与timeline固定结构图
 阶段出口：4图19节点21固定边合法；90题×19牌位及78牌×19牌位的正逆位场景Schema、确定性和真实引用通过率100%；同牌不同牌位路径差异通过率100%；当前commit取得CWapi full RESULT。
 """
 if "## 18. Phase 4：固定结构图与Observation Engine" not in contract_text:
-    contracts.write_text(contract_text.rstrip() + section + "\n", encoding="utf-8", newline="\n")
+    contracts.write_text(contract_text.rstrip() + section.rstrip() + "\n", encoding="utf-8", newline="\n")
 
 gitignore = ROOT / ".gitignore"
 gitignore_text = gitignore.read_text(encoding="utf-8")
