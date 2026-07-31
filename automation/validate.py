@@ -14,7 +14,7 @@ import time
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Sequence
+from typing import Iterable, Sequence
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -46,6 +46,75 @@ def parse_args() -> argparse.Namespace:
         help="Optional path for the JSON summary. Omit to keep validation read-only.",
     )
     return parser.parse_args()
+
+
+def unique_paths(values: Iterable[str | Path | None]) -> list[Path]:
+    result: list[Path] = []
+    seen: set[str] = set()
+    for value in values:
+        if not value:
+            continue
+        path = Path(value).expanduser()
+        key = os.path.normcase(str(path))
+        if key in seen:
+            continue
+        seen.add(key)
+        result.append(path)
+    return result
+
+
+def find_node_executable() -> tuple[str | None, list[str]]:
+    """Locate Node without assuming the isolated Runner inherits the user PATH."""
+
+    program_files = os.environ.get("PROGRAMFILES")
+    program_files_x86 = os.environ.get("PROGRAMFILES(X86)")
+    local_app_data = os.environ.get("LOCALAPPDATA")
+    app_data = os.environ.get("APPDATA")
+    user_profile = os.environ.get("USERPROFILE")
+
+    direct_candidates = unique_paths(
+        [
+            shutil.which("node"),
+            os.environ.get("NODE_EXE"),
+            Path(program_files) / "nodejs" / "node.exe" if program_files else None,
+            Path(program_files_x86) / "nodejs" / "node.exe" if program_files_x86 else None,
+            Path(local_app_data) / "Programs" / "nodejs" / "node.exe"
+            if local_app_data
+            else None,
+            Path(user_profile) / "scoop" / "apps" / "nodejs" / "current" / "node.exe"
+            if user_profile
+            else None,
+            Path(user_profile) / "scoop" / "apps" / "nodejs-lts" / "current" / "node.exe"
+            if user_profile
+            else None,
+            Path(user_profile) / ".volta" / "bin" / "node.exe" if user_profile else None,
+        ]
+    )
+
+    discovered_candidates: list[Path] = []
+    glob_roots: list[tuple[Path, str]] = []
+    if local_app_data:
+        glob_roots.append((Path(local_app_data), "fnm_multishells/*/node.exe"))
+    if user_profile:
+        glob_roots.append((Path(user_profile), ".volta/tools/image/node/*/node.exe"))
+    if app_data:
+        glob_roots.append((Path(app_data), "nvm/*/node.exe"))
+
+    for root, pattern in glob_roots:
+        try:
+            discovered_candidates.extend(sorted(root.glob(pattern), reverse=True))
+        except OSError:
+            continue
+
+    candidates = unique_paths([*direct_candidates, *discovered_candidates])
+    checked = [str(path) for path in candidates]
+    for path in candidates:
+        try:
+            if path.is_file():
+                return str(path.resolve()), checked
+        except OSError:
+            continue
+    return None, checked
 
 
 def run_step(name: str, command: Sequence[str], env: dict[str, str]) -> StepResult:
@@ -139,9 +208,13 @@ def baseline_steps(node: str) -> list[tuple[str, list[str]]]:
 
 def main() -> int:
     args = parse_args()
-    node = shutil.which("node")
+    node, checked_node_paths = find_node_executable()
     if node is None:
-        print("Node.js executable was not found in PATH.", file=sys.stderr)
+        checked = "\n".join(f"  - {path}" for path in checked_node_paths)
+        message = "Node.js executable was not found in PATH or common Windows locations."
+        if checked:
+            message += f"\nChecked:\n{checked}"
+        print(message, file=sys.stderr)
         return 127
 
     env = os.environ.copy()
@@ -170,6 +243,7 @@ def main() -> int:
         "platform": platform.platform(),
         "python": sys.version.split()[0],
         "node": node,
+        "nodeSearchPaths": checked_node_paths,
         "warningCount": warning_count,
         "steps": [
             {
