@@ -47,7 +47,7 @@ function adjustedDimensions(card, orientation, reversalMode) {
   return result;
 }
 
-function validateInput({ card, question, operator, orientation, reversalMode }) {
+function validateInput({ card, question, operator, orientation, reversalMode = null }) {
   if (!card || !question || !operator) throw new TypeError("card, question, and operator are required");
   if (!["upright", "reversed"].includes(orientation)) throw new RangeError(`Unsupported orientation: ${orientation}`);
   if (!question.spreadProfiles?.[operator.spreadId]) {
