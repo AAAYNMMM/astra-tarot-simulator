@@ -236,6 +236,12 @@ def baseline_steps(node: str) -> list[tuple[str, list[str]]]:
         ("node-phase-6-random-streams", [node, "tests/phase_6_random_streams_test.mjs"]),
         ("node-phase-6-text-rendering", [node, "tests/phase_6_text_rendering_test.mjs"]),
         ("node-phase-6-terminal-gate", [node, "tests/phase_6_gate_test.mjs"]),
+        ("node-phase-7-production-random", [node, "tests/phase_7_production_random_test.mjs"]),
+        ("node-phase-7-reading-record", [node, "tests/phase_7_reading_record_indexeddb_test.mjs"]),
+        ("node-phase-7-migration", [node, "tests/phase_7_migration_test.mjs"]),
+        ("node-phase-7-transfer", [node, "tests/phase_7_transfer_test.mjs"]),
+        ("node-phase-7-capacity", [node, "tests/phase_7_capacity_degradation_test.mjs"]),
+        ("node-phase-7-terminal-gate", [node, "tests/phase_7_gate_test.mjs"]),
         ("node-phase-2-golden-freeze", [node, "tests/phase_2_golden_freeze_test.mjs"]),
         ("node-phase-2-card-profiles", [node, "tests/phase_2_card_profiles_test.mjs"]),
         (

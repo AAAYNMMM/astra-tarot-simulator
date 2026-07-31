@@ -28,9 +28,10 @@ export function startApplication({ windowRef = globalThis.window, documentRef = 
   assertKnowledgeCatalog(TarotData);
   const { deck, categories, spreads } = TarotData;
   const {
-    randomUnit, secureShuffle, registerServiceWorker, registerLocalLifecycle,
+    createReadingRandomContext, registerServiceWorker, registerLocalLifecycle,
     loadSettings, saveSettings, loadHistory,
     writeHistory: writeHistoryToStorage, readingRecord, offlineStatus,
+    initializeStructuredHistory, saveStructuredReading,
   } = createRuntimeServices(window);
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
   const storedSettings = loadSettings();
@@ -71,7 +72,7 @@ export function startApplication({ windowRef = globalThis.window, documentRef = 
       dom,
       cardBackPath,
     });
-    const createReading = createReadingFactory({ deck, selectors, secureShuffle, randomUnit });
+    const createReading = createReadingFactory({ deck, selectors, createRandomContext: createReadingRandomContext });
     const showToast = createToast({ documentRef: document, windowRef: window, dom, reducedMotion });
   function writeHistory(records) {
     const saved = writeHistoryToStorage(records);
@@ -475,6 +476,9 @@ export function startApplication({ windowRef = globalThis.window, documentRef = 
         records.unshift(record);
       }
       writeHistory(records);
+      void saveStructuredReading(state.reading).then((result) => {
+        if (result.status === "degraded") showToast("结构化历史暂存于内存，请及时导出", "!");
+      });
     }
   const { openDialog, closeDialog, confirmAction, resolveConfirmation } = createDialogController({ dom, state });
 
@@ -579,6 +583,7 @@ export function startApplication({ windowRef = globalThis.window, documentRef = 
       renderDeckStyles();
       bindEvents();
       resetReadingView();
+      void initializeStructuredHistory();
       void registerServiceWorker().then(() => offlineStatus.start({ selectedDeckId: initialDeckStyle }));
       registerLocalLifecycle();
     }

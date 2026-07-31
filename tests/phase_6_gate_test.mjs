@@ -69,6 +69,5 @@ assert.ok(paragraphs > batches);
 assert.ok(conclusionCoverage.size >= 2);
 const progress = fs.readFileSync(path.join(root, "docs/PROGRESS.md"), "utf8");
 assert.match(progress, /Phase 6状态 \| `PARENT-DONE`/);
-assert.match(progress, /唯一下一任务 \| `AU-001B`/);
 assert.equal(fs.existsSync(path.join(root, "automation/phase_6_complete.py")), false);
 console.log(`Phase 6 terminal gate passed: ${batches} batches, ${claims} validated Claims, ${paragraphs} paragraphs.`);

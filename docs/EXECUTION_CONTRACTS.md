@@ -417,3 +417,15 @@ Card、Question、Position、Observation或固定结构图变化会使Phase 5相
 - 模板只表达已经通过CL-005的结构化Claim。
 - 四牌阵输出层级固定；TX-003检查文本矛盾说明、禁止措辞、引用丢失、重复和格式。
 - 阶段出口：90题×4牌阵×正逆位均可生成合法Claim与文本；非法Claim不能进入模板；当前commit取得CWapi full RESULT。
+
+### Phase 7终态要求
+
+`AU-001B`至`AU-003C`必须作为同一阶段连续收口：
+
+- 生产抽牌、正逆位和渲染从同一版本化根种子派生独立流；消费任一流不得改变其他流。
+- Reading保存根种子、算法、版本、熵来源和派生流信息，相同输入必须可重放。
+- ReadingRecord 2.0保存抽牌、结构化证据槽位和本次artifact消费指纹，不写最终Git commit。
+- IndexedDB包含readings与meta存储；旧localStorage迁移幂等，失败不删除旧数据或写完成标记。
+- 导出包必须带稳定校验和；导入在写入前完成Schema、重复ID、校验和和冲突策略验证。
+- 容量与配额达到阈值时给出可执行提醒；IndexedDB或配额失败时保留内存待导出副本，不静默截断或删除记录。
+- 阶段出口：生产随机可重放、结构化历史可保存、迁移幂等、导入导出可验证、容量降级无静默丢失；当前commit取得CWapi full RESULT。
