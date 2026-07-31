@@ -51,21 +51,33 @@ def split_stylesheet() -> list[str]:
             f"styles.css line count changed: expected {SOURCE_LINES}, received {len(lines)}"
         )
 
-    paths: list[str] = []
-    reconstructed = bytearray()
+    raw_chunks: list[tuple[str, bytes]] = []
     for relative_path, start, end in CHUNKS:
-        chunk = b"".join(lines[start - 1 : end])
+        raw_chunks.append((relative_path, b"".join(lines[start - 1 : end])))
+
+    for index in range(len(raw_chunks) - 1):
+        relative_path, chunk = raw_chunks[index]
+        next_path, next_chunk = raw_chunks[index + 1]
+        moved = b""
+        while chunk.endswith(b"\n\n"):
+            chunk = chunk[:-1]
+            moved = b"\n" + moved
+        raw_chunks[index] = (relative_path, chunk)
+        raw_chunks[index + 1] = (next_path, moved + next_chunk)
+
+    reconstructed = b"".join(chunk for _, chunk in raw_chunks)
+    if reconstructed != source_bytes:
+        raise RuntimeError("Split CSS does not reconstruct the original stylesheet bytes.")
+
+    paths: list[str] = []
+    for relative_path, chunk in raw_chunks:
         chunk_lines = len(chunk.splitlines())
         if chunk_lines > 900:
             raise RuntimeError(f"{relative_path} exceeds 900 lines: {chunk_lines}")
         path = ROOT / relative_path
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_bytes(chunk)
-        reconstructed.extend(chunk)
         paths.append(relative_path)
-
-    if bytes(reconstructed) != source_bytes:
-        raise RuntimeError("Split CSS does not reconstruct the original stylesheet bytes.")
 
     imports = "\n".join(
         f'@import url("./{Path(relative_path).name}");' for relative_path in paths
