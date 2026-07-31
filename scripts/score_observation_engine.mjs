@@ -33,6 +33,8 @@ function reversedMode(card, key) {
 let schemaPassed = 0;
 let deterministicPassed = 0;
 let semanticReferencePassed = 0;
+let directMatchScenarios = 0;
+let positionMediatedScenarios = 0;
 let questionPositionScenarios = 0;
 let cardPositionScenarios = 0;
 const validationFailures = [];
@@ -55,6 +57,8 @@ function execute(card, question, operator, orientation, modeKey) {
   else validationFailures.push({ key: modeKey, errors });
   if (JSON.stringify(first) === JSON.stringify(second)) deterministicPassed += 1;
   if (first.semanticUnitRef.startsWith(`${card.id}#`) && first.sourceRefs.length) semanticReferencePassed += 1;
+  if (first.dimensionMatchMode === "direct") directMatchScenarios += 1;
+  else if (first.dimensionMatchMode === "position-mediated") positionMediatedScenarios += 1;
   return first;
 }
 
@@ -110,6 +114,8 @@ const report = {
     questionPositionScenarios,
     cardPositionScenarios,
     totalScenarios,
+    directMatchScenarios,
+    positionMediatedScenarios,
     schemaPassRate: schemaPassed / totalScenarios,
     deterministicPassRate: deterministicPassed / totalScenarios,
     semanticReferencePassRate: semanticReferencePassed / totalScenarios,
@@ -132,6 +138,9 @@ if (mode === "write") {
 assert.deepEqual(graphFailures, []);
 assert.deepEqual(validationFailures, []);
 assert.deepEqual(differentiationFailures, []);
+assert.equal(directMatchScenarios + positionMediatedScenarios, totalScenarios);
+assert.ok(directMatchScenarios > 0);
+assert.ok(positionMediatedScenarios > 0);
 assert.equal(report.summary.schemaPassRate, 1);
 assert.equal(report.summary.deterministicPassRate, 1);
 assert.equal(report.summary.semanticReferencePassRate, 1);
