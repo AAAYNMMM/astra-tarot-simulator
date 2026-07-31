@@ -51,32 +51,32 @@ def split_stylesheet() -> list[str]:
             f"styles.css line count changed: expected {SOURCE_LINES}, received {len(lines)}"
         )
 
-    raw_chunks: list[tuple[str, bytes]] = []
+    raw_chunks: list[tuple[str, list[bytes]]] = []
     for relative_path, start, end in CHUNKS:
-        raw_chunks.append((relative_path, b"".join(lines[start - 1 : end])))
+        raw_chunks.append((relative_path, list(lines[start - 1 : end])))
 
     for index in range(len(raw_chunks) - 1):
-        relative_path, chunk = raw_chunks[index]
-        next_path, next_chunk = raw_chunks[index + 1]
-        moved = b""
-        while chunk.endswith(b"\n\n"):
-            chunk = chunk[:-1]
-            moved = b"\n" + moved
-        raw_chunks[index] = (relative_path, chunk)
-        raw_chunks[index + 1] = (next_path, moved + next_chunk)
+        relative_path, chunk_lines = raw_chunks[index]
+        next_path, next_lines = raw_chunks[index + 1]
+        moved: list[bytes] = []
+        while chunk_lines and not chunk_lines[-1].strip(b" \t\r\n"):
+            moved.insert(0, chunk_lines.pop())
+        raw_chunks[index] = (relative_path, chunk_lines)
+        raw_chunks[index + 1] = (next_path, moved + next_lines)
 
-    reconstructed = b"".join(chunk for _, chunk in raw_chunks)
+    reconstructed = b"".join(
+        line for _, chunk_lines in raw_chunks for line in chunk_lines
+    )
     if reconstructed != source_bytes:
         raise RuntimeError("Split CSS does not reconstruct the original stylesheet bytes.")
 
     paths: list[str] = []
-    for relative_path, chunk in raw_chunks:
-        chunk_lines = len(chunk.splitlines())
-        if chunk_lines > 900:
-            raise RuntimeError(f"{relative_path} exceeds 900 lines: {chunk_lines}")
+    for relative_path, chunk_lines in raw_chunks:
+        if len(chunk_lines) > 900:
+            raise RuntimeError(f"{relative_path} exceeds 900 lines: {len(chunk_lines)}")
         path = ROOT / relative_path
         path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_bytes(chunk)
+        path.write_bytes(b"".join(chunk_lines))
         paths.append(relative_path)
 
     imports = "\n".join(
