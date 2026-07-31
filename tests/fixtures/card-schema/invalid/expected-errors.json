@@ -1,0 +1,12 @@
+{
+  "bad-card-id.json": "schema.pattern",
+  "dimension-out-of-range.json": "schema.maximum",
+  "duplicate-reference.json": "schema.unique_items",
+  "duplicate-semantic-id.json": "card.semantic_id_duplicate",
+  "minor-id-mismatch.json": "card.id_suit_rank_mismatch",
+  "missing-identity.json": "schema.required",
+  "reversal-weight-keys.json": "card.reversal_weight_keys",
+  "semantic-role-mismatch.json": "card.semantic_role_mismatch",
+  "unexpected-property.json": "schema.additional_property",
+  "unresolved-reference.json": "card.reference_unresolved"
+}

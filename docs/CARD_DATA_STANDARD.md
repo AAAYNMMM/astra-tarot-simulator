@@ -184,6 +184,12 @@
 }
 ```
 
+### 4.1 TQ-001正式结构契约
+
+正式路径：`src/knowledge/schemas/card-semantic-profile.schema.json`，Schema版本 `1.0.0`。
+
+本Schema冻结字段、必填项、ID/引用语法、类型、范围、基础枚举、结构性重复和局部引用解析。标签成员资格、来源注册、同义词与解释政策不在结构Schema中硬编码，由 `TQ-002` 冻结。
+
 ## 5. 内容要求
 
 ### 5.1 核心原型

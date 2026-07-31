@@ -1,0 +1,626 @@
+{
+  "arcana": "major",
+  "boundaries": {
+    "ambiguityNotes": [
+      {
+        "id": "ambiguity.control",
+        "sourceRefs": [
+          "fixture-source"
+        ],
+        "text": "控制可能指自律或压制。"
+      }
+    ],
+    "commonMisreadings": [
+      {
+        "id": "misreading.force",
+        "sourceRefs": [
+          "fixture-source"
+        ],
+        "text": "不等于强行推进。"
+      }
+    ],
+    "forbiddenClaims": [
+      {
+        "id": "forbidden.victory-guarantee",
+        "sourceRefs": [
+          "fixture-source"
+        ],
+        "text": "不得保证胜利。"
+      }
+    ]
+  },
+  "dimensions": {
+    "activation": 3,
+    "agency": 3,
+    "clarity": 2,
+    "emotionality": -1,
+    "materiality": 0,
+    "openness": 0,
+    "reciprocity": 0,
+    "risk": 1,
+    "speed": 3,
+    "stability": 1,
+    "transition": 2
+  },
+  "domains": {
+    "career": {
+      "facetRefs": [
+        "state.primary",
+        "obstacle.primary",
+        "action.primary"
+      ],
+      "overrides": [],
+      "weightAdjustments": {
+        "agency": 0.2,
+        "risk": 0.1
+      }
+    },
+    "daily": {
+      "facetRefs": [
+        "state.primary",
+        "obstacle.primary",
+        "action.primary"
+      ],
+      "overrides": [],
+      "weightAdjustments": {
+        "agency": 0.2,
+        "risk": 0.1
+      }
+    },
+    "decision": {
+      "facetRefs": [
+        "state.primary",
+        "obstacle.primary",
+        "action.primary"
+      ],
+      "overrides": [],
+      "weightAdjustments": {
+        "agency": 0.2,
+        "risk": 0.1
+      }
+    },
+    "finance": {
+      "facetRefs": [
+        "state.primary",
+        "obstacle.primary",
+        "action.primary"
+      ],
+      "overrides": [],
+      "weightAdjustments": {
+        "agency": 0.2,
+        "risk": 0.1
+      }
+    },
+    "growth": {
+      "facetRefs": [
+        "state.primary",
+        "obstacle.primary",
+        "action.primary"
+      ],
+      "overrides": [],
+      "weightAdjustments": {
+        "agency": 0.2,
+        "risk": 0.1
+      }
+    },
+    "relationship": {
+      "facetRefs": [
+        "state.primary",
+        "obstacle.primary",
+        "action.primary"
+      ],
+      "overrides": [],
+      "weightAdjustments": {
+        "agency": 0.2,
+        "risk": 0.1
+      }
+    }
+  },
+  "facets": {
+    "action": [
+      {
+        "allowedRoles": [
+          "action"
+        ],
+        "id": "action.primary",
+        "sourceRefs": [
+          "fixture-source"
+        ],
+        "tags": [
+          "action-tag",
+          "primary-tag"
+        ],
+        "text": "action primary fixture text"
+      },
+      {
+        "allowedRoles": [
+          "action"
+        ],
+        "id": "action.secondary",
+        "sourceRefs": [
+          "fixture-source"
+        ],
+        "tags": [
+          "action-tag",
+          "secondary-tag"
+        ],
+        "text": "action secondary fixture text"
+      }
+    ],
+    "boundary": [
+      {
+        "allowedRoles": [
+          "boundary"
+        ],
+        "id": "boundary.primary",
+        "sourceRefs": [
+          "fixture-source"
+        ],
+        "tags": [
+          "boundary-tag",
+          "primary-tag"
+        ],
+        "text": "boundary primary fixture text"
+      },
+      {
+        "allowedRoles": [
+          "boundary"
+        ],
+        "id": "boundary.secondary",
+        "sourceRefs": [
+          "fixture-source"
+        ],
+        "tags": [
+          "boundary-tag",
+          "secondary-tag"
+        ],
+        "text": "boundary secondary fixture text"
+      }
+    ],
+    "cause": [
+      {
+        "allowedRoles": [
+          "cause"
+        ],
+        "id": "cause.primary",
+        "sourceRefs": [
+          "fixture-source"
+        ],
+        "tags": [
+          "cause-tag",
+          "primary-tag"
+        ],
+        "text": "cause primary fixture text"
+      },
+      {
+        "allowedRoles": [
+          "cause"
+        ],
+        "id": "cause.secondary",
+        "sourceRefs": [
+          "fixture-source"
+        ],
+        "tags": [
+          "cause-tag",
+          "secondary-tag"
+        ],
+        "text": "cause secondary fixture text"
+      }
+    ],
+    "motivation": [
+      {
+        "allowedRoles": [
+          "motivation"
+        ],
+        "id": "motivation.primary",
+        "sourceRefs": [
+          "fixture-source"
+        ],
+        "tags": [
+          "motivation-tag",
+          "primary-tag"
+        ],
+        "text": "motivation primary fixture text"
+      },
+      {
+        "allowedRoles": [
+          "motivation"
+        ],
+        "id": "motivation.secondary",
+        "sourceRefs": [
+          "fixture-source"
+        ],
+        "tags": [
+          "motivation-tag",
+          "secondary-tag"
+        ],
+        "text": "motivation secondary fixture text"
+      }
+    ],
+    "obstacle": [
+      {
+        "allowedRoles": [
+          "obstacle"
+        ],
+        "id": "obstacle.primary",
+        "sourceRefs": [
+          "fixture-source"
+        ],
+        "tags": [
+          "obstacle-tag",
+          "primary-tag"
+        ],
+        "text": "obstacle primary fixture text"
+      },
+      {
+        "allowedRoles": [
+          "obstacle"
+        ],
+        "id": "obstacle.secondary",
+        "sourceRefs": [
+          "fixture-source"
+        ],
+        "tags": [
+          "obstacle-tag",
+          "secondary-tag"
+        ],
+        "text": "obstacle secondary fixture text"
+      }
+    ],
+    "opportunity": [
+      {
+        "allowedRoles": [
+          "opportunity"
+        ],
+        "id": "opportunity.primary",
+        "sourceRefs": [
+          "fixture-source"
+        ],
+        "tags": [
+          "opportunity-tag",
+          "primary-tag"
+        ],
+        "text": "opportunity primary fixture text"
+      },
+      {
+        "allowedRoles": [
+          "opportunity"
+        ],
+        "id": "opportunity.secondary",
+        "sourceRefs": [
+          "fixture-source"
+        ],
+        "tags": [
+          "opportunity-tag",
+          "secondary-tag"
+        ],
+        "text": "opportunity secondary fixture text"
+      }
+    ],
+    "outcome": [
+      {
+        "allowedRoles": [
+          "outcome"
+        ],
+        "id": "outcome.primary",
+        "sourceRefs": [
+          "fixture-source"
+        ],
+        "tags": [
+          "outcome-tag",
+          "primary-tag"
+        ],
+        "text": "outcome primary fixture text"
+      },
+      {
+        "allowedRoles": [
+          "outcome"
+        ],
+        "id": "outcome.secondary",
+        "sourceRefs": [
+          "fixture-source"
+        ],
+        "tags": [
+          "outcome-tag",
+          "secondary-tag"
+        ],
+        "text": "outcome secondary fixture text"
+      }
+    ],
+    "reflection": [
+      {
+        "allowedRoles": [
+          "reflection"
+        ],
+        "id": "reflection.primary",
+        "sourceRefs": [
+          "fixture-source"
+        ],
+        "tags": [
+          "reflection-tag",
+          "primary-tag"
+        ],
+        "text": "reflection primary fixture text"
+      },
+      {
+        "allowedRoles": [
+          "reflection"
+        ],
+        "id": "reflection.secondary",
+        "sourceRefs": [
+          "fixture-source"
+        ],
+        "tags": [
+          "reflection-tag",
+          "secondary-tag"
+        ],
+        "text": "reflection secondary fixture text"
+      }
+    ],
+    "relationship": [
+      {
+        "allowedRoles": [
+          "relationship"
+        ],
+        "id": "relationship.primary",
+        "sourceRefs": [
+          "fixture-source"
+        ],
+        "tags": [
+          "relationship-tag",
+          "primary-tag"
+        ],
+        "text": "relationship primary fixture text"
+      },
+      {
+        "allowedRoles": [
+          "relationship"
+        ],
+        "id": "relationship.secondary",
+        "sourceRefs": [
+          "fixture-source"
+        ],
+        "tags": [
+          "relationship-tag",
+          "secondary-tag"
+        ],
+        "text": "relationship secondary fixture text"
+      }
+    ],
+    "resource": [
+      {
+        "allowedRoles": [
+          "resource"
+        ],
+        "id": "resource.primary",
+        "sourceRefs": [
+          "fixture-source"
+        ],
+        "tags": [
+          "resource-tag",
+          "primary-tag"
+        ],
+        "text": "resource primary fixture text"
+      },
+      {
+        "allowedRoles": [
+          "resource"
+        ],
+        "id": "resource.secondary",
+        "sourceRefs": [
+          "fixture-source"
+        ],
+        "tags": [
+          "resource-tag",
+          "secondary-tag"
+        ],
+        "text": "resource secondary fixture text"
+      }
+    ],
+    "state": [
+      {
+        "allowedRoles": [
+          "state"
+        ],
+        "id": "state.primary",
+        "sourceRefs": [
+          "fixture-source"
+        ],
+        "tags": [
+          "state-tag",
+          "primary-tag"
+        ],
+        "text": "state primary fixture text"
+      },
+      {
+        "allowedRoles": [
+          "state"
+        ],
+        "id": "state.secondary",
+        "sourceRefs": [
+          "fixture-source"
+        ],
+        "tags": [
+          "state-tag",
+          "secondary-tag"
+        ],
+        "text": "state secondary fixture text"
+      }
+    ],
+    "trend": [
+      {
+        "allowedRoles": [
+          "trend"
+        ],
+        "id": "trend.primary",
+        "sourceRefs": [
+          "fixture-source"
+        ],
+        "tags": [
+          "trend-tag",
+          "primary-tag"
+        ],
+        "text": "trend primary fixture text"
+      },
+      {
+        "allowedRoles": [
+          "trend"
+        ],
+        "id": "trend.secondary",
+        "sourceRefs": [
+          "fixture-source"
+        ],
+        "tags": [
+          "trend-tag",
+          "secondary-tag"
+        ],
+        "text": "trend secondary fixture text"
+      }
+    ]
+  },
+  "id": "major-7",
+  "identity": {
+    "coreArchetype": "驾驭相反力量并朝目标推进",
+    "developmentalStage": "主动确立方向并承担控制责任",
+    "essence": "方向、意志、控制与推进"
+  },
+  "language": {
+    "actionPhraseRefs": [
+      "action.primary",
+      "action.primary"
+    ],
+    "cautionPhraseRefs": [
+      "boundary.primary"
+    ],
+    "conciseReversedRefs": [
+      "obstacle.primary"
+    ],
+    "conciseUprightRefs": [
+      "state.primary"
+    ],
+    "keywordsReversed": [
+      "失控",
+      "摇摆",
+      "用力失衡"
+    ],
+    "keywordsUpright": [
+      "推进",
+      "方向",
+      "自律"
+    ]
+  },
+  "metadata": {
+    "reviewDate": null,
+    "reviewedBy": [],
+    "score": null,
+    "status": "DRAFT",
+    "version": "1.0.0"
+  },
+  "name": "战车",
+  "number": 7,
+  "provenance": {
+    "modernizedScope": [
+      "行动建议采用现代中性表达。"
+    ],
+    "sourceRefs": [
+      "fixture-source"
+    ],
+    "tradition": "rws-core"
+  },
+  "relations": {
+    "conflictsTags": [
+      "delay",
+      "confusion"
+    ],
+    "roleTags": [
+      "driver"
+    ],
+    "stageTags": [
+      "active-direction"
+    ],
+    "supportsTags": [
+      "movement",
+      "direction"
+    ],
+    "transformsTags": [
+      "control-release"
+    ]
+  },
+  "reversal": {
+    "defaultWeights": {
+      "blocked": 0.4,
+      "excessive": 0.3,
+      "misdirected": 0.3
+    },
+    "modeFacetRefs": {
+      "blocked": [
+        "obstacle.primary"
+      ],
+      "excessive": [
+        "boundary.primary"
+      ],
+      "misdirected": [
+        "action.secondary"
+      ]
+    },
+    "supportedModes": [
+      "blocked",
+      "excessive",
+      "misdirected"
+    ]
+  },
+  "schemaVersion": "1.0.0",
+  "themes": [
+    "direction",
+    "agency",
+    "movement"
+  ],
+  "traditions": {
+    "cautions": [
+      {
+        "id": "caution.control",
+        "sourceRefs": [
+          "fixture-source"
+        ],
+        "text": "控制不等于压制。"
+      }
+    ],
+    "reversedSummary": "方向摇摆或控制失衡。",
+    "symbols": [
+      {
+        "id": "symbol.chariot",
+        "meaning": "主动推进",
+        "sourceRefs": [
+          "fixture-source"
+        ],
+        "symbol": "战车",
+        "traditionScopes": [
+          "cross-deck"
+        ]
+      },
+      {
+        "id": "symbol.opposites",
+        "meaning": "需要协调",
+        "sourceRefs": [
+          "fixture-source"
+        ],
+        "symbol": "相反力量",
+        "traditionScopes": [
+          "rws"
+        ]
+      },
+      {
+        "id": "symbol.road",
+        "meaning": "方向与进程",
+        "sourceRefs": [
+          "fixture-source"
+        ],
+        "symbol": "道路",
+        "traditionScopes": [
+          "cross-deck"
+        ]
+      }
+    ],
+    "uprightSummary": "方向明确并能整合力量。"
+  }
+}

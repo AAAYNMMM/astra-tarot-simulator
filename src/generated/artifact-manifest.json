@@ -1,9 +1,9 @@
 {
   "appVersion": "2.0.0-dev",
-  "engineManifestHash": "212977b2911125c936f540c8af4135e1b2305a9d3045053b333c47f8250d0be6",
+  "engineManifestHash": "e048eb893ca47f68d005823dec31b1a0cc220c5891d9fd8483c6b1d37ec0be20",
   "generatorHash": "76bc2d029b5c973668ff17558c7aa12244f63093801358b36b552c7c6f03b584",
   "generatorVersion": "1.0.0",
-  "knowledgeManifestHash": "0edf02dda8871c17c08a6203d0f54155072c50de0acb8d54a1bc699fc55f78b5",
+  "knowledgeManifestHash": "5719578592dbae853771d220d171f6f0e9ecf1e1c970880f823bb5a771d6fa10",
   "modules": {
     "cards": {
       "cups-ace": "8e7298b5aff3ccc34a6f7506b7d70031d9bcc5198b3e18779338ff3d307d2e25",
@@ -152,13 +152,15 @@
     "src/config/accent-tokens.js": "e26ac1533de60a846b35a1490d2a0d55a488d50763d359f04e1fee332656a2c0",
     "src/config/decks.js": "586885d37be46c95245082d0f93b9b869e787d70660ba771b122eae2d75b9896",
     "src/config/legacy-storage.js": "5d232eedaebe2ee2ccc5acb6718da65065d833cb02bd653b49eece9003d0bce0",
-    "src/config/version.js": "3a530f2210f3c90887ba887f167406f4a2d43a3e3403208b418da3ad90cc81fd",
+    "src/config/version.js": "6fba835abd5af32e758b05b071c0a3cf3985745e2ad381b4b2b7012af824ee37",
     "src/core/html.js": "9cc91c09a105ca220ce3171d68119f05d4af795888548af16e777ac64316829c",
     "src/core/random/business-random.js": "31fa1d1d8addacea924c7a47b4860b3459df82b9e61b63c38050a12c4daed70b",
     "src/engine/legacy/card-reading.js": "8cb14ef15e014bc00b58f5b8156cbb4cf106d2c48f65ffd1c134bfbf29e73cba",
     "src/engine/legacy/synthesis.js": "586a2a578dfa3410c6c6933c397432544666a1da51f499050824d1b12919caac",
+    "src/engine/validation/card-profile-validator.js": "fdc881c76f43e9538cb19fb999b392f3aa6ba128d8d4360bc22511911a507770",
+    "src/engine/validation/schema-validator.js": "c89f1e12e4d09e23f708447623997d16feca69ccd13623c392bfb0d44b03cfd5",
     "src/generated/card-catalog.js": "d27d0e79a507718813a0fb3ff049ed5036fffba748f5e98073866fd921385c5e",
-    "src/generated/knowledge-manifest.json": "0edf02dda8871c17c08a6203d0f54155072c50de0acb8d54a1bc699fc55f78b5",
+    "src/generated/knowledge-manifest.json": "5719578592dbae853771d220d171f6f0e9ecf1e1c970880f823bb5a771d6fa10",
     "src/generated/knowledge-registry.js": "0ee925ccee1499559e5778a7c0ba7ae050aa863446a8fbc1d9fa43e914a7f184",
     "src/generated/question-catalog.js": "e7c1eb3fc4cf0db3989c5272072d5f6f72fcbbdd3a8ddb64e377e14124696875",
     "src/knowledge/legacy/build.js": "c63393572e8dd815e130abb3c532786e256953c87a62f22cada998685f9e283d",
@@ -167,6 +169,7 @@
     "src/knowledge/legacy/index.js": "6429b0744b710fd0bbefd8a98810ab2aa8f81ab4ecbfcb44e647b66643ed0b3b",
     "src/knowledge/legacy/metadata.js": "73ac14615e9d67921d6adf5cad018a2cc90a32acabeb670015dafebffce00278",
     "src/knowledge/legacy/questions.js": "a3757f083bd77df1943348e6e0e79cc114f9ca43714378afba31f28280de0112",
+    "src/knowledge/schemas/card-semantic-profile.schema.json": "1f959083cb64f5ce6c49e28375e4a01e54b49a9780edb70fd0243648974e0399",
     "src/knowledge/spreads/definitions.js": "e2d01ff57fe684364b641adc9f1fc7867f1555ac66783792de339956c3b714e6",
     "src/platform/assets.js": "0b65428b4f91f5957a9bee71851b729bb71e746f38463e3b9fa8a6d300a3c030",
     "src/platform/entropy.js": "c11dcc43360723ccfbeb319e108f84f44909fa84d6ab0a1838550d70c47ee1a2",
@@ -203,5 +206,5 @@
     "sw.js": "0032b0963cb1bf03d6355e763c5e0e01600c3b4fda48fff33b453793cbb3af99"
   },
   "schemaVersion": "1.0.0",
-  "sourceSetHash": "6093751942beadf732f87c2c336d806a77695271a9f700499a513e66a8c5fb32"
+  "sourceSetHash": "d124c0d2287e9f052cd6b81ad6c28274357164eef4c6d128dedd4b46ad35a423"
 }

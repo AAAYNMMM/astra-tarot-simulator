@@ -1,0 +1,1102 @@
+{
+  "$defs": {
+    "evidenceUnit": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "maxLength": 96,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$",
+          "type": "string"
+        },
+        "sourceRefs": {
+          "items": {
+            "maxLength": 96,
+            "minLength": 1,
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+            "type": "string"
+          },
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "text": {
+          "maxLength": 360,
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "text",
+        "sourceRefs"
+      ],
+      "type": "object"
+    },
+    "localSemanticRef": {
+      "maxLength": 96,
+      "minLength": 1,
+      "pattern": "^(?:state|cause|motivation|obstacle|opportunity|resource|relationship|action|boundary|trend|outcome|reflection)\\.[a-z0-9]+(?:-[a-z0-9]+)*$",
+      "type": "string"
+    },
+    "semanticUnit": {
+      "additionalProperties": false,
+      "properties": {
+        "allowedRoles": {
+          "items": {
+            "enum": [
+              "state",
+              "cause",
+              "motivation",
+              "obstacle",
+              "opportunity",
+              "resource",
+              "relationship",
+              "action",
+              "boundary",
+              "trend",
+              "outcome",
+              "reflection"
+            ]
+          },
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "id": {
+          "maxLength": 96,
+          "minLength": 1,
+          "pattern": "^(?:state|cause|motivation|obstacle|opportunity|resource|relationship|action|boundary|trend|outcome|reflection)\\.[a-z0-9]+(?:-[a-z0-9]+)*$",
+          "type": "string"
+        },
+        "sourceRefs": {
+          "items": {
+            "maxLength": 96,
+            "minLength": 1,
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+            "type": "string"
+          },
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "tags": {
+          "items": {
+            "maxLength": 64,
+            "minLength": 1,
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+            "type": "string"
+          },
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "text": {
+          "maxLength": 320,
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "text",
+        "tags",
+        "allowedRoles",
+        "sourceRefs"
+      ],
+      "type": "object"
+    },
+    "stableCardRef": {
+      "maxLength": 168,
+      "minLength": 1,
+      "pattern": "^(?:major-(?:0|[1-9]|1[0-9]|2[01])|(?:wands|cups|swords|pentacles)-(?:ace|two|three|four|five|six|seven|eight|nine|ten|page|knight|queen|king))#(?:state|cause|motivation|obstacle|opportunity|resource|relationship|action|boundary|trend|outcome|reflection)\\.[a-z0-9]+(?:-[a-z0-9]+)*$",
+      "type": "string"
+    },
+    "symbolUnit": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "maxLength": 96,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$",
+          "type": "string"
+        },
+        "meaning": {
+          "maxLength": 320,
+          "minLength": 1,
+          "type": "string"
+        },
+        "sourceRefs": {
+          "items": {
+            "maxLength": 96,
+            "minLength": 1,
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+            "type": "string"
+          },
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "symbol": {
+          "maxLength": 80,
+          "minLength": 1,
+          "type": "string"
+        },
+        "traditionScopes": {
+          "items": {
+            "maxLength": 64,
+            "minLength": 1,
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+            "type": "string"
+          },
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "id",
+        "symbol",
+        "meaning",
+        "traditionScopes",
+        "sourceRefs"
+      ],
+      "type": "object"
+    }
+  },
+  "$id": "https://astra.local/schemas/card-semantic-profile/1.0.0",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "arcana": {
+            "const": "major"
+          }
+        },
+        "required": [
+          "arcana"
+        ]
+      },
+      "then": {
+        "properties": {
+          "id": {
+            "pattern": "^major-(?:0|[1-9]|1[0-9]|2[01])$"
+          }
+        },
+        "required": [
+          "number"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "arcana": {
+            "const": "minor"
+          }
+        },
+        "required": [
+          "arcana"
+        ]
+      },
+      "then": {
+        "properties": {
+          "id": {
+            "pattern": "^(?:wands|cups|swords|pentacles)-(?:ace|two|three|four|five|six|seven|eight|nine|ten|page|knight|queen|king)$"
+          }
+        },
+        "required": [
+          "suit",
+          "rank"
+        ]
+      }
+    }
+  ],
+  "description": "TQ-001 structural contract. Vocabulary membership and source registry policy belong to TQ-002.",
+  "properties": {
+    "arcana": {
+      "enum": [
+        "major",
+        "minor"
+      ]
+    },
+    "boundaries": {
+      "additionalProperties": false,
+      "properties": {
+        "ambiguityNotes": {
+          "items": {
+            "$ref": "#/$defs/evidenceUnit"
+          },
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "commonMisreadings": {
+          "items": {
+            "$ref": "#/$defs/evidenceUnit"
+          },
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "forbiddenClaims": {
+          "items": {
+            "$ref": "#/$defs/evidenceUnit"
+          },
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "forbiddenClaims",
+        "commonMisreadings",
+        "ambiguityNotes"
+      ],
+      "type": "object"
+    },
+    "dimensions": {
+      "additionalProperties": false,
+      "properties": {
+        "activation": {
+          "maximum": 3,
+          "minimum": -3,
+          "type": "integer"
+        },
+        "agency": {
+          "maximum": 3,
+          "minimum": -3,
+          "type": "integer"
+        },
+        "clarity": {
+          "maximum": 3,
+          "minimum": -3,
+          "type": "integer"
+        },
+        "emotionality": {
+          "maximum": 3,
+          "minimum": -3,
+          "type": "integer"
+        },
+        "materiality": {
+          "maximum": 3,
+          "minimum": -3,
+          "type": "integer"
+        },
+        "openness": {
+          "maximum": 3,
+          "minimum": -3,
+          "type": "integer"
+        },
+        "reciprocity": {
+          "maximum": 3,
+          "minimum": -3,
+          "type": "integer"
+        },
+        "risk": {
+          "maximum": 3,
+          "minimum": -3,
+          "type": "integer"
+        },
+        "speed": {
+          "maximum": 3,
+          "minimum": -3,
+          "type": "integer"
+        },
+        "stability": {
+          "maximum": 3,
+          "minimum": -3,
+          "type": "integer"
+        },
+        "transition": {
+          "maximum": 3,
+          "minimum": -3,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "activation",
+        "stability",
+        "clarity",
+        "agency",
+        "openness",
+        "reciprocity",
+        "materiality",
+        "emotionality",
+        "risk",
+        "transition",
+        "speed"
+      ],
+      "type": "object"
+    },
+    "domains": {
+      "additionalProperties": false,
+      "properties": {
+        "career": {
+          "additionalProperties": false,
+          "properties": {
+            "facetRefs": {
+              "items": {
+                "$ref": "#/$defs/localSemanticRef"
+              },
+              "minItems": 3,
+              "type": "array",
+              "uniqueItems": true
+            },
+            "overrides": {
+              "items": {
+                "$ref": "#/$defs/semanticUnit"
+              },
+              "minItems": 0,
+              "type": "array",
+              "uniqueItems": true
+            },
+            "weightAdjustments": {
+              "additionalProperties": {
+                "maximum": 1,
+                "minimum": -1,
+                "type": "number"
+              },
+              "maxProperties": 11,
+              "type": "object"
+            }
+          },
+          "required": [
+            "facetRefs",
+            "weightAdjustments",
+            "overrides"
+          ],
+          "type": "object"
+        },
+        "daily": {
+          "additionalProperties": false,
+          "properties": {
+            "facetRefs": {
+              "items": {
+                "$ref": "#/$defs/localSemanticRef"
+              },
+              "minItems": 3,
+              "type": "array",
+              "uniqueItems": true
+            },
+            "overrides": {
+              "items": {
+                "$ref": "#/$defs/semanticUnit"
+              },
+              "minItems": 0,
+              "type": "array",
+              "uniqueItems": true
+            },
+            "weightAdjustments": {
+              "additionalProperties": {
+                "maximum": 1,
+                "minimum": -1,
+                "type": "number"
+              },
+              "maxProperties": 11,
+              "type": "object"
+            }
+          },
+          "required": [
+            "facetRefs",
+            "weightAdjustments",
+            "overrides"
+          ],
+          "type": "object"
+        },
+        "decision": {
+          "additionalProperties": false,
+          "properties": {
+            "facetRefs": {
+              "items": {
+                "$ref": "#/$defs/localSemanticRef"
+              },
+              "minItems": 3,
+              "type": "array",
+              "uniqueItems": true
+            },
+            "overrides": {
+              "items": {
+                "$ref": "#/$defs/semanticUnit"
+              },
+              "minItems": 0,
+              "type": "array",
+              "uniqueItems": true
+            },
+            "weightAdjustments": {
+              "additionalProperties": {
+                "maximum": 1,
+                "minimum": -1,
+                "type": "number"
+              },
+              "maxProperties": 11,
+              "type": "object"
+            }
+          },
+          "required": [
+            "facetRefs",
+            "weightAdjustments",
+            "overrides"
+          ],
+          "type": "object"
+        },
+        "finance": {
+          "additionalProperties": false,
+          "properties": {
+            "facetRefs": {
+              "items": {
+                "$ref": "#/$defs/localSemanticRef"
+              },
+              "minItems": 3,
+              "type": "array",
+              "uniqueItems": true
+            },
+            "overrides": {
+              "items": {
+                "$ref": "#/$defs/semanticUnit"
+              },
+              "minItems": 0,
+              "type": "array",
+              "uniqueItems": true
+            },
+            "weightAdjustments": {
+              "additionalProperties": {
+                "maximum": 1,
+                "minimum": -1,
+                "type": "number"
+              },
+              "maxProperties": 11,
+              "type": "object"
+            }
+          },
+          "required": [
+            "facetRefs",
+            "weightAdjustments",
+            "overrides"
+          ],
+          "type": "object"
+        },
+        "growth": {
+          "additionalProperties": false,
+          "properties": {
+            "facetRefs": {
+              "items": {
+                "$ref": "#/$defs/localSemanticRef"
+              },
+              "minItems": 3,
+              "type": "array",
+              "uniqueItems": true
+            },
+            "overrides": {
+              "items": {
+                "$ref": "#/$defs/semanticUnit"
+              },
+              "minItems": 0,
+              "type": "array",
+              "uniqueItems": true
+            },
+            "weightAdjustments": {
+              "additionalProperties": {
+                "maximum": 1,
+                "minimum": -1,
+                "type": "number"
+              },
+              "maxProperties": 11,
+              "type": "object"
+            }
+          },
+          "required": [
+            "facetRefs",
+            "weightAdjustments",
+            "overrides"
+          ],
+          "type": "object"
+        },
+        "relationship": {
+          "additionalProperties": false,
+          "properties": {
+            "facetRefs": {
+              "items": {
+                "$ref": "#/$defs/localSemanticRef"
+              },
+              "minItems": 3,
+              "type": "array",
+              "uniqueItems": true
+            },
+            "overrides": {
+              "items": {
+                "$ref": "#/$defs/semanticUnit"
+              },
+              "minItems": 0,
+              "type": "array",
+              "uniqueItems": true
+            },
+            "weightAdjustments": {
+              "additionalProperties": {
+                "maximum": 1,
+                "minimum": -1,
+                "type": "number"
+              },
+              "maxProperties": 11,
+              "type": "object"
+            }
+          },
+          "required": [
+            "facetRefs",
+            "weightAdjustments",
+            "overrides"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "relationship",
+        "career",
+        "finance",
+        "growth",
+        "decision",
+        "daily"
+      ],
+      "type": "object"
+    },
+    "facets": {
+      "additionalProperties": false,
+      "properties": {
+        "action": {
+          "items": {
+            "$ref": "#/$defs/semanticUnit"
+          },
+          "minItems": 2,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "boundary": {
+          "items": {
+            "$ref": "#/$defs/semanticUnit"
+          },
+          "minItems": 2,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "cause": {
+          "items": {
+            "$ref": "#/$defs/semanticUnit"
+          },
+          "minItems": 2,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "motivation": {
+          "items": {
+            "$ref": "#/$defs/semanticUnit"
+          },
+          "minItems": 2,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "obstacle": {
+          "items": {
+            "$ref": "#/$defs/semanticUnit"
+          },
+          "minItems": 2,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "opportunity": {
+          "items": {
+            "$ref": "#/$defs/semanticUnit"
+          },
+          "minItems": 2,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "outcome": {
+          "items": {
+            "$ref": "#/$defs/semanticUnit"
+          },
+          "minItems": 2,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "reflection": {
+          "items": {
+            "$ref": "#/$defs/semanticUnit"
+          },
+          "minItems": 2,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "relationship": {
+          "items": {
+            "$ref": "#/$defs/semanticUnit"
+          },
+          "minItems": 2,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "resource": {
+          "items": {
+            "$ref": "#/$defs/semanticUnit"
+          },
+          "minItems": 2,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "state": {
+          "items": {
+            "$ref": "#/$defs/semanticUnit"
+          },
+          "minItems": 2,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "trend": {
+          "items": {
+            "$ref": "#/$defs/semanticUnit"
+          },
+          "minItems": 2,
+          "type": "array",
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "state",
+        "cause",
+        "motivation",
+        "obstacle",
+        "opportunity",
+        "resource",
+        "relationship",
+        "action",
+        "boundary",
+        "trend",
+        "outcome",
+        "reflection"
+      ],
+      "type": "object"
+    },
+    "id": {
+      "maxLength": 64,
+      "minLength": 1,
+      "pattern": "^(?:major-(?:0|[1-9]|1[0-9]|2[01])|(?:wands|cups|swords|pentacles)-(?:ace|two|three|four|five|six|seven|eight|nine|ten|page|knight|queen|king))$",
+      "type": "string"
+    },
+    "identity": {
+      "additionalProperties": false,
+      "properties": {
+        "coreArchetype": {
+          "maxLength": 180,
+          "minLength": 1,
+          "type": "string"
+        },
+        "developmentalStage": {
+          "maxLength": 200,
+          "minLength": 1,
+          "type": "string"
+        },
+        "essence": {
+          "maxLength": 160,
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "coreArchetype",
+        "essence",
+        "developmentalStage"
+      ],
+      "type": "object"
+    },
+    "language": {
+      "additionalProperties": false,
+      "properties": {
+        "actionPhraseRefs": {
+          "items": {
+            "$ref": "#/$defs/localSemanticRef"
+          },
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "cautionPhraseRefs": {
+          "items": {
+            "$ref": "#/$defs/localSemanticRef"
+          },
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "conciseReversedRefs": {
+          "items": {
+            "$ref": "#/$defs/localSemanticRef"
+          },
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "conciseUprightRefs": {
+          "items": {
+            "$ref": "#/$defs/localSemanticRef"
+          },
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "keywordsReversed": {
+          "items": {
+            "maxLength": 40,
+            "minLength": 1,
+            "type": "string"
+          },
+          "minItems": 3,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "keywordsUpright": {
+          "items": {
+            "maxLength": 40,
+            "minLength": 1,
+            "type": "string"
+          },
+          "minItems": 3,
+          "type": "array",
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "keywordsUpright",
+        "keywordsReversed",
+        "conciseUprightRefs",
+        "conciseReversedRefs",
+        "actionPhraseRefs",
+        "cautionPhraseRefs"
+      ],
+      "type": "object"
+    },
+    "metadata": {
+      "additionalProperties": false,
+      "properties": {
+        "reviewDate": {
+          "format": "date",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "reviewedBy": {
+          "items": {
+            "maxLength": 80,
+            "minLength": 1,
+            "type": "string"
+          },
+          "minItems": 0,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "score": {
+          "maximum": 100,
+          "minimum": 0,
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "status": {
+          "enum": [
+            "DRAFT",
+            "SCHEMA_VALID",
+            "CONTENT_REVIEWED",
+            "CROSS_CARD_REVIEWED",
+            "CONSUMER_VALIDATED",
+            "SCENARIO_TESTED",
+            "APPROVED"
+          ]
+        },
+        "version": {
+          "maxLength": 32,
+          "minLength": 1,
+          "pattern": "^(?:0|[1-9][0-9]*)\\.(?:0|[1-9][0-9]*)\\.(?:0|[1-9][0-9]*)$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "version",
+        "status",
+        "reviewedBy",
+        "reviewDate",
+        "score"
+      ],
+      "type": "object"
+    },
+    "name": {
+      "maxLength": 40,
+      "minLength": 1,
+      "type": "string"
+    },
+    "number": {
+      "maximum": 21,
+      "minimum": 0,
+      "type": "integer"
+    },
+    "provenance": {
+      "additionalProperties": false,
+      "properties": {
+        "modernizedScope": {
+          "items": {
+            "maxLength": 240,
+            "minLength": 1,
+            "type": "string"
+          },
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "sourceRefs": {
+          "items": {
+            "maxLength": 96,
+            "minLength": 1,
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+            "type": "string"
+          },
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "tradition": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "tradition",
+        "sourceRefs",
+        "modernizedScope"
+      ],
+      "type": "object"
+    },
+    "rank": {
+      "enum": [
+        "ace",
+        "two",
+        "three",
+        "four",
+        "five",
+        "six",
+        "seven",
+        "eight",
+        "nine",
+        "ten",
+        "page",
+        "knight",
+        "queen",
+        "king"
+      ]
+    },
+    "relations": {
+      "additionalProperties": false,
+      "properties": {
+        "conflictsTags": {
+          "items": {
+            "maxLength": 64,
+            "minLength": 1,
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+            "type": "string"
+          },
+          "minItems": 0,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "roleTags": {
+          "items": {
+            "maxLength": 64,
+            "minLength": 1,
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+            "type": "string"
+          },
+          "minItems": 0,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "stageTags": {
+          "items": {
+            "maxLength": 64,
+            "minLength": 1,
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+            "type": "string"
+          },
+          "minItems": 0,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "supportsTags": {
+          "items": {
+            "maxLength": 64,
+            "minLength": 1,
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+            "type": "string"
+          },
+          "minItems": 0,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "transformsTags": {
+          "items": {
+            "maxLength": 64,
+            "minLength": 1,
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+            "type": "string"
+          },
+          "minItems": 0,
+          "type": "array",
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "supportsTags",
+        "conflictsTags",
+        "transformsTags",
+        "stageTags",
+        "roleTags"
+      ],
+      "type": "object"
+    },
+    "reversal": {
+      "additionalProperties": false,
+      "properties": {
+        "defaultWeights": {
+          "additionalProperties": {
+            "maximum": 1,
+            "minimum": 0,
+            "type": "number"
+          },
+          "maxProperties": 6,
+          "minProperties": 3,
+          "type": "object"
+        },
+        "modeFacetRefs": {
+          "additionalProperties": {
+            "items": {
+              "$ref": "#/$defs/localSemanticRef"
+            },
+            "minItems": 1,
+            "type": "array",
+            "uniqueItems": true
+          },
+          "maxProperties": 6,
+          "minProperties": 3,
+          "type": "object"
+        },
+        "supportedModes": {
+          "items": {
+            "enum": [
+              "blocked",
+              "delayed",
+              "internalized",
+              "excessive",
+              "deficient",
+              "misdirected",
+              "distorted",
+              "released",
+              "avoided",
+              "loss-of-control"
+            ]
+          },
+          "maxItems": 6,
+          "minItems": 3,
+          "type": "array",
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "supportedModes",
+        "defaultWeights",
+        "modeFacetRefs"
+      ],
+      "type": "object"
+    },
+    "schemaVersion": {
+      "const": "1.0.0"
+    },
+    "suit": {
+      "enum": [
+        "wands",
+        "cups",
+        "swords",
+        "pentacles"
+      ]
+    },
+    "themes": {
+      "items": {
+        "maxLength": 64,
+        "minLength": 1,
+        "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+        "type": "string"
+      },
+      "minItems": 3,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "traditions": {
+      "additionalProperties": false,
+      "properties": {
+        "cautions": {
+          "items": {
+            "$ref": "#/$defs/evidenceUnit"
+          },
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "reversedSummary": {
+          "maxLength": 500,
+          "minLength": 1,
+          "type": "string"
+        },
+        "symbols": {
+          "items": {
+            "$ref": "#/$defs/symbolUnit"
+          },
+          "minItems": 3,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "uprightSummary": {
+          "maxLength": 500,
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "uprightSummary",
+        "reversedSummary",
+        "symbols",
+        "cautions"
+      ],
+      "type": "object"
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "id",
+    "name",
+    "arcana",
+    "identity",
+    "traditions",
+    "themes",
+    "dimensions",
+    "facets",
+    "reversal",
+    "domains",
+    "relations",
+    "language",
+    "boundaries",
+    "provenance",
+    "metadata"
+  ],
+  "title": "Astra Tarot CardSemanticProfile",
+  "type": "object"
+}

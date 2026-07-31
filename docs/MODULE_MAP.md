@@ -560,3 +560,16 @@ src/storage/legacy-record.js
 ## MOD-006D终态门禁
 
 `automation/validate.py --scope full` 在baseline之外执行Phase M综合契约、真实浏览器harness和严格规模检查。浏览器harness使用测试专用回环端点，不扩大生产服务器白名单。
+
+
+---
+
+## 10. Phase 1结构验证入口
+
+`TQ-001` 冻结 `src/knowledge/schemas/card-semantic-profile.schema.json`（Draft 2020-12，Schema版本1.0.0）。
+
+- 通用无依赖子集验证器：`src/engine/validation/schema-validator.js`。
+- 卡牌结构、局部引用和跨字段验证器：`src/engine/validation/card-profile-validator.js`。
+- 命令行入口：`node scripts/validate_card_profiles.mjs <profile.json...>`。
+- 契约与失败样例：`tests/card_schema_contract_test.mjs`、`tests/fixtures/card-schema/`。
+- Schema只检查结构、语法、范围、基础枚举、重复和局部引用；标签、来源和语义词典成员资格由 `TQ-002` 校验。

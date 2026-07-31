@@ -14,6 +14,8 @@
     "test:pwa": "node tests/pwa_contract_test.mjs",
     "test:phase-m": "node tests/phase_m_gate_test.mjs",
     "test:browser": "python tests/browser_harness.py",
-    "test:full": "python automation/validate.py --scope full"
+    "test:full": "python automation/validate.py --scope full",
+    "test:card-schema": "node tests/card_schema_contract_test.mjs",
+    "validate:card": "node scripts/validate_card_profiles.mjs"
   }
 }

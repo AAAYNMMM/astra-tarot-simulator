@@ -115,3 +115,14 @@ MOD-006B后baseline先执行生成物陈旧检查和生成契约。生成命令�
 
 
 Phase M终态与后续完整回归使用 `python automation/validate.py --scope full`；该scope要求至少一款本机Chromium浏览器，并验证所有检测到的受支持桌面浏览器。
+
+
+## TQ-001 CardSemanticProfile
+
+`baseline` 与 `full` 均运行 `node tests/card_schema_contract_test.mjs`。单独验证JSON文件：
+
+```text
+node scripts/validate_card_profiles.mjs path/to/card.json
+```
+
+退出码0表示全部通过，1表示存在结构错误，2表示命令使用错误。输出为包含稳定错误码的JSON。

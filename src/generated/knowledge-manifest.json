@@ -16,6 +16,7 @@
     "src/knowledge/legacy/index.js": "6429b0744b710fd0bbefd8a98810ab2aa8f81ab4ecbfcb44e647b66643ed0b3b",
     "src/knowledge/legacy/metadata.js": "73ac14615e9d67921d6adf5cad018a2cc90a32acabeb670015dafebffce00278",
     "src/knowledge/legacy/questions.js": "a3757f083bd77df1943348e6e0e79cc114f9ca43714378afba31f28280de0112",
+    "src/knowledge/schemas/card-semantic-profile.schema.json": "1f959083cb64f5ce6c49e28375e4a01e54b49a9780edb70fd0243648974e0399",
     "src/knowledge/spreads/definitions.js": "e2d01ff57fe684364b641adc9f1fc7867f1555ac66783792de339956c3b714e6"
   },
   "generatorVersion": "1.0.0",
