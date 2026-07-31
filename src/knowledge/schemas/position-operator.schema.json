@@ -1,0 +1,112 @@
+{
+  "$id": "https://astra.local/schemas/position-operator/1.0.0",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "actionTransform": {
+      "enum": [
+        "none",
+        "optional",
+        "advisory",
+        "required"
+      ]
+    },
+    "canSupplyCounterEvidence": {
+      "type": "boolean"
+    },
+    "canSupportConclusion": {
+      "type": "boolean"
+    },
+    "conditionality": {
+      "enum": [
+        "direct",
+        "contextual",
+        "conditional",
+        "corrective"
+      ]
+    },
+    "evidencePriority": {
+      "enum": [
+        "contextual",
+        "secondary",
+        "primary",
+        "core"
+      ]
+    },
+    "positionId": {
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+      "type": "string"
+    },
+    "schemaVersion": {
+      "const": "1.0.0"
+    },
+    "selectableFacets": {
+      "items": {
+        "enum": [
+          "state",
+          "cause",
+          "motivation",
+          "obstacle",
+          "opportunity",
+          "resource",
+          "relationship",
+          "action",
+          "boundary",
+          "trend",
+          "outcome",
+          "reflection"
+        ]
+      },
+      "minItems": 2,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "spreadId": {
+      "enum": [
+        "single",
+        "timeline",
+        "cross",
+        "celtic"
+      ]
+    },
+    "subjectScope": {
+      "enum": [
+        "self",
+        "other",
+        "relationship",
+        "environment",
+        "system",
+        "mixed"
+      ]
+    },
+    "tense": {
+      "enum": [
+        "past",
+        "present",
+        "near-future",
+        "open"
+      ]
+    },
+    "weight": {
+      "maximum": 2,
+      "minimum": 0.5,
+      "type": "number"
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "spreadId",
+    "positionId",
+    "selectableFacets",
+    "tense",
+    "subjectScope",
+    "weight",
+    "conditionality",
+    "actionTransform",
+    "evidencePriority",
+    "canSupportConclusion",
+    "canSupplyCounterEvidence"
+  ],
+  "title": "Astra Tarot Position Operator",
+  "type": "object"
+}

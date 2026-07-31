@@ -1,0 +1,489 @@
+{
+  "$id": "https://astra.local/schemas/question-profile/1.0.0",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "allowedConclusionTypes": {
+      "items": {
+        "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+        "type": "string"
+      },
+      "minItems": 2,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "answerDimensions": {
+      "items": {
+        "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+        "type": "string"
+      },
+      "maxItems": 8,
+      "minItems": 4,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "domain": {
+      "enum": [
+        "relationship",
+        "career",
+        "finance",
+        "growth",
+        "decision",
+        "daily"
+      ]
+    },
+    "forbiddenClaims": {
+      "items": {
+        "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+        "type": "string"
+      },
+      "minItems": 4,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "id": {
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+      "type": "string"
+    },
+    "intent": {
+      "enum": [
+        "alternative-option",
+        "balance-regulation",
+        "boundary-guidance",
+        "capability-development",
+        "change-decision",
+        "collaboration-guidance",
+        "communication-guidance",
+        "cost-review",
+        "daily-guidance",
+        "direction-selection",
+        "hidden-factor",
+        "identity-growth",
+        "improvement-guidance",
+        "obstacle-diagnosis",
+        "opportunity-discovery",
+        "pattern-reflection",
+        "resource-planning",
+        "risk-assessment",
+        "self-care",
+        "status-assessment",
+        "timing-decision",
+        "trend-forecast",
+        "value-alignment"
+      ]
+    },
+    "label": {
+      "maxLength": 40,
+      "minLength": 2,
+      "type": "string"
+    },
+    "metadata": {
+      "additionalProperties": false,
+      "properties": {
+        "reviewDate": {
+          "format": "date",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "DRAFT",
+            "APPROVED"
+          ]
+        },
+        "version": {
+          "pattern": "^(?:0|[1-9][0-9]*)\\.(?:0|[1-9][0-9]*)\\.(?:0|[1-9][0-9]*)$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "version",
+        "status",
+        "reviewDate"
+      ],
+      "type": "object"
+    },
+    "riskLevel": {
+      "enum": [
+        "low",
+        "medium",
+        "high"
+      ]
+    },
+    "schemaVersion": {
+      "const": "1.0.0"
+    },
+    "spreadProfiles": {
+      "additionalProperties": false,
+      "properties": {
+        "celtic": {
+          "additionalProperties": false,
+          "properties": {
+            "outputDepth": {
+              "enum": [
+                "brief",
+                "standard",
+                "deep"
+              ]
+            },
+            "positionResponsibilities": {
+              "additionalProperties": false,
+              "properties": {
+                "above": {
+                  "items": {
+                    "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+                    "type": "string"
+                  },
+                  "minItems": 1,
+                  "type": "array",
+                  "uniqueItems": true
+                },
+                "advice": {
+                  "items": {
+                    "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+                    "type": "string"
+                  },
+                  "minItems": 1,
+                  "type": "array",
+                  "uniqueItems": true
+                },
+                "below": {
+                  "items": {
+                    "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+                    "type": "string"
+                  },
+                  "minItems": 1,
+                  "type": "array",
+                  "uniqueItems": true
+                },
+                "challenge": {
+                  "items": {
+                    "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+                    "type": "string"
+                  },
+                  "minItems": 1,
+                  "type": "array",
+                  "uniqueItems": true
+                },
+                "external": {
+                  "items": {
+                    "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+                    "type": "string"
+                  },
+                  "minItems": 1,
+                  "type": "array",
+                  "uniqueItems": true
+                },
+                "future": {
+                  "items": {
+                    "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+                    "type": "string"
+                  },
+                  "minItems": 1,
+                  "type": "array",
+                  "uniqueItems": true
+                },
+                "hopes": {
+                  "items": {
+                    "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+                    "type": "string"
+                  },
+                  "minItems": 1,
+                  "type": "array",
+                  "uniqueItems": true
+                },
+                "outcome": {
+                  "items": {
+                    "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+                    "type": "string"
+                  },
+                  "minItems": 1,
+                  "type": "array",
+                  "uniqueItems": true
+                },
+                "past": {
+                  "items": {
+                    "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+                    "type": "string"
+                  },
+                  "minItems": 1,
+                  "type": "array",
+                  "uniqueItems": true
+                },
+                "present": {
+                  "items": {
+                    "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+                    "type": "string"
+                  },
+                  "minItems": 1,
+                  "type": "array",
+                  "uniqueItems": true
+                }
+              },
+              "required": [
+                "present",
+                "challenge",
+                "past",
+                "future",
+                "above",
+                "below",
+                "advice",
+                "external",
+                "hopes",
+                "outcome"
+              ],
+              "type": "object"
+            },
+            "requiredConclusionDimensions": {
+              "items": {
+                "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+                "type": "string"
+              },
+              "minItems": 1,
+              "type": "array",
+              "uniqueItems": true
+            }
+          },
+          "required": [
+            "positionResponsibilities",
+            "requiredConclusionDimensions",
+            "outputDepth"
+          ],
+          "type": "object"
+        },
+        "cross": {
+          "additionalProperties": false,
+          "properties": {
+            "outputDepth": {
+              "enum": [
+                "brief",
+                "standard",
+                "deep"
+              ]
+            },
+            "positionResponsibilities": {
+              "additionalProperties": false,
+              "properties": {
+                "action": {
+                  "items": {
+                    "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+                    "type": "string"
+                  },
+                  "minItems": 1,
+                  "type": "array",
+                  "uniqueItems": true
+                },
+                "core": {
+                  "items": {
+                    "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+                    "type": "string"
+                  },
+                  "minItems": 1,
+                  "type": "array",
+                  "uniqueItems": true
+                },
+                "influence": {
+                  "items": {
+                    "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+                    "type": "string"
+                  },
+                  "minItems": 1,
+                  "type": "array",
+                  "uniqueItems": true
+                },
+                "root": {
+                  "items": {
+                    "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+                    "type": "string"
+                  },
+                  "minItems": 1,
+                  "type": "array",
+                  "uniqueItems": true
+                },
+                "trend": {
+                  "items": {
+                    "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+                    "type": "string"
+                  },
+                  "minItems": 1,
+                  "type": "array",
+                  "uniqueItems": true
+                }
+              },
+              "required": [
+                "core",
+                "root",
+                "trend",
+                "influence",
+                "action"
+              ],
+              "type": "object"
+            },
+            "requiredConclusionDimensions": {
+              "items": {
+                "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+                "type": "string"
+              },
+              "minItems": 1,
+              "type": "array",
+              "uniqueItems": true
+            }
+          },
+          "required": [
+            "positionResponsibilities",
+            "requiredConclusionDimensions",
+            "outputDepth"
+          ],
+          "type": "object"
+        },
+        "single": {
+          "additionalProperties": false,
+          "properties": {
+            "outputDepth": {
+              "enum": [
+                "brief",
+                "standard",
+                "deep"
+              ]
+            },
+            "positionResponsibilities": {
+              "additionalProperties": false,
+              "properties": {
+                "essence": {
+                  "items": {
+                    "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+                    "type": "string"
+                  },
+                  "minItems": 1,
+                  "type": "array",
+                  "uniqueItems": true
+                }
+              },
+              "required": [
+                "essence"
+              ],
+              "type": "object"
+            },
+            "requiredConclusionDimensions": {
+              "items": {
+                "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+                "type": "string"
+              },
+              "minItems": 1,
+              "type": "array",
+              "uniqueItems": true
+            }
+          },
+          "required": [
+            "positionResponsibilities",
+            "requiredConclusionDimensions",
+            "outputDepth"
+          ],
+          "type": "object"
+        },
+        "timeline": {
+          "additionalProperties": false,
+          "properties": {
+            "outputDepth": {
+              "enum": [
+                "brief",
+                "standard",
+                "deep"
+              ]
+            },
+            "positionResponsibilities": {
+              "additionalProperties": false,
+              "properties": {
+                "future": {
+                  "items": {
+                    "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+                    "type": "string"
+                  },
+                  "minItems": 1,
+                  "type": "array",
+                  "uniqueItems": true
+                },
+                "past": {
+                  "items": {
+                    "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+                    "type": "string"
+                  },
+                  "minItems": 1,
+                  "type": "array",
+                  "uniqueItems": true
+                },
+                "present": {
+                  "items": {
+                    "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+                    "type": "string"
+                  },
+                  "minItems": 1,
+                  "type": "array",
+                  "uniqueItems": true
+                }
+              },
+              "required": [
+                "past",
+                "present",
+                "future"
+              ],
+              "type": "object"
+            },
+            "requiredConclusionDimensions": {
+              "items": {
+                "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+                "type": "string"
+              },
+              "minItems": 1,
+              "type": "array",
+              "uniqueItems": true
+            }
+          },
+          "required": [
+            "positionResponsibilities",
+            "requiredConclusionDimensions",
+            "outputDepth"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "single",
+        "timeline",
+        "cross",
+        "celtic"
+      ],
+      "type": "object"
+    },
+    "text": {
+      "maxLength": 160,
+      "minLength": 4,
+      "type": "string"
+    },
+    "timeframe": {
+      "enum": [
+        "today",
+        "present",
+        "near-term",
+        "long-term",
+        "open"
+      ]
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "id",
+    "text",
+    "label",
+    "domain",
+    "intent",
+    "timeframe",
+    "riskLevel",
+    "answerDimensions",
+    "allowedConclusionTypes",
+    "forbiddenClaims",
+    "spreadProfiles",
+    "metadata"
+  ],
+  "title": "Astra Tarot QuestionProfile",
+  "type": "object"
+}

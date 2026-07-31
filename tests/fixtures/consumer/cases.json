@@ -1,0 +1,110 @@
+[
+  {
+    "cardId": "major-0",
+    "id": "consumer-fool-single",
+    "orientation": "upright",
+    "positionId": "essence",
+    "questionId": "daily-focus",
+    "reversalMode": null,
+    "spreadId": "single"
+  },
+  {
+    "cardId": "major-0",
+    "id": "consumer-fool-action",
+    "orientation": "reversed",
+    "positionId": "action",
+    "questionId": "decision-option",
+    "reversalMode": "excessive",
+    "spreadId": "cross"
+  },
+  {
+    "cardId": "major-7",
+    "id": "consumer-chariot-core",
+    "orientation": "upright",
+    "positionId": "core",
+    "questionId": "career-change",
+    "reversalMode": null,
+    "spreadId": "cross"
+  },
+  {
+    "cardId": "major-7",
+    "id": "consumer-chariot-action",
+    "orientation": "reversed",
+    "positionId": "action",
+    "questionId": "career-change",
+    "reversalMode": "misdirected",
+    "spreadId": "cross"
+  },
+  {
+    "cardId": "major-9",
+    "id": "consumer-hermit-below",
+    "orientation": "upright",
+    "positionId": "below",
+    "questionId": "growth-lesson",
+    "reversalMode": null,
+    "spreadId": "celtic"
+  },
+  {
+    "cardId": "major-9",
+    "id": "consumer-hermit-advice",
+    "orientation": "reversed",
+    "positionId": "advice",
+    "questionId": "growth-lesson",
+    "reversalMode": "avoided",
+    "spreadId": "celtic"
+  },
+  {
+    "cardId": "major-16",
+    "id": "consumer-tower-root",
+    "orientation": "upright",
+    "positionId": "root",
+    "questionId": "decision-change",
+    "reversalMode": null,
+    "spreadId": "cross"
+  },
+  {
+    "cardId": "major-16",
+    "id": "consumer-tower-trend",
+    "orientation": "reversed",
+    "positionId": "trend",
+    "questionId": "decision-change",
+    "reversalMode": "released",
+    "spreadId": "cross"
+  },
+  {
+    "cardId": "cups-two",
+    "id": "consumer-cups-core",
+    "orientation": "upright",
+    "positionId": "core",
+    "questionId": "love-current",
+    "reversalMode": null,
+    "spreadId": "cross"
+  },
+  {
+    "cardId": "cups-two",
+    "id": "consumer-cups-action",
+    "orientation": "reversed",
+    "positionId": "action",
+    "questionId": "love-communication",
+    "reversalMode": "deficient",
+    "spreadId": "cross"
+  },
+  {
+    "cardId": "pentacles-eight",
+    "id": "consumer-pentacles-present",
+    "orientation": "upright",
+    "positionId": "present",
+    "questionId": "career-growth",
+    "reversalMode": null,
+    "spreadId": "timeline"
+  },
+  {
+    "cardId": "pentacles-eight",
+    "id": "consumer-pentacles-future",
+    "orientation": "reversed",
+    "positionId": "future",
+    "questionId": "career-growth",
+    "reversalMode": "misdirected",
+    "spreadId": "timeline"
+  }
+]

@@ -6,20 +6,138 @@ const CARD_IDS = Object.freeze(["major-0","major-1","major-2","major-3","major-4
 const QUESTION_IDS = Object.freeze(["love-current","love-future","love-improve","love-new","love-truth","love-self","love-communication","career-focus","career-block","career-change","career-growth","career-team","career-balance","career-opportunity","wealth-state","wealth-opportunity","wealth-risk","wealth-growth","wealth-project","wealth-habit","wealth-resource","growth-lesson","growth-release","growth-strength","growth-heal","growth-next","growth-boundary","growth-purpose","decision-see","decision-a","decision-change","decision-value","decision-timing","decision-cost","decision-option","daily-energy","daily-focus","daily-avoid","daily-message","daily-action","daily-relationship","daily-rest"]);
 const SPREAD_IDS = Object.freeze(["single","timeline","cross","celtic"]);
 
-export const CARD_REGISTRY = Object.freeze(Object.fromEntries(CARD_IDS.map((id) => [id, async () => {
-  const { majorCards, minorCards } = await import("../knowledge/legacy/build.js");
-  return [...majorCards, ...minorCards].find((card) => card.id === id) || null;
-}])));
+export const CARD_REGISTRY = Object.freeze({
+  "major-0": async () => (await import("../knowledge/cards/major-0.js")).CARD_PROFILE,
+  "major-1": async () => { const { majorCards, minorCards } = await import("../knowledge/legacy/build.js"); return [...majorCards, ...minorCards].find((item) => item.id === "major-1") || null; },
+  "major-2": async () => { const { majorCards, minorCards } = await import("../knowledge/legacy/build.js"); return [...majorCards, ...minorCards].find((item) => item.id === "major-2") || null; },
+  "major-3": async () => { const { majorCards, minorCards } = await import("../knowledge/legacy/build.js"); return [...majorCards, ...minorCards].find((item) => item.id === "major-3") || null; },
+  "major-4": async () => { const { majorCards, minorCards } = await import("../knowledge/legacy/build.js"); return [...majorCards, ...minorCards].find((item) => item.id === "major-4") || null; },
+  "major-5": async () => { const { majorCards, minorCards } = await import("../knowledge/legacy/build.js"); return [...majorCards, ...minorCards].find((item) => item.id === "major-5") || null; },
+  "major-6": async () => { const { majorCards, minorCards } = await import("../knowledge/legacy/build.js"); return [...majorCards, ...minorCards].find((item) => item.id === "major-6") || null; },
+  "major-7": async () => (await import("../knowledge/cards/major-7.js")).CARD_PROFILE,
+  "major-8": async () => { const { majorCards, minorCards } = await import("../knowledge/legacy/build.js"); return [...majorCards, ...minorCards].find((item) => item.id === "major-8") || null; },
+  "major-9": async () => (await import("../knowledge/cards/major-9.js")).CARD_PROFILE,
+  "major-10": async () => { const { majorCards, minorCards } = await import("../knowledge/legacy/build.js"); return [...majorCards, ...minorCards].find((item) => item.id === "major-10") || null; },
+  "major-11": async () => { const { majorCards, minorCards } = await import("../knowledge/legacy/build.js"); return [...majorCards, ...minorCards].find((item) => item.id === "major-11") || null; },
+  "major-12": async () => { const { majorCards, minorCards } = await import("../knowledge/legacy/build.js"); return [...majorCards, ...minorCards].find((item) => item.id === "major-12") || null; },
+  "major-13": async () => { const { majorCards, minorCards } = await import("../knowledge/legacy/build.js"); return [...majorCards, ...minorCards].find((item) => item.id === "major-13") || null; },
+  "major-14": async () => { const { majorCards, minorCards } = await import("../knowledge/legacy/build.js"); return [...majorCards, ...minorCards].find((item) => item.id === "major-14") || null; },
+  "major-15": async () => { const { majorCards, minorCards } = await import("../knowledge/legacy/build.js"); return [...majorCards, ...minorCards].find((item) => item.id === "major-15") || null; },
+  "major-16": async () => (await import("../knowledge/cards/major-16.js")).CARD_PROFILE,
+  "major-17": async () => { const { majorCards, minorCards } = await import("../knowledge/legacy/build.js"); return [...majorCards, ...minorCards].find((item) => item.id === "major-17") || null; },
+  "major-18": async () => { const { majorCards, minorCards } = await import("../knowledge/legacy/build.js"); return [...majorCards, ...minorCards].find((item) => item.id === "major-18") || null; },
+  "major-19": async () => { const { majorCards, minorCards } = await import("../knowledge/legacy/build.js"); return [...majorCards, ...minorCards].find((item) => item.id === "major-19") || null; },
+  "major-20": async () => { const { majorCards, minorCards } = await import("../knowledge/legacy/build.js"); return [...majorCards, ...minorCards].find((item) => item.id === "major-20") || null; },
+  "major-21": async () => { const { majorCards, minorCards } = await import("../knowledge/legacy/build.js"); return [...majorCards, ...minorCards].find((item) => item.id === "major-21") || null; },
+  "wands-ace": async () => { const { majorCards, minorCards } = await import("../knowledge/legacy/build.js"); return [...majorCards, ...minorCards].find((item) => item.id === "wands-ace") || null; },
+  "wands-two": async () => { const { majorCards, minorCards } = await import("../knowledge/legacy/build.js"); return [...majorCards, ...minorCards].find((item) => item.id === "wands-two") || null; },
+  "wands-three": async () => { const { majorCards, minorCards } = await import("../knowledge/legacy/build.js"); return [...majorCards, ...minorCards].find((item) => item.id === "wands-three") || null; },
+  "wands-four": async () => { const { majorCards, minorCards } = await import("../knowledge/legacy/build.js"); return [...majorCards, ...minorCards].find((item) => item.id === "wands-four") || null; },
+  "wands-five": async () => { const { majorCards, minorCards } = await import("../knowledge/legacy/build.js"); return [...majorCards, ...minorCards].find((item) => item.id === "wands-five") || null; },
+  "wands-six": async () => { const { majorCards, minorCards } = await import("../knowledge/legacy/build.js"); return [...majorCards, ...minorCards].find((item) => item.id === "wands-six") || null; },
+  "wands-seven": async () => { const { majorCards, minorCards } = await import("../knowledge/legacy/build.js"); return [...majorCards, ...minorCards].find((item) => item.id === "wands-seven") || null; },
+  "wands-eight": async () => { const { majorCards, minorCards } = await import("../knowledge/legacy/build.js"); return [...majorCards, ...minorCards].find((item) => item.id === "wands-eight") || null; },
+  "wands-nine": async () => { const { majorCards, minorCards } = await import("../knowledge/legacy/build.js"); return [...majorCards, ...minorCards].find((item) => item.id === "wands-nine") || null; },
+  "wands-ten": async () => { const { majorCards, minorCards } = await import("../knowledge/legacy/build.js"); return [...majorCards, ...minorCards].find((item) => item.id === "wands-ten") || null; },
+  "wands-page": async () => { const { majorCards, minorCards } = await import("../knowledge/legacy/build.js"); return [...majorCards, ...minorCards].find((item) => item.id === "wands-page") || null; },
+  "wands-knight": async () => { const { majorCards, minorCards } = await import("../knowledge/legacy/build.js"); return [...majorCards, ...minorCards].find((item) => item.id === "wands-knight") || null; },
+  "wands-queen": async () => { const { majorCards, minorCards } = await import("../knowledge/legacy/build.js"); return [...majorCards, ...minorCards].find((item) => item.id === "wands-queen") || null; },
+  "wands-king": async () => { const { majorCards, minorCards } = await import("../knowledge/legacy/build.js"); return [...majorCards, ...minorCards].find((item) => item.id === "wands-king") || null; },
+  "cups-ace": async () => { const { majorCards, minorCards } = await import("../knowledge/legacy/build.js"); return [...majorCards, ...minorCards].find((item) => item.id === "cups-ace") || null; },
+  "cups-two": async () => (await import("../knowledge/cards/cups-two.js")).CARD_PROFILE,
+  "cups-three": async () => { const { majorCards, minorCards } = await import("../knowledge/legacy/build.js"); return [...majorCards, ...minorCards].find((item) => item.id === "cups-three") || null; },
+  "cups-four": async () => { const { majorCards, minorCards } = await import("../knowledge/legacy/build.js"); return [...majorCards, ...minorCards].find((item) => item.id === "cups-four") || null; },
+  "cups-five": async () => { const { majorCards, minorCards } = await import("../knowledge/legacy/build.js"); return [...majorCards, ...minorCards].find((item) => item.id === "cups-five") || null; },
+  "cups-six": async () => { const { majorCards, minorCards } = await import("../knowledge/legacy/build.js"); return [...majorCards, ...minorCards].find((item) => item.id === "cups-six") || null; },
+  "cups-seven": async () => { const { majorCards, minorCards } = await import("../knowledge/legacy/build.js"); return [...majorCards, ...minorCards].find((item) => item.id === "cups-seven") || null; },
+  "cups-eight": async () => { const { majorCards, minorCards } = await import("../knowledge/legacy/build.js"); return [...majorCards, ...minorCards].find((item) => item.id === "cups-eight") || null; },
+  "cups-nine": async () => { const { majorCards, minorCards } = await import("../knowledge/legacy/build.js"); return [...majorCards, ...minorCards].find((item) => item.id === "cups-nine") || null; },
+  "cups-ten": async () => { const { majorCards, minorCards } = await import("../knowledge/legacy/build.js"); return [...majorCards, ...minorCards].find((item) => item.id === "cups-ten") || null; },
+  "cups-page": async () => { const { majorCards, minorCards } = await import("../knowledge/legacy/build.js"); return [...majorCards, ...minorCards].find((item) => item.id === "cups-page") || null; },
+  "cups-knight": async () => { const { majorCards, minorCards } = await import("../knowledge/legacy/build.js"); return [...majorCards, ...minorCards].find((item) => item.id === "cups-knight") || null; },
+  "cups-queen": async () => { const { majorCards, minorCards } = await import("../knowledge/legacy/build.js"); return [...majorCards, ...minorCards].find((item) => item.id === "cups-queen") || null; },
+  "cups-king": async () => { const { majorCards, minorCards } = await import("../knowledge/legacy/build.js"); return [...majorCards, ...minorCards].find((item) => item.id === "cups-king") || null; },
+  "swords-ace": async () => { const { majorCards, minorCards } = await import("../knowledge/legacy/build.js"); return [...majorCards, ...minorCards].find((item) => item.id === "swords-ace") || null; },
+  "swords-two": async () => { const { majorCards, minorCards } = await import("../knowledge/legacy/build.js"); return [...majorCards, ...minorCards].find((item) => item.id === "swords-two") || null; },
+  "swords-three": async () => { const { majorCards, minorCards } = await import("../knowledge/legacy/build.js"); return [...majorCards, ...minorCards].find((item) => item.id === "swords-three") || null; },
+  "swords-four": async () => { const { majorCards, minorCards } = await import("../knowledge/legacy/build.js"); return [...majorCards, ...minorCards].find((item) => item.id === "swords-four") || null; },
+  "swords-five": async () => { const { majorCards, minorCards } = await import("../knowledge/legacy/build.js"); return [...majorCards, ...minorCards].find((item) => item.id === "swords-five") || null; },
+  "swords-six": async () => { const { majorCards, minorCards } = await import("../knowledge/legacy/build.js"); return [...majorCards, ...minorCards].find((item) => item.id === "swords-six") || null; },
+  "swords-seven": async () => { const { majorCards, minorCards } = await import("../knowledge/legacy/build.js"); return [...majorCards, ...minorCards].find((item) => item.id === "swords-seven") || null; },
+  "swords-eight": async () => { const { majorCards, minorCards } = await import("../knowledge/legacy/build.js"); return [...majorCards, ...minorCards].find((item) => item.id === "swords-eight") || null; },
+  "swords-nine": async () => { const { majorCards, minorCards } = await import("../knowledge/legacy/build.js"); return [...majorCards, ...minorCards].find((item) => item.id === "swords-nine") || null; },
+  "swords-ten": async () => { const { majorCards, minorCards } = await import("../knowledge/legacy/build.js"); return [...majorCards, ...minorCards].find((item) => item.id === "swords-ten") || null; },
+  "swords-page": async () => { const { majorCards, minorCards } = await import("../knowledge/legacy/build.js"); return [...majorCards, ...minorCards].find((item) => item.id === "swords-page") || null; },
+  "swords-knight": async () => { const { majorCards, minorCards } = await import("../knowledge/legacy/build.js"); return [...majorCards, ...minorCards].find((item) => item.id === "swords-knight") || null; },
+  "swords-queen": async () => { const { majorCards, minorCards } = await import("../knowledge/legacy/build.js"); return [...majorCards, ...minorCards].find((item) => item.id === "swords-queen") || null; },
+  "swords-king": async () => { const { majorCards, minorCards } = await import("../knowledge/legacy/build.js"); return [...majorCards, ...minorCards].find((item) => item.id === "swords-king") || null; },
+  "pentacles-ace": async () => { const { majorCards, minorCards } = await import("../knowledge/legacy/build.js"); return [...majorCards, ...minorCards].find((item) => item.id === "pentacles-ace") || null; },
+  "pentacles-two": async () => { const { majorCards, minorCards } = await import("../knowledge/legacy/build.js"); return [...majorCards, ...minorCards].find((item) => item.id === "pentacles-two") || null; },
+  "pentacles-three": async () => { const { majorCards, minorCards } = await import("../knowledge/legacy/build.js"); return [...majorCards, ...minorCards].find((item) => item.id === "pentacles-three") || null; },
+  "pentacles-four": async () => { const { majorCards, minorCards } = await import("../knowledge/legacy/build.js"); return [...majorCards, ...minorCards].find((item) => item.id === "pentacles-four") || null; },
+  "pentacles-five": async () => { const { majorCards, minorCards } = await import("../knowledge/legacy/build.js"); return [...majorCards, ...minorCards].find((item) => item.id === "pentacles-five") || null; },
+  "pentacles-six": async () => { const { majorCards, minorCards } = await import("../knowledge/legacy/build.js"); return [...majorCards, ...minorCards].find((item) => item.id === "pentacles-six") || null; },
+  "pentacles-seven": async () => { const { majorCards, minorCards } = await import("../knowledge/legacy/build.js"); return [...majorCards, ...minorCards].find((item) => item.id === "pentacles-seven") || null; },
+  "pentacles-eight": async () => (await import("../knowledge/cards/pentacles-eight.js")).CARD_PROFILE,
+  "pentacles-nine": async () => { const { majorCards, minorCards } = await import("../knowledge/legacy/build.js"); return [...majorCards, ...minorCards].find((item) => item.id === "pentacles-nine") || null; },
+  "pentacles-ten": async () => { const { majorCards, minorCards } = await import("../knowledge/legacy/build.js"); return [...majorCards, ...minorCards].find((item) => item.id === "pentacles-ten") || null; },
+  "pentacles-page": async () => { const { majorCards, minorCards } = await import("../knowledge/legacy/build.js"); return [...majorCards, ...minorCards].find((item) => item.id === "pentacles-page") || null; },
+  "pentacles-knight": async () => { const { majorCards, minorCards } = await import("../knowledge/legacy/build.js"); return [...majorCards, ...minorCards].find((item) => item.id === "pentacles-knight") || null; },
+  "pentacles-queen": async () => { const { majorCards, minorCards } = await import("../knowledge/legacy/build.js"); return [...majorCards, ...minorCards].find((item) => item.id === "pentacles-queen") || null; },
+  "pentacles-king": async () => { const { majorCards, minorCards } = await import("../knowledge/legacy/build.js"); return [...majorCards, ...minorCards].find((item) => item.id === "pentacles-king") || null; }
+});
 
-export const QUESTION_REGISTRY = Object.freeze(Object.fromEntries(QUESTION_IDS.map((id) => [id, async () => {
-  const { CATEGORIES } = await import("../knowledge/legacy/questions.js");
-  return CATEGORIES.flatMap((category) => category.questions).find((question) => question.id === id) || null;
-}])));
+export const QUESTION_REGISTRY = Object.freeze({
+  "love-current": async () => (await import("../knowledge/questions/profiles/love-current.js")).QUESTION_PROFILE,
+  "love-future": async () => (await import("../knowledge/questions/profiles/love-future.js")).QUESTION_PROFILE,
+  "love-improve": async () => (await import("../knowledge/questions/profiles/love-improve.js")).QUESTION_PROFILE,
+  "love-new": async () => (await import("../knowledge/questions/profiles/love-new.js")).QUESTION_PROFILE,
+  "love-truth": async () => (await import("../knowledge/questions/profiles/love-truth.js")).QUESTION_PROFILE,
+  "love-self": async () => (await import("../knowledge/questions/profiles/love-self.js")).QUESTION_PROFILE,
+  "love-communication": async () => (await import("../knowledge/questions/profiles/love-communication.js")).QUESTION_PROFILE,
+  "career-focus": async () => (await import("../knowledge/questions/profiles/career-focus.js")).QUESTION_PROFILE,
+  "career-block": async () => (await import("../knowledge/questions/profiles/career-block.js")).QUESTION_PROFILE,
+  "career-change": async () => (await import("../knowledge/questions/profiles/career-change.js")).QUESTION_PROFILE,
+  "career-growth": async () => (await import("../knowledge/questions/profiles/career-growth.js")).QUESTION_PROFILE,
+  "career-team": async () => (await import("../knowledge/questions/profiles/career-team.js")).QUESTION_PROFILE,
+  "career-balance": async () => (await import("../knowledge/questions/profiles/career-balance.js")).QUESTION_PROFILE,
+  "career-opportunity": async () => (await import("../knowledge/questions/profiles/career-opportunity.js")).QUESTION_PROFILE,
+  "wealth-state": async () => (await import("../knowledge/questions/profiles/wealth-state.js")).QUESTION_PROFILE,
+  "wealth-opportunity": async () => (await import("../knowledge/questions/profiles/wealth-opportunity.js")).QUESTION_PROFILE,
+  "wealth-risk": async () => (await import("../knowledge/questions/profiles/wealth-risk.js")).QUESTION_PROFILE,
+  "wealth-growth": async () => (await import("../knowledge/questions/profiles/wealth-growth.js")).QUESTION_PROFILE,
+  "wealth-project": async () => (await import("../knowledge/questions/profiles/wealth-project.js")).QUESTION_PROFILE,
+  "wealth-habit": async () => (await import("../knowledge/questions/profiles/wealth-habit.js")).QUESTION_PROFILE,
+  "wealth-resource": async () => (await import("../knowledge/questions/profiles/wealth-resource.js")).QUESTION_PROFILE,
+  "growth-lesson": async () => (await import("../knowledge/questions/profiles/growth-lesson.js")).QUESTION_PROFILE,
+  "growth-release": async () => (await import("../knowledge/questions/profiles/growth-release.js")).QUESTION_PROFILE,
+  "growth-strength": async () => (await import("../knowledge/questions/profiles/growth-strength.js")).QUESTION_PROFILE,
+  "growth-heal": async () => (await import("../knowledge/questions/profiles/growth-heal.js")).QUESTION_PROFILE,
+  "growth-next": async () => (await import("../knowledge/questions/profiles/growth-next.js")).QUESTION_PROFILE,
+  "growth-boundary": async () => (await import("../knowledge/questions/profiles/growth-boundary.js")).QUESTION_PROFILE,
+  "growth-purpose": async () => (await import("../knowledge/questions/profiles/growth-purpose.js")).QUESTION_PROFILE,
+  "decision-see": async () => (await import("../knowledge/questions/profiles/decision-see.js")).QUESTION_PROFILE,
+  "decision-a": async () => (await import("../knowledge/questions/profiles/decision-a.js")).QUESTION_PROFILE,
+  "decision-change": async () => (await import("../knowledge/questions/profiles/decision-change.js")).QUESTION_PROFILE,
+  "decision-value": async () => (await import("../knowledge/questions/profiles/decision-value.js")).QUESTION_PROFILE,
+  "decision-timing": async () => (await import("../knowledge/questions/profiles/decision-timing.js")).QUESTION_PROFILE,
+  "decision-cost": async () => (await import("../knowledge/questions/profiles/decision-cost.js")).QUESTION_PROFILE,
+  "decision-option": async () => (await import("../knowledge/questions/profiles/decision-option.js")).QUESTION_PROFILE,
+  "daily-energy": async () => (await import("../knowledge/questions/profiles/daily-energy.js")).QUESTION_PROFILE,
+  "daily-focus": async () => (await import("../knowledge/questions/profiles/daily-focus.js")).QUESTION_PROFILE,
+  "daily-avoid": async () => (await import("../knowledge/questions/profiles/daily-avoid.js")).QUESTION_PROFILE,
+  "daily-message": async () => (await import("../knowledge/questions/profiles/daily-message.js")).QUESTION_PROFILE,
+  "daily-action": async () => (await import("../knowledge/questions/profiles/daily-action.js")).QUESTION_PROFILE,
+  "daily-relationship": async () => (await import("../knowledge/questions/profiles/daily-relationship.js")).QUESTION_PROFILE,
+  "daily-rest": async () => (await import("../knowledge/questions/profiles/daily-rest.js")).QUESTION_PROFILE
+});
 
-export const SPREAD_REGISTRY = Object.freeze(Object.fromEntries(SPREAD_IDS.map((id) => [id, async () => {
-  const { SPREADS } = await import("../knowledge/spreads/definitions.js");
-  return SPREADS.find((spread) => spread.id === id) || null;
-}])));
+export const SPREAD_REGISTRY = Object.freeze({
+  "single": async () => { const { SPREADS } = await import("../knowledge/spreads/definitions.js"); return SPREADS.find((item) => item.id === "single") || null; },
+  "timeline": async () => { const { SPREADS } = await import("../knowledge/spreads/definitions.js"); return SPREADS.find((item) => item.id === "timeline") || null; },
+  "cross": async () => { const { SPREADS } = await import("../knowledge/spreads/definitions.js"); return SPREADS.find((item) => item.id === "cross") || null; },
+  "celtic": async () => { const { SPREADS } = await import("../knowledge/spreads/definitions.js"); return SPREADS.find((item) => item.id === "celtic") || null; }
+});
 
 export function assertKnowledgeCatalog(data) {
   const actualCards = data.deck.map((item) => item.id);

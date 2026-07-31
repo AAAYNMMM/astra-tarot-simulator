@@ -1,0 +1,122 @@
+[
+  {
+    "cardId": "major-0",
+    "disallowedClaims": [
+      "guaranteed-outcome",
+      "certain-external-fact"
+    ],
+    "id": "dev-major-0-1",
+    "orientation": "upright",
+    "questionId": "daily-focus",
+    "requiredEvidenceRoles": [
+      "state",
+      "action",
+      "boundary"
+    ],
+    "spreadId": "single",
+    "targetDimensions": [
+      "current-state",
+      "recommended-action"
+    ]
+  },
+  {
+    "cardId": "major-7",
+    "disallowedClaims": [
+      "guaranteed-outcome",
+      "certain-external-fact"
+    ],
+    "id": "dev-major-7-2",
+    "orientation": "reversed",
+    "questionId": "career-change",
+    "requiredEvidenceRoles": [
+      "state",
+      "action",
+      "boundary"
+    ],
+    "spreadId": "cross",
+    "targetDimensions": [
+      "current-state",
+      "recommended-action"
+    ]
+  },
+  {
+    "cardId": "major-9",
+    "disallowedClaims": [
+      "guaranteed-outcome",
+      "certain-external-fact"
+    ],
+    "id": "dev-major-9-3",
+    "orientation": "upright",
+    "questionId": "growth-lesson",
+    "requiredEvidenceRoles": [
+      "state",
+      "action",
+      "boundary"
+    ],
+    "spreadId": "celtic",
+    "targetDimensions": [
+      "current-state",
+      "recommended-action"
+    ]
+  },
+  {
+    "cardId": "major-16",
+    "disallowedClaims": [
+      "guaranteed-outcome",
+      "certain-external-fact"
+    ],
+    "id": "dev-major-16-4",
+    "orientation": "reversed",
+    "questionId": "decision-change",
+    "requiredEvidenceRoles": [
+      "state",
+      "action",
+      "boundary"
+    ],
+    "spreadId": "timeline",
+    "targetDimensions": [
+      "current-state",
+      "recommended-action"
+    ]
+  },
+  {
+    "cardId": "cups-two",
+    "disallowedClaims": [
+      "guaranteed-outcome",
+      "certain-external-fact"
+    ],
+    "id": "dev-cups-two-5",
+    "orientation": "upright",
+    "questionId": "love-current",
+    "requiredEvidenceRoles": [
+      "state",
+      "action",
+      "boundary"
+    ],
+    "spreadId": "cross",
+    "targetDimensions": [
+      "current-state",
+      "recommended-action"
+    ]
+  },
+  {
+    "cardId": "pentacles-eight",
+    "disallowedClaims": [
+      "guaranteed-outcome",
+      "certain-external-fact"
+    ],
+    "id": "dev-pentacles-eight-6",
+    "orientation": "upright",
+    "questionId": "career-growth",
+    "requiredEvidenceRoles": [
+      "state",
+      "action",
+      "boundary"
+    ],
+    "spreadId": "timeline",
+    "targetDimensions": [
+      "current-state",
+      "recommended-action"
+    ]
+  }
+]

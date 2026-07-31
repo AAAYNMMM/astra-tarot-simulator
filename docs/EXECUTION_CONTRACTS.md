@@ -331,3 +331,10 @@ REL-001后任何运行代码、数据、缓存、迁移、资源清单或生成�
 ```text
 MOD-001：模块边界、数据边界与基线验证
 ```
+
+
+## 7. Phase 2首个可执行叶子
+
+### TQ-101A：大阿卡纳第一批
+
+依赖Phase 1 `PARENT-DONE`。按已冻结Card Schema、词典、来源、质量门禁和消费者契约，完成 `major-1`、`major-2`、`major-3`、`major-4`、`major-5` 五张正式资料。不得修改黄金卡、Schema、QuestionProfile或Position Operator；若确需修改，Phase 1消费验证失效并重跑。

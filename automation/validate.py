@@ -206,6 +206,15 @@ def baseline_steps(node: str) -> list[tuple[str, list[str]]]:
             "node-card-schema-contract",
             [node, "tests/card_schema_contract_test.mjs"],
         ),
+        ("node-vocabulary-contract", [node, "tests/vocabulary_contract_test.mjs"]),
+        ("node-evaluation-protocol", [node, "tests/evaluation_protocol_test.mjs"]),
+        ("node-golden-cards-contract", [node, "tests/golden_cards_contract_test.mjs"]),
+        ("golden-quality-report-check", [node, "scripts/score_golden_cards.mjs", "--check"]),
+        ("node-question-classification", [node, "tests/question_classification_test.mjs"]),
+        ("node-question-profile-contract", [node, "tests/question_profile_contract_test.mjs"]),
+        ("node-position-operator-contract", [node, "tests/position_operator_contract_test.mjs"]),
+        ("node-consumer-fixture-contract", [node, "tests/consumer_fixture_contract_test.mjs"]),
+        ("node-consumer-validation", [node, "tests/consumer_validation_test.mjs"]),
         (
             "node-application-contract",
             [node, "tests/application_contract_test.mjs"],
@@ -253,6 +262,7 @@ def full_steps(node: str) -> list[tuple[str, list[str]]]:
     python = sys.executable
     return [
         ("phase-m-terminal-gate", [node, "tests/phase_m_gate_test.mjs"]),
+        ("phase-1-terminal-gate", [node, "tests/phase_1_gate_test.mjs"]),
         ("browser-harness", [python, "tests/browser_harness.py"]),
         (
             "module-size-strict",

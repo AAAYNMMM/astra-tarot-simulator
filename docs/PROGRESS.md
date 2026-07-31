@@ -6,42 +6,40 @@
 
 | 项目 | 当前值 |
 |---|---|
-| 当前阶段 | Phase 1：数据、问题和牌位契约基础 |
-| 当前进行中任务 | Phase 1连续执行：`TQ-002`至`TQ-005B` |
-| 最近完成任务 | `TQ-001` CardSemanticProfile结构Schema |
-| 唯一下一任务 | 无；阶段执行期间不释放叶子NEXT |
+| 当前阶段 | Phase 2：78张牌资料升级 |
+| 当前进行中任务 | 无 |
+| 最近完成任务 | Phase 1终态：`TQ-005B` 黄金样本消费验证 |
+| 唯一下一任务 | `TQ-101A` 大阿卡纳第一批：major-1至major-5 |
 | 阻塞项 | 无 |
 | 工作分支 | `phase-1-completion` |
 | Phase M状态 | `PARENT-DONE` |
-| Phase 1状态 | `PARENT-IN-PROGRESS` |
+| Phase 1状态 | `PARENT-DONE` |
+| Phase 2状态 | `PARENT-PENDING` |
 | 最后更新时间 | 2026-07-31 |
 
-## Phase M完成记录
+## Phase 1完成记录
 
-| 任务 | 状态 | 产物/证据 |
+| 任务 | 状态 | 产物 |
 |---|---|---|
-| `MOD-001`–`MOD-003B` | `DONE` | 基线、CSS、ESM入口与基础模块 |
-| `MOD-004A` | `DONE` | `72b55c0e8b83f44b61b966eb39a849bf613b5436` |
-| `MOD-004B` | `DONE` | `e1b2c8e73ad9c4e40cb5264aade7f60fe86618a9`；发现修复 `b31c2af465eb68466929d1c40938c409b60937d8` |
-| `MOD-005` | `DONE` | `b03ca2602a36c4f96f2f2cf3c54d085db729116f`；固定复验 `01KYG9PHM5B2` |
-| `MOD-006A` | `DONE` | `72cd7fa7ba05dab81b0f36a41c17d025002d8e29`；固定复验 `01KYG9PHM6AK2` |
-| `MOD-006B` | `DONE` | `a710750d207cf13c6a4c61852356a4aaedc39c15`；永久生成器与规范manifest |
-| `MOD-006C` | `DONE` | `b8973a7f1077234a04d115652e05324706dafd07`；分类缓存与离线状态 |
-| `MOD-006D` | `DONE` | `70e5a70ee1f66802afdff73aa97522a5183f7181`；固定full复验 `01KYG9PHM6AN7` |
+| `TQ-001` | `DONE` | CardSemanticProfile结构Schema与无依赖验证器 |
+| `TQ-002` | `DONE` | 正式词典、来源注册和解释政策 |
+| `EV-000A` | `DONE` | 开发评测Schema、量表和最终盲测外部保管协议 |
+| `TQ-003` | `DONE` | 愚者、战车、隐者、高塔、圣杯二、星币八黄金资料 |
+| `TQ-004` | `DONE` | 开发质量门禁，六张均达到90分准入线 |
+| `QP-001` | `DONE` | 42题分类与六领域覆盖矩阵 |
+| `QP-002` | `DONE` | QuestionProfile Schema与42个独立模块 |
+| `PO-001` | `DONE` | 四牌阵19个Position Operator完整契约 |
+| `TQ-005A` | `DONE` | 正式跨域消费者夹具 |
+| `TQ-005B` | `DONE` | 确定性最小Observation消费验证 |
 
-## Phase 1执行队列
+## 冻结不变量
 
-```text
-TQ-002 → EV-000A → TQ-003 → TQ-004
-→ QP-001 → QP-002 → PO-001 → TQ-005A → TQ-005B
-```
+- 78张牌、42个固定问题、1/3/5/10牌阵、公开ID、旧历史键和抽牌分布不变。
+- Card、Question和Position契约版本均为1.0.0。
+- 自动开发质量分不冒充最终独立盲测。
+- 最终盲测正文不进入仓库，普通开发代理不得读取。
+- 人工源变化必须重建生成产物；`automation/validate.py --scope full` 是完整回归入口。
 
-本阶段只在全部叶子任务、生成产物、消费者验证和固定commit full RESULT完成后停止。
+## 唯一NEXT：TQ-101A
 
-## 已冻结不变量
-
-- 78张牌、42个固定问题、1/3/5/10牌阵、公开ID、旧历史键和随机分布不变。
-- 人工JS/CSS无超限技术债；不引入npm依赖、构建步骤或GitHub Actions。
-- 人工源是唯一真相；`src/generated/` 必须由永久生成器重建并通过陈旧检查。
-- `automation/validate.py --scope full` 是完整回归入口。
-- `TQ-001`只冻结Card结构；词典、QuestionProfile和Position Operator分别由本阶段后续任务冻结。
+完成 `major-1` 至 `major-5` 五张大阿卡纳正式资料，并通过Schema、词典、来源、质量与消费者回归。

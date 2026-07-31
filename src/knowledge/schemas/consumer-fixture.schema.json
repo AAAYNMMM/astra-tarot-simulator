@@ -1,0 +1,50 @@
+{
+  "$id": "https://astra.local/schemas/consumer-fixture/1.0.0",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "cardId": {
+      "type": "string"
+    },
+    "id": {
+      "pattern": "^consumer-[a-z0-9]+(?:-[a-z0-9]+)*$",
+      "type": "string"
+    },
+    "orientation": {
+      "enum": [
+        "upright",
+        "reversed"
+      ]
+    },
+    "positionId": {
+      "type": "string"
+    },
+    "questionId": {
+      "type": "string"
+    },
+    "reversalMode": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "spreadId": {
+      "enum": [
+        "single",
+        "timeline",
+        "cross",
+        "celtic"
+      ]
+    }
+  },
+  "required": [
+    "id",
+    "cardId",
+    "questionId",
+    "spreadId",
+    "positionId",
+    "orientation",
+    "reversalMode"
+  ],
+  "type": "object"
+}

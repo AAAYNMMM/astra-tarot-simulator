@@ -126,3 +126,13 @@ node scripts/validate_card_profiles.mjs path/to/card.json
 ```
 
 退出码0表示全部通过，1表示存在结构错误，2表示命令使用错误。输出为包含稳定错误码的JSON。
+
+
+## Phase 1
+
+完整回归包含词典、评测保管、黄金卡质量、42个QuestionProfile、19个Position Operator和跨域消费者验证。单独入口：
+
+```text
+node tests/phase_1_gate_test.mjs
+node scripts/score_golden_cards.mjs --check
+```

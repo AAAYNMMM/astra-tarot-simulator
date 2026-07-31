@@ -32,6 +32,11 @@ for (const forbidden of ["finalCommit", "commit", "precacheManifestHash", "artif
 assert.equal(artifact.generatorVersion, "1.0.0");
 assert.equal(Object.keys(artifact.modules.cards).length, 78);
 assert.equal(Object.keys(artifact.modules.questions).length, 42);
+assert.ok(Object.keys(artifact.modules.vocabularies).length >= 5);
+assert.ok(Object.keys(artifact.modules.schemas).length >= 4);
+assert.equal(Object.keys(artifact.modules.positionOperators).length, 5);
+assert.equal((await CARD_REGISTRY["major-7"]()).schemaVersion, "1.0.0");
+assert.equal((await QUESTION_REGISTRY["career-change"]()).spreadProfiles.cross.outputDepth, "standard");
 
 const sandbox = { self: {}, ServiceWorkerGlobalScope: class ServiceWorkerGlobalScope {} };
 sandbox.self = new sandbox.ServiceWorkerGlobalScope();
