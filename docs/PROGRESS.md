@@ -8,7 +8,7 @@
 | 项目 | 当前值 |
 |---|---|
 | 当前阶段 | Phase M：模块化基础 |
-| 当前进行中任务 | `MOD-004A` 状态、控制器、渲染器与DOM安全 |
+| 当前进行中任务 | `MOD-004B` 服务器边界、生命周期保护与强制CSP |
 | 最近完成任务 | `MOD-003B` 基础模块与随机边界 |
 | 下一任务 | 无；Phase M连续执行中 |
 | 阻塞项 | 无 |
@@ -155,3 +155,6 @@ tests/foundation_contract_test.mjs
 
 - `MOD-004A`：`IN_PROGRESS`。
 - 后续叶子任务将按执行契约连续推进，不在每个任务结束后暂停。
+
+- `MOD-004A`：`DONE`，产物提交 `72b55c0e8b83f44b61b966eb39a849bf613b5436`，CWapi `01KYG9PHM4AB2` COMPLETED。
+- `MOD-004B`：`IN_PROGRESS`。

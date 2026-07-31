@@ -139,3 +139,8 @@ src/app/
 ## MOD-004A活动模块
 
 `src/app/state`、`selectors`、`controllers`、`events.js` 与 `src/ui/dom.js`、`safe-dom.js`、`renderers`、`animations`、`components` 已由真实页面兼容运行时消费。
+
+
+## Python本地服务
+
+`src/server/` 负责静态白名单、会话、生命周期与安全响应头；根 `run.py` 只保留CLI兼容导出和启动入口。

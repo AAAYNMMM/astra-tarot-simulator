@@ -1,3 +1,4 @@
+import { accentToken } from "../config/accent-tokens.js";
 import { createEventBinder } from "./events.js";
 import { createReadingFactory } from "./controllers/reading-controller.js";
 import { createSelectionSelectors } from "./selectors/current-selection.js";
@@ -76,7 +77,7 @@ export function createLegacyRuntimeBindings(windowRef = globalThis.window) {
       createToast,
       createHistoryRenderer,
     }),
-    config: Object.freeze({ DECK_STYLES, LEGACY_DECK_IDS }),
+    config: Object.freeze({ DECK_STYLES, LEGACY_DECK_IDS, accentToken }),
     core: Object.freeze({
       escapeHtml,
       randomUnit: businessRandom.randomUnit,

@@ -32,6 +32,7 @@ export function createLifecycleClient({
       method: "POST",
       cache: "no-store",
       keepalive: true,
+      credentials: "same-origin",
     }).catch(() => {
       // Lifecycle signaling only exists when launched through run.py.
     });

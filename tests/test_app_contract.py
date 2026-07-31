@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import functools
+import http.cookiejar
 import http.server
 import pathlib
 import re
@@ -22,6 +23,7 @@ STYLE_FILES = (
     "src/styles/desktop.css",
     "src/styles/wide.css",
     "src/styles/responsive.css",
+    "src/styles/accent-tokens.css",
 )
 
 
@@ -117,6 +119,30 @@ class TarotAppContractTests(unittest.TestCase):
         self.assertNotIn("function bindEvents()", app_source)
         self.assertNotIn("innerHTML", history_source)
         self.assertNotIn("innerHTML", toast_source)
+
+    def test_mod_004b_server_denies_internal_files_and_requires_session(self) -> None:
+        handler = functools.partial(launcher.AppRequestHandler, directory=str(ROOT))
+        server = launcher.AppServer(("127.0.0.1", 0), handler, session_guard=launcher.SessionGuard())
+        thread = threading.Thread(target=server.serve_forever, daemon=True)
+        thread.start()
+        try:
+            origin = f"http://127.0.0.1:{server.server_address[1]}"
+            for path in ("/docs/PROGRESS.md", "/tests/test_app_contract.py", "/%2e%2e/run.py"):
+                with self.assertRaises(urllib.error.HTTPError) as error:
+                    urllib.request.urlopen(f"{origin}{path}", timeout=2)
+                self.assertIn(error.exception.code, {403, 404})
+            request = urllib.request.Request(
+                f"{origin}/__astra/open?client=unauthorized",
+                method="POST",
+                headers={"Origin": origin, "Sec-Fetch-Site": "same-origin"},
+            )
+            with self.assertRaises(urllib.error.HTTPError) as error:
+                urllib.request.urlopen(request, timeout=2)
+            self.assertEqual(error.exception.code, 403)
+        finally:
+            server.shutdown()
+            server.server_close()
+            thread.join(timeout=2)
 
     def test_four_complete_local_tarot_decks_are_bundled(self) -> None:
         ranks = (
@@ -315,49 +341,58 @@ class TarotAppContractTests(unittest.TestCase):
             server.server_close()
             thread.join(timeout=2)
 
-    def test_launcher_stops_after_last_page_closes(self) -> None:
-        handler = functools.partial(
-            launcher.AppRequestHandler,
-            directory=str(ROOT),
-        )
-        server = launcher.AppServer(("127.0.0.1", 0), handler)
-        serving_thread = threading.Thread(target=server.serve_forever, daemon=True)
-        original_grace = launcher.AUTO_CLOSE_GRACE_SECONDS
-        launcher.AUTO_CLOSE_GRACE_SECONDS = 0.15
-        serving_thread.start()
-        monitor_thread = server.start_lifecycle_monitor()
-        try:
-            port = server.server_address[1]
-            for action in ("open", "close"):
-                request = urllib.request.Request(
-                    f"http://127.0.0.1:{port}/__astra/{action}?client=test-page",
-                    method="POST",
-                )
-                with urllib.request.urlopen(request, timeout=2) as response:
-                    self.assertEqual(response.status, 204)
-            serving_thread.join(timeout=2)
-            self.assertFalse(serving_thread.is_alive())
-        finally:
-            launcher.AUTO_CLOSE_GRACE_SECONDS = original_grace
-            server.stop_lifecycle_monitor()
-            if serving_thread.is_alive():
-                server.shutdown()
-            server.server_close()
-            serving_thread.join(timeout=2)
-            monitor_thread.join(timeout=1)
+def test_launcher_stops_after_last_page_closes(self) -> None:
+    handler = functools.partial(launcher.AppRequestHandler, directory=str(ROOT))
+    server = launcher.AppServer(("127.0.0.1", 0), handler, session_guard=launcher.SessionGuard())
+    server.auto_close_grace_seconds = 0.15
+    serving_thread = threading.Thread(target=server.serve_forever, daemon=True)
+    serving_thread.start()
+    monitor_thread = server.start_lifecycle_monitor()
+    try:
+        port = server.server_address[1]
+        origin = f"http://127.0.0.1:{port}"
+        jar = http.cookiejar.CookieJar()
+        opener = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(jar))
+        with opener.open(f"{origin}/index.html", timeout=2) as response:
+            self.assertEqual(response.status, 200)
+            self.assertNotIn("unsafe-inline", response.headers["Content-Security-Policy"])
+            self.assertIn("HttpOnly", response.headers["Set-Cookie"])
+        for action in ("open", "close"):
+            request = urllib.request.Request(
+                f"{origin}/__astra/{action}?client=test-page",
+                method="POST",
+                headers={"Origin": origin, "Sec-Fetch-Site": "same-origin"},
+            )
+            with opener.open(request, timeout=2) as response:
+                self.assertEqual(response.status, 204)
+        serving_thread.join(timeout=2)
+        self.assertFalse(serving_thread.is_alive())
+    finally:
+        server.stop_lifecycle_monitor()
+        if serving_thread.is_alive():
+            server.shutdown()
+        server.server_close()
+        serving_thread.join(timeout=2)
+        monitor_thread.join(timeout=1)
 
-    def test_page_lifecycle_stream_is_wired_end_to_end(self) -> None:
-        app_source = (ROOT / "app.js").read_text(encoding="utf-8")
-        lifecycle_source = (ROOT / "src/platform/lifecycle-client.js").read_text(encoding="utf-8")
-        entropy_source = (ROOT / "src/platform/entropy.js").read_text(encoding="utf-8")
-        launcher_source = (ROOT / "run.py").read_text(encoding="utf-8")
-        worker_source = (ROOT / "sw.js").read_text(encoding="utf-8")
-        self.assertIn("registerLocalLifecycle", app_source)
-        self.assertIn("new EventSourceCtor", lifecycle_source)
-        self.assertNotIn("Math.random", lifecycle_source)
-        self.assertNotIn("Math.random", entropy_source)
-        self.assertIn("/__astra/events", launcher_source)
-        self.assertIn('startsWith("/__astra/")', worker_source)
+def test_page_lifecycle_stream_is_wired_end_to_end(self) -> None:
+    app_source = (ROOT / "app.js").read_text(encoding="utf-8")
+    lifecycle_source = (ROOT / "src/platform/lifecycle-client.js").read_text(encoding="utf-8")
+    entropy_source = (ROOT / "src/platform/entropy.js").read_text(encoding="utf-8")
+    handler_source = (ROOT / "src/server/http.py").read_text(encoding="utf-8")
+    session_source = (ROOT / "src/server/session.py").read_text(encoding="utf-8")
+    security_source = (ROOT / "src/server/security.py").read_text(encoding="utf-8")
+    worker_source = (ROOT / "sw.js").read_text(encoding="utf-8")
+    self.assertIn("registerLocalLifecycle", app_source)
+    self.assertIn("withCredentials: true", lifecycle_source)
+    self.assertIn('credentials: "same-origin"', lifecycle_source)
+    self.assertNotIn("Math.random", lifecycle_source)
+    self.assertNotIn("Math.random", entropy_source)
+    self.assertIn("/__astra/events", handler_source)
+    self.assertIn("HttpOnly", session_source)
+    self.assertIn("SameSite=Strict", session_source)
+    self.assertNotIn("unsafe-inline", security_source)
+    self.assertIn('startsWith("/__astra/")', worker_source)
 
 if __name__ == "__main__":
     unittest.main()

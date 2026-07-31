@@ -1,0 +1,157 @@
+[data-accent-token="accent-0"] {
+  --astra-accent: #62a3bd;
+  --category-accent: #62a3bd;
+  --active-accent: #62a3bd;
+  --history-accent: #62a3bd;
+  --card-accent: #62a3bd;
+  --mini-accent: #62a3bd;
+  --keyword-accent: #62a3bd;
+  --guidance-accent: #62a3bd;
+  --summary-accent: #62a3bd;
+}
+
+[data-accent-token="accent-1"] {
+  --astra-accent: #79b5a5;
+  --category-accent: #79b5a5;
+  --active-accent: #79b5a5;
+  --history-accent: #79b5a5;
+  --card-accent: #79b5a5;
+  --mini-accent: #79b5a5;
+  --keyword-accent: #79b5a5;
+  --guidance-accent: #79b5a5;
+  --summary-accent: #79b5a5;
+}
+
+[data-accent-token="accent-2"] {
+  --astra-accent: #7fa9d8;
+  --category-accent: #7fa9d8;
+  --active-accent: #7fa9d8;
+  --history-accent: #7fa9d8;
+  --card-accent: #7fa9d8;
+  --mini-accent: #7fa9d8;
+  --keyword-accent: #7fa9d8;
+  --guidance-accent: #7fa9d8;
+  --summary-accent: #7fa9d8;
+}
+
+[data-accent-token="accent-3"] {
+  --astra-accent: #8d9db7;
+  --category-accent: #8d9db7;
+  --active-accent: #8d9db7;
+  --history-accent: #8d9db7;
+  --card-accent: #8d9db7;
+  --mini-accent: #8d9db7;
+  --keyword-accent: #8d9db7;
+  --guidance-accent: #8d9db7;
+  --summary-accent: #8d9db7;
+}
+
+[data-accent-token="accent-4"] {
+  --astra-accent: #93a0cf;
+  --category-accent: #93a0cf;
+  --active-accent: #93a0cf;
+  --history-accent: #93a0cf;
+  --card-accent: #93a0cf;
+  --mini-accent: #93a0cf;
+  --keyword-accent: #93a0cf;
+  --guidance-accent: #93a0cf;
+  --summary-accent: #93a0cf;
+}
+
+[data-accent-token="accent-5"] {
+  --astra-accent: #a58ad4;
+  --category-accent: #a58ad4;
+  --active-accent: #a58ad4;
+  --history-accent: #a58ad4;
+  --card-accent: #a58ad4;
+  --mini-accent: #a58ad4;
+  --keyword-accent: #a58ad4;
+  --guidance-accent: #a58ad4;
+  --summary-accent: #a58ad4;
+}
+
+[data-accent-token="accent-6"] {
+  --astra-accent: #b89a59;
+  --category-accent: #b89a59;
+  --active-accent: #b89a59;
+  --history-accent: #b89a59;
+  --card-accent: #b89a59;
+  --mini-accent: #b89a59;
+  --keyword-accent: #b89a59;
+  --guidance-accent: #b89a59;
+  --summary-accent: #b89a59;
+}
+
+[data-accent-token="accent-7"] {
+  --astra-accent: #c8a66a;
+  --category-accent: #c8a66a;
+  --active-accent: #c8a66a;
+  --history-accent: #c8a66a;
+  --card-accent: #c8a66a;
+  --mini-accent: #c8a66a;
+  --keyword-accent: #c8a66a;
+  --guidance-accent: #c8a66a;
+  --summary-accent: #c8a66a;
+}
+
+[data-accent-token="accent-8"] {
+  --astra-accent: #d1aa62;
+  --category-accent: #d1aa62;
+  --active-accent: #d1aa62;
+  --history-accent: #d1aa62;
+  --card-accent: #d1aa62;
+  --mini-accent: #d1aa62;
+  --keyword-accent: #d1aa62;
+  --guidance-accent: #d1aa62;
+  --summary-accent: #d1aa62;
+}
+
+[data-accent-token="accent-9"] {
+  --astra-accent: #d6815f;
+  --category-accent: #d6815f;
+  --active-accent: #d6815f;
+  --history-accent: #d6815f;
+  --card-accent: #d6815f;
+  --mini-accent: #d6815f;
+  --keyword-accent: #d6815f;
+  --guidance-accent: #d6815f;
+  --summary-accent: #d6815f;
+}
+
+[data-accent-token="accent-10"] {
+  --astra-accent: #d77f95;
+  --category-accent: #d77f95;
+  --active-accent: #d77f95;
+  --history-accent: #d77f95;
+  --card-accent: #d77f95;
+  --mini-accent: #d77f95;
+  --keyword-accent: #d77f95;
+  --guidance-accent: #d77f95;
+  --summary-accent: #d77f95;
+}
+
+[data-accent-token="accent-11"] {
+  --astra-accent: #d8bb7a;
+  --category-accent: #d8bb7a;
+  --active-accent: #d8bb7a;
+  --history-accent: #d8bb7a;
+  --card-accent: #d8bb7a;
+  --mini-accent: #d8bb7a;
+  --keyword-accent: #d8bb7a;
+  --guidance-accent: #d8bb7a;
+  --summary-accent: #d8bb7a;
+}
+
+.reading-meta [data-accent-token] { color: var(--astra-accent); }
+.shuffle-card-0 { --i: 0; }
+.shuffle-card-1 { --i: 1; }
+.shuffle-card-2 { --i: 2; }
+.shuffle-card-3 { --i: 3; }
+.shuffle-card-4 { --i: 4; }
+.shuffle-card-5 { --i: 5; }
+.shuffle-card-6 { --i: 6; }
+.shuffle-progress > i {
+  width: 100%;
+  transform: scaleX(0);
+  transform-origin: left center;
+}

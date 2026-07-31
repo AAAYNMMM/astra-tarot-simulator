@@ -5,7 +5,7 @@ const { deck, categories, spreads } = window.TarotData;
 const runtime = window.AstraRuntime;
 if (!runtime) throw new Error("AstraRuntime bindings were not installed.");
 const {
-  config: { DECK_STYLES, LEGACY_DECK_IDS },
+  config: { DECK_STYLES, LEGACY_DECK_IDS, accentToken },
   core: { escapeHtml, randomUnit, secureShuffle },
   platform: {
     resolveDeckStyle,
@@ -109,7 +109,7 @@ function writeHistory(records) {
     dom.readingTitle.textContent = question.text;
     dom.readingMeta.hidden = false;
     dom.metaCategory.textContent = category.name;
-    dom.metaCategory.style.color = category.accent;
+    dom.metaCategory.dataset.accentToken = accentToken(category.accent);
     dom.metaSpread.textContent = spread.name;
     dom.readingPanel.dataset.spreadId = spread.id;
     dom.idleState.hidden = true;
@@ -137,7 +137,7 @@ function writeHistory(records) {
     const { card, reversed, position, index } = draw;
     const deckStyle = resolveDeckStyle(state.reading?.deckStyle || currentDeckStyle());
     return `
-      <article class="drawn-card deck-style-${deckStyle.id}" data-card-index="${index}" style="--card-accent: ${card.accent}">
+      <article class="drawn-card deck-style-${deckStyle.id}" data-card-index="${index}" data-accent-token="${accentToken(card.accent)}">
         <button
           class="card-hitbox"
           type="button"
@@ -339,7 +339,7 @@ function writeHistory(records) {
     dom.insightContent.innerHTML = `
       <article class="card-reading">
         <header class="selected-card-heading">
-          <div class="mini-card deck-style-${deckStyle.id} ${reversed ? "is-reversed" : ""}" style="--mini-accent: ${card.accent}">
+          <div class="mini-card deck-style-${deckStyle.id} ${reversed ? "is-reversed" : ""}" data-accent-token="${accentToken(card.accent)}">
             <img src="${cardImagePath(card.id, deckStyle)}" alt="" />
           </div>
           <div class="selected-card-copy">
@@ -352,7 +352,7 @@ function writeHistory(records) {
           </div>
         </header>
 
-        <div class="keyword-row" style="--keyword-accent: ${card.accent}">
+        <div class="keyword-row" data-accent-token="${accentToken(card.accent)}">
           ${keywordMarkup}
         </div>
 
@@ -387,7 +387,7 @@ function writeHistory(records) {
 
         <section class="reading-block">
           <div class="reading-block-label">落地建议</div>
-          <div class="action-guidance" style="--guidance-accent: ${card.accent}">
+          <div class="action-guidance" data-accent-token="${accentToken(card.accent)}">
             <strong>可以尝试的一步</strong>
             <p>${escapeHtml(card.advice)}</p>
           </div>
@@ -695,7 +695,7 @@ function writeHistory(records) {
       .join("");
 
     dom.insightContent.innerHTML = `
-      <article class="summary-reading" style="--summary-accent: ${category.accent}">
+      <article class="summary-reading" data-accent-token="${accentToken(category.accent)}">
         <header class="summary-hero">
           <span class="summary-overline">SYNTHESIS · 综合讯息</span>
           <h3>${escapeHtml(synthesis.headline)}</h3>

@@ -1,3 +1,4 @@
+import { accentToken } from "../../config/accent-tokens.js";
 import { createElement, replaceChildren, safeColor, setText } from "../safe-dom.js";
 
 export function historyRecordView(record, formatDate) {
@@ -34,7 +35,7 @@ export function createHistoryRenderer({ documentRef, dom, loadHistory, writeHist
       const view = historyRecordView(record, formatDate);
       const article = createElement(documentRef, "article", { className: "history-item" });
       article.dataset.historyId = view.id;
-      article.style.setProperty("--history-accent", view.accent);
+      article.dataset.accentToken = accentToken(view.accent);
       article.append(createElement(documentRef, "span", { className: "history-icon", text: view.icon, attributes: { "aria-hidden": "true" } }));
       const summary = createElement(documentRef, "div", { className: "history-summary" });
       summary.append(createElement(documentRef, "strong", { text: view.question }), createElement(documentRef, "small", { text: view.meta }), createElement(documentRef, "time", { text: view.createdAt }));

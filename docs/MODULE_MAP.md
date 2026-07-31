@@ -528,3 +528,8 @@ src/storage/legacy-record.js
 ## MOD-004A活动边界
 
 页面状态、选择器、读牌创建、设置页渲染、洗牌动画、事件绑定、提示消息和历史记录渲染已迁入 `src/app/` 与 `src/ui/`。历史和提示不再使用 `innerHTML`，恶意持久化字段通过DOM节点与 `textContent` 输出。
+
+
+## MOD-004B安全边界
+
+本地服务仅公开应用壳、`assets/` 与 `src/` 运行资源；生命周期接口使用HttpOnly SameSite会话Cookie、回环Host与Origin校验。CSP不包含 `unsafe-inline`，运行时颜色通过有限accent token和外部CSS表达。

@@ -41,6 +41,7 @@ const requiredFiles = [
   "src/app/legacy-runtime.js",
   "tests/foundation_contract_test.mjs",
   "src/config/decks.js",
+  "src/config/accent-tokens.js",
   "src/config/legacy-storage.js",
   "src/core/html.js",
   "src/core/random/business-random.js",
@@ -210,9 +211,10 @@ assert.deepEqual(cssImports, [
   "src/styles/history.css",
   "src/styles/desktop.css",
   "src/styles/wide.css",
-  "src/styles/responsive.css"
+  "src/styles/responsive.css",
+  "src/styles/accent-tokens.css"
 ]);
-const reconstructedCss = cssImports.map((relativePath) => read(relativePath)).join("");
+const reconstructedCss = cssImports.filter((relativePath) => !relativePath.endsWith("accent-tokens.css")).map((relativePath) => read(relativePath)).join("");
 assert.equal(
   crypto.createHash("sha256").update(reconstructedCss).digest("hex"),
   "087ab37e367357fbb1ea4532f0f0d9a81973e2dadd163a6d7c104cfbc6c466db",
@@ -225,13 +227,14 @@ for (const relativePath of cssImports) {
 
 const serviceWorkerSource = read("sw.js");
 assert.match(serviceWorkerSource, /cache\.addAll\(CORE_FILES\)/, "Current precache baseline changed");
-assert.match(serviceWorkerSource, /astra-tarot-v9/, "MOD-003B must bump the cache version");
+assert.match(serviceWorkerSource, /astra-tarot-v10/, "MOD-003B must bump the cache version");
 for (const relativePath of [
   "src/styles/index.css",
   ...cssImports,
   "src/app/bootstrap.js",
   "src/app/legacy-runtime.js",
   "src/config/decks.js",
+  "src/config/accent-tokens.js",
   "src/config/legacy-storage.js",
   "src/core/html.js",
   "src/core/random/business-random.js",
@@ -297,5 +300,5 @@ for (const requiredText of [
 }
 
 console.log(
-  "MOD-004A module contract passed: foundation modules are wired through the controlled bridge while public IDs, CSS, and PWA resources remain stable.",
+  "MOD-004B module contract passed: foundation modules are wired through the controlled bridge while public IDs, CSS, and PWA resources remain stable.",
 );

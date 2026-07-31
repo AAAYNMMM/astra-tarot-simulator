@@ -11,7 +11,6 @@ export function createReadingAnimation({ windowRef, documentRef, reducedMotion, 
     const backPath = cardBackPath(state.reading?.deckStyle);
     const cards = Array.from({ length: 7 }, (_, index) => {
       const span = createElement(documentRef, "span", { className: `shuffle-card shuffle-card-${index}` });
-      span.style.setProperty("--i", String(index));
       span.append(createElement(documentRef, "img", { attributes: { src: backPath, alt: "" } }));
       return span;
     });
@@ -23,12 +22,15 @@ export function createReadingAnimation({ windowRef, documentRef, reducedMotion, 
       { at: 92, text: "牌阵即将显现" },
     ];
     const totalDuration = reducedMotion.matches ? 90 : 2350;
+    const progressAnimation = dom.shuffleProgress.animate?.(
+      [{ transform: "scaleX(0)" }, { transform: "scaleX(1)" }],
+      { duration: totalDuration, easing: "linear", fill: "forwards" },
+    );
     const startedAt = windowRef.performance.now();
     let lastPhase = -1;
     await new Promise((resolve) => {
       const tick = (now) => {
         const percentage = Math.min(100, ((now - startedAt) / totalDuration) * 100);
-        dom.shuffleProgress.style.width = `${percentage}%`;
         let phaseIndex = 0;
         for (let index = phases.length - 1; index >= 0; index -= 1) {
           if (percentage >= phases[index].at) { phaseIndex = index; break; }
@@ -42,8 +44,8 @@ export function createReadingAnimation({ windowRef, documentRef, reducedMotion, 
       windowRef.requestAnimationFrame(tick);
     });
     await delay(180);
+    progressAnimation?.cancel();
     dom.shuffleScene.hidden = true;
-    dom.shuffleProgress.style.width = "0";
   }
 
   return Object.freeze({ delay, runShuffleAnimation });

@@ -1,4 +1,5 @@
-import { createElement, replaceChildren, safeColor, safeIdentifier, setText } from "../safe-dom.js";
+import { accentToken } from "../../config/accent-tokens.js";
+import { createElement, replaceChildren, safeIdentifier, setText } from "../safe-dom.js";
 
 function selectedClass(base, selected) {
   return selected ? `${base} is-selected` : base;
@@ -24,7 +25,7 @@ export function createSetupRenderer({
         attributes: { type: "button", "aria-pressed": category.id === state.categoryId },
       });
       button.dataset.categoryId = safeIdentifier(category.id);
-      button.style.setProperty("--category-accent", safeColor(category.accent));
+      button.dataset.accentToken = accentToken(category.accent);
       button.append(
         createElement(documentRef, "span", { className: "category-icon", text: category.icon, attributes: { "aria-hidden": "true" } }),
         createElement(documentRef, "span", { className: "category-name", text: category.name }),
@@ -41,9 +42,9 @@ export function createSetupRenderer({
     setText(dom.questionDialogHint, `${category.name} · 从以下 ${category.questions.length} 个问题中选择一项`);
     setText(dom.selectedQuestionLabel, question.label);
     setText(dom.selectedQuestionText, question.text);
-    const accent = safeColor(category.accent);
-    dom.questionPickerButton.style.setProperty("--active-accent", accent);
-    dom.questionList.style.setProperty("--active-accent", accent);
+    const accent = accentToken(category.accent);
+    dom.questionPickerButton.dataset.accentToken = accent;
+    dom.questionList.dataset.accentToken = accent;
     const nodes = category.questions.map((item) => {
       const button = createElement(documentRef, "button", {
         className: selectedClass("question-option", item.id === state.questionId),
