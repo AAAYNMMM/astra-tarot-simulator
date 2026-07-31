@@ -81,6 +81,12 @@ def find_node_executable() -> tuple[str | None, list[str]]:
             Path(local_app_data) / "Programs" / "nodejs" / "node.exe"
             if local_app_data
             else None,
+            Path(local_app_data) / "Microsoft" / "WinGet" / "Links" / "node.exe"
+            if local_app_data
+            else None,
+            Path(local_app_data) / "Microsoft" / "WindowsApps" / "node.exe"
+            if local_app_data
+            else None,
             Path(user_profile) / "scoop" / "apps" / "nodejs" / "current" / "node.exe"
             if user_profile
             else None,
@@ -94,7 +100,12 @@ def find_node_executable() -> tuple[str | None, list[str]]:
     discovered_candidates: list[Path] = []
     glob_roots: list[tuple[Path, str]] = []
     if local_app_data:
-        glob_roots.append((Path(local_app_data), "fnm_multishells/*/node.exe"))
+        glob_roots.extend(
+            [
+                (Path(local_app_data), "fnm_multishells/*/node.exe"),
+                (Path(local_app_data), "Microsoft/WinGet/Packages/**/node.exe"),
+            ]
+        )
     if user_profile:
         glob_roots.append((Path(user_profile), ".volta/tools/image/node/*/node.exe"))
     if app_data:
