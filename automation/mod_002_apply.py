@@ -265,6 +265,76 @@ for (const relativePath of cssImports) {{
     write_text("tests/module_contract_test.mjs", text)
 
 
+def update_python_contract(css_paths: list[str]) -> None:
+    path = ROOT / "tests/test_app_contract.py"
+    text = path.read_text(encoding="utf-8")
+    text = replace_once(
+        text,
+        "import pathlib\n",
+        "import pathlib\nimport re\n",
+        "Python CSS contract import",
+    )
+    style_files = ["src/styles/index.css", *css_paths]
+    style_tuple = "(\n" + "".join(f'    "{item}",\n' for item in style_files) + ")"
+    helper = (
+        f"STYLE_FILES = {style_tuple}\n\n\n"
+        "def read_styles() -> str:\n"
+        "    index_source = (ROOT / STYLE_FILES[0]).read_text(encoding=\"utf-8\")\n"
+        "    imported_names = re.findall(r'@import url\\(\"\\./(.+?)\"\\);', index_source)\n"
+        "    expected_names = [pathlib.PurePosixPath(item).name for item in STYLE_FILES[1:]]\n"
+        "    if imported_names != expected_names:\n"
+        "        raise AssertionError(f\"Unexpected CSS import order: {imported_names!r}\")\n"
+        "    return \"\".join(\n"
+        "        (ROOT / relative_path).read_text(encoding=\"utf-8\")\n"
+        "        for relative_path in STYLE_FILES[1:]\n"
+        "    )\n\n\n"
+    )
+    text = replace_once(
+        text,
+        "ROOT = pathlib.Path(__file__).resolve().parents[1]\n\n\n",
+        "ROOT = pathlib.Path(__file__).resolve().parents[1]\n"
+        + helper,
+        "Python CSS helpers",
+    )
+    text = replace_once(
+        text,
+        '            "styles.css",\n',
+        "",
+        "root stylesheet requirement",
+    )
+    text = replace_once(
+        text,
+        "        self.assertTrue(required.issubset({path.name for path in ROOT.iterdir()}))\n",
+        "        self.assertTrue(required.issubset({path.name for path in ROOT.iterdir()}))\n"
+        "        for relative_path in STYLE_FILES:\n"
+        "            self.assertTrue((ROOT / relative_path).is_file(), relative_path)\n"
+        "        self.assertFalse((ROOT / \"styles.css\").exists())\n",
+        "split stylesheet requirement",
+    )
+    styles_read = '(ROOT / "styles.css").read_text(encoding="utf-8")'
+    occurrences = text.count(styles_read)
+    if occurrences != 4:
+        raise RuntimeError(f"Expected four styles.css reads, found {occurrences}")
+    text = text.replace(styles_read, "read_styles()")
+    text = replace_once(
+        text,
+        '        for filename in ("index.html", "styles.css", "data.js", "app.js"):\n'
+        '            content = (ROOT / filename).read_text(encoding="utf-8")\n'
+        '            self.assertNotIn("https://cdn.", content)\n'
+        '            self.assertNotIn("fonts.googleapis.com", content)\n',
+        '        for filename in ("index.html", "data.js", "app.js"):\n'
+        '            content = (ROOT / filename).read_text(encoding="utf-8")\n'
+        '            self.assertNotIn("https://cdn.", content)\n'
+        '            self.assertNotIn("fonts.googleapis.com", content)\n'
+        '        for relative_path in STYLE_FILES:\n'
+        '            content = (ROOT / relative_path).read_text(encoding="utf-8")\n'
+        '            self.assertNotIn("https://cdn.", content)\n'
+        '            self.assertNotIn("fonts.googleapis.com", content)\n',
+        "static asset CSS paths",
+    )
+    write_text("tests/test_app_contract.py", text)
+
+
 def update_docs(css_paths: list[str]) -> None:
     automation_path = ROOT / "automation/README.md"
     automation_text = automation_path.read_text(encoding="utf-8")
@@ -327,6 +397,7 @@ def main() -> int:
     update_quality_baseline()
     update_size_checker()
     update_module_contract(css_paths)
+    update_python_contract(css_paths)
     update_docs(css_paths)
     print(
         "CWAPI_REPORT: "
