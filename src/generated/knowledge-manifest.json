@@ -204,6 +204,7 @@
     "src/knowledge/spreads/operators/index.js": "30bb1e7f7e824f90d801a99511b2b6da3089b4ef16ac136fc10bd84911bdb754",
     "src/knowledge/spreads/operators/single.js": "32be4d5d158b180143e62dea8eedf2f6126828465d0c325e651d30c7f761a47a",
     "src/knowledge/spreads/operators/timeline.js": "b8c4aa6b98a1c289398731dd30e407ca3ddcb31d078ff4109c8cf744e550c1ac",
+    "src/knowledge/templates/claim-templates.js": "ee63d34656b4e8ac903a5219638d88ef8a07dacde0c2833489c3f5915859eaec",
     "src/knowledge/vocabularies/index.js": "ed391ee3c9b2c34d75eeb8e225ae7802f9e5ac22b6717b6a55d44aeb7c0c9031",
     "src/knowledge/vocabularies/interpretation-policy.js": "d398826282a389e2e350bae18044859a79d2da71dd4dd649e9f97b360101690f",
     "src/knowledge/vocabularies/sources.js": "2c54b1c5720daf9e8047481062af2b058bd8624b50bfcb4d5d49b01ab1782e3f",

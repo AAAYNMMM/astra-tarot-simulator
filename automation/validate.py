@@ -230,6 +230,12 @@ def baseline_steps(node: str) -> list[tuple[str, list[str]]]:
         ("node-phase-5-semantic-relations", [node, "tests/phase_5_semantic_relation_test.mjs"]),
         ("node-phase-5-auxiliary-relations", [node, "tests/phase_5_auxiliary_relation_test.mjs"]),
         ("node-phase-5-terminal-gate", [node, "tests/phase_5_gate_test.mjs"]),
+        ("node-phase-6-claim-candidates", [node, "tests/phase_6_claim_candidate_test.mjs"]),
+        ("node-phase-6-claim-scoring-conflicts", [node, "tests/phase_6_claim_scoring_conflict_test.mjs"]),
+        ("node-phase-6-claim-validation", [node, "tests/phase_6_claim_validation_test.mjs"]),
+        ("node-phase-6-random-streams", [node, "tests/phase_6_random_streams_test.mjs"]),
+        ("node-phase-6-text-rendering", [node, "tests/phase_6_text_rendering_test.mjs"]),
+        ("node-phase-6-terminal-gate", [node, "tests/phase_6_gate_test.mjs"]),
         ("node-phase-2-golden-freeze", [node, "tests/phase_2_golden_freeze_test.mjs"]),
         ("node-phase-2-card-profiles", [node, "tests/phase_2_card_profiles_test.mjs"]),
         (

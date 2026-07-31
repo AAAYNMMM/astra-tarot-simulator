@@ -405,3 +405,15 @@ Card、Question、Position、Observation或固定结构图变化会使Phase 5相
 - `MR-005`覆盖全部90题、四牌阵、正逆位批次、正反例、候选限制、稳定排序和输入重排复现。
 
 阶段出口：Relation数量等于冻结结构边数量；single为零；不对凯尔特十字做全量两两组合；最终类型不越过候选集合；当前commit取得CWapi full RESULT。
+
+### Phase 6终态要求
+
+`CL-001`至`TX-003`必须作为同一阶段连续收口：
+
+- ClaimCandidate只能来自当前Observation与合法Relation，并按冻结节点和边顺序稳定生成。
+- 评分限制在0到1；平局顺序稳定；冲突不得静默删除。
+- 最终结论只允许使用QuestionProfile的`allowedConclusionTypes`，禁止结论和未覆盖维度必须在模板前拦截。
+- `AU-001A`建立版本化根种子派生以及draw、orientation、rendering独立流，不切换生产抽牌。
+- 模板只表达已经通过CL-005的结构化Claim。
+- 四牌阵输出层级固定；TX-003检查文本矛盾说明、禁止措辞、引用丢失、重复和格式。
+- 阶段出口：90题×4牌阵×正逆位均可生成合法Claim与文本；非法Claim不能进入模板；当前commit取得CWapi full RESULT。

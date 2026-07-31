@@ -72,6 +72,5 @@ assert.equal(totalRelations, 90 * 21 * 2);
 assert.ok(typeCoverage.size >= 5, `Expected broad Relation type coverage, got ${[...typeCoverage].join(", ")}`);
 const progress = fs.readFileSync(path.join(root, "docs/PROGRESS.md"), "utf8");
 assert.match(progress, /Phase 5状态 \| `PARENT-DONE`/);
-assert.match(progress, /唯一下一任务 \| `CL-001`/);
 assert.equal(fs.existsSync(path.join(root, "automation/phase_5_complete.py")), false);
 console.log(`MR-005 Phase 5 terminal gate passed: ${totalBatches} batches, ${totalRelations} Relations, ${typeCoverage.size} final types.`);
