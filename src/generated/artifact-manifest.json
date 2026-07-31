@@ -1,6 +1,6 @@
 {
   "appVersion": "2.0.0-dev",
-  "engineManifestHash": "e305f09118016fe478cfd2d06dab7b5b8a4e1edb1400d010016419a46ca15558",
+  "engineManifestHash": "f122007f51efa708fa10d75b6ad41508cb4babaa005165145d8a4b9798ba3f46",
   "generatorHash": "efeb76569667843ead911adb0e64c4608c5779d779c74e5c9f3a964861b3e8f8",
   "generatorVersion": "1.0.0",
   "knowledgeManifestHash": "bd93f68c374515c5b7a15475ed2e89970f8b3500571d29994412ccfd29fe3d06",
@@ -233,6 +233,10 @@
     "src/engine/observations/observation-engine.js": "3d6d4f1a3d42280d579f1b485e4e7eac3b401e9cfb547f874dfab6c82a2b6e8e",
     "src/engine/observations/semantic-selector.js": "0ae48fec20b06d52bb3c94197cc96b66ffac11ebf605be5e10b52a50a15dea42",
     "src/engine/observations/spread-graphs.js": "6b83b17ad16ffd62e4729b232e0559f459c0925fea8c7031f934ee0bf3c0a444",
+    "src/engine/relations/auxiliary-relation-signals.js": "44d3717ba60178c2fea8eb144173797ded4059bfb2f54a8b1e77794801ae1771",
+    "src/engine/relations/question-position-relation.js": "2ec60c638a2d003244a6c07e74ddb4a564e07c6d2077a830a3f487d852c524ca",
+    "src/engine/relations/relation-engine.js": "22395dd9636752b52ddfd7167013c82deaeccbef97ae85c35350e2e76a84f435",
+    "src/engine/relations/semantic-relation-resolver.js": "822c2fe95680da5d0e4e19a37fdd89837e5ccc973f4d8bf730ddb08b211b21f2",
     "src/engine/relations/structural-relation-candidates.js": "0959f95711a0e0ad63db10f24900d56aa4dce95cd886991420032b690b9034c7",
     "src/engine/validation/card-profile-validator.js": "fdc881c76f43e9538cb19fb999b392f3aa6ba128d8d4360bc22511911a507770",
     "src/engine/validation/card-quality-gate.js": "64ef43c1f06df10782bad17320e11af8ce0123097164afe194c119e00db4508f",
@@ -480,5 +484,5 @@
     "sw.js": "0032b0963cb1bf03d6355e763c5e0e01600c3b4fda48fff33b453793cbb3af99"
   },
   "schemaVersion": "1.0.0",
-  "sourceSetHash": "38bf87f4de931e9b6daa89a7d34a1a8975fdf78a7e3183a195c5b06c1595f0a3"
+  "sourceSetHash": "7749a646a7a152ca68b36d8c736f1b6808b2b4998d05d5347b4be32231dd5dc5"
 }

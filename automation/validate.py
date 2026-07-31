@@ -226,6 +226,10 @@ def baseline_steps(node: str) -> list[tuple[str, list[str]]]:
         ("node-observation-schema", [node, "tests/observation_schema_contract_test.mjs"]),
         ("node-observation-engine", [node, "tests/observation_engine_test.mjs"]),
         ("node-phase-5-structural-relations", [node, "tests/phase_5_structural_relation_candidates_test.mjs"]),
+        ("node-phase-5-question-position", [node, "tests/phase_5_question_position_relation_test.mjs"]),
+        ("node-phase-5-semantic-relations", [node, "tests/phase_5_semantic_relation_test.mjs"]),
+        ("node-phase-5-auxiliary-relations", [node, "tests/phase_5_auxiliary_relation_test.mjs"]),
+        ("node-phase-5-terminal-gate", [node, "tests/phase_5_gate_test.mjs"]),
         ("node-phase-2-golden-freeze", [node, "tests/phase_2_golden_freeze_test.mjs"]),
         ("node-phase-2-card-profiles", [node, "tests/phase_2_card_profiles_test.mjs"]),
         (

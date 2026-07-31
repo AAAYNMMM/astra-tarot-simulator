@@ -396,3 +396,12 @@ MR-001固定结构边转Relation候选
 `MR-001`只把Phase 4冻结的结构边映射为有限候选。每条结构边恰好对应一个候选；single为零；输出按图边顺序确定。候选不得提前确定最终Relation类型、强度或语义成立，也不得建立非结构边或凯尔特十字全量两两组合。
 
 Card、Question、Position、Observation或固定结构图变化会使Phase 5相关验证失效并重跑。
+
+### Phase 5终态要求
+
+- `MR-002`直接消费QuestionProfile的answerDimensions与各牌阵positionResponsibilities，记录职责覆盖、交接和证据优先级，不复制问题契约。
+- `MR-003`只在`MR-001`候选集合内，依据Observation与CardSemanticProfile的主题、facet、维度、状态、行动和逆位机制确定有限Relation类型；平局按候选原顺序稳定解决。
+- `MR-004`的元素、数字、宫廷、阶段和正逆位信号只能附着于现有结构边，并只允许有限强度修正，不得创建新边。
+- `MR-005`覆盖全部90题、四牌阵、正逆位批次、正反例、候选限制、稳定排序和输入重排复现。
+
+阶段出口：Relation数量等于冻结结构边数量；single为零；不对凯尔特十字做全量两两组合；最终类型不越过候选集合；当前commit取得CWapi full RESULT。
