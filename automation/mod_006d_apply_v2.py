@@ -16,6 +16,15 @@ if source.count(opening) != 1 or source.count(closing) != 1:
 source = source.replace(opening, 'BROWSER_HARNESS = r"""', 1)
 source = source.replace(closing, '\n"""\n\nPHASE_GATE = r\'\'\'', 1)
 
+browser_docstring = '"""Launch the real application in installed desktop browsers without third-party packages."""'
+if source.count(browser_docstring) != 1:
+    raise RuntimeError("MOD-006D browser harness docstring anchor changed")
+source = source.replace(
+    browser_docstring,
+    "# Launch the real application in installed desktop browsers without third-party packages.",
+    1,
+)
+
 old_imports = '''from dataclasses import dataclass
 from typing import ClassVar
 
