@@ -8,23 +8,24 @@
 | 项目 | 当前值 |
 |---|---|
 | 当前阶段 | Phase M：模块化基础 |
-| 当前任务 | `MOD-002` 拆分 CSS |
-| 任务状态 | `CLOSURE_PENDING` |
-| 最近完成任务 | `MOD-001` 模块边界、数据边界与基线验证 |
-| 下一任务 | 暂不选择；闭环完成后更新为 `MOD-003A` |
+| 当前进行中任务 | 无 |
+| 最近完成任务 | `MOD-002` 拆分 CSS |
+| 下一任务 | `MOD-003A` ES Module 入口、Node 模块格式与兼容桥 |
 | 阻塞项 | 无 |
 | 工作分支 | `mod-002-split-css` |
 | 实现提交 | `4451e5da53d6ba81569a25c81a7d4cb4d77894ab` |
 | 最后更新时间 | 2026-07-31 |
 | 规划状态 | 已冻结且执行审查已收敛；不得继续用非阻断性规划推迟开发 |
 
-## 2. 当前任务：MOD-002
+## 2. 最近完成：MOD-002
+
+**状态：DONE**
 
 ### 目标
 
 把根目录单体 `styles.css` 拆为真实页面正在使用的活动模块，保持原有级联顺序、视觉、动画、响应式、牌阵布局和可访问行为；清除 CSS 超限技术债，并让旧文件重新出现时直接失败。
 
-### 当前产物
+### 最终产物
 
 ```text
 src/styles/
@@ -46,7 +47,7 @@ src/styles/
 - 原始 `styles.css`：4916 行，SHA-256 `087ab37e367357fbb1ea4532f0f0d9a81973e2dadd163a6d7c104cfbc6c466db`。
 - 拆分点全部位于顶层规则边界。
 - 八个模块按入口顺序拼接后与原始文件字节完全一致。
-- 分隔空白行被归入后一个模块，避免新增文件末尾空白，同时不改变拼接字节。
+- 分隔空白行归入后一个模块，避免新增文件末尾空白，同时不改变拼接字节。
 - 最大人工 CSS 文件为 `desktop.css`，714 行，低于 900 行硬上限。
 
 ### 修改文件
@@ -68,6 +69,7 @@ src/styles/
 - `automation/README.md`
 - `automation/quality-baseline.json`
 - `docs/MODULE_MAP.md`
+- `docs/PROGRESS.md`
 - `index.html`
 - `scripts/check_module_size.py`
 - `src/README.md`
@@ -89,7 +91,9 @@ src/styles/
 - Node 契约测试检查入口、模块顺序、原始 CSS 哈希、文件规模、Service Worker 资源和旧文件缺失。
 - `styles.css` 已加入 `resolvedDebt`；重新创建该路径会返回 `FAIL`。
 
-## 3. 固定提交验证
+## 3. 验证记录
+
+### 实现产物固定提交
 
 | 项目 | 值 |
 |---|---|
@@ -103,6 +107,18 @@ src/styles/
 | 工作区 | 执行前后均干净 |
 | RESULT manifest SHA-256 | `a80e3a754436309990c25d6e6b7087c06aac01bdc46bcd8b70e3ef827a972bfd` |
 | Drive 相对路径 | `CWapi/AAAYNMMM__astra-tarot-simulator/01KYG9MOD2B1` |
+
+### 完成现场闭环提交
+
+| 项目 | 值 |
+|---|---|
+| commit | `f653625f35461a5adb75d5f81b5692c4e3f22267` |
+| task_id | `01KYG9MOD2B2` |
+| RESULT | `COMPLETED` |
+| scope | `baseline` |
+| 工作区 | 执行前后均干净 |
+| RESULT manifest SHA-256 | `ee6d976bc1c30d29ab3d0bde612249c459b5b63ab128b84beb0e54fbfe6baba1` |
+| Drive 相对路径 | `CWapi/AAAYNMMM__astra-tarot-simulator/01KYG9MOD2B2` |
 
 ### 自动测试摘要
 
@@ -150,16 +166,11 @@ src/styles/
 - `01KYG9MOD2I5`：镜像远端不能与 refspec 同时推送；改为单次覆盖 `remote.origin.mirror=false`。
 - `01KYG9MOD2I6`：完整迁移、baseline、格式检查、提交和推送成功。
 - `01KYG9MOD2B1`：实现产物固定提交 baseline 全部通过。
+- `01KYG9MOD2B2`：完成现场提交 baseline 全部通过。
 
-## 5. 闭环步骤
+## 5. 最终复验
 
-本文件所在提交必须由新的 CWapi task 使用同一 `baseline` 范围复验。通过后：
-
-1. 把 `MOD-002` 标记为 `DONE`；
-2. 把唯一下一任务更新为 `MOD-003A`；
-3. 保存闭环 task_id、RESULT 和 manifest；
-4. 对最终 DONE 状态提交再执行一次固定提交 baseline；
-5. 最终复验后不得再修改本文件或 MOD-002 产物。
+本文件所在最终 DONE 提交由 CWapi task `01KYG9MOD2B3` 使用同一 `baseline` 范围复验。该任务必须匹配本文件所在 commit，执行前后工作区必须干净；复验后不得再修改本文件或 MOD-002 产物，否则 RESULT 失效。
 
 ## 6. 当前代码与平台基线
 
@@ -180,10 +191,26 @@ src/styles/
 | 浏览器自动化 | 尚无仓库 harness | `MOD-006D` 逐步建立 |
 | GitHub Actions | 不使用 | CWapi 本地验证 |
 
-## 7. 阶段状态
+## 7. 下一任务：MOD-003A
+
+**状态：NEXT**
+
+目标：建立最小 ES Module 页面入口和受控兼容桥，提交无依赖 `package.json`，明确 Node 脚本格式，并让旧 `app.js`、`data.js` 在渐进迁移期间继续由真实页面使用。
+
+主要约束：
+
+- 不引入 npm 依赖、构建步骤或 GitHub Actions。
+- `index.html` 立即通过原生模块入口启动。
+- 旧全局只通过受控兼容桥存在，并有明确删除任务。
+- 现有 CommonJS smoke test 转换为 ESM；必要的临时 CommonJS 文件使用 `.cjs` 并登记清除。
+- 页面行为、生命周期、离线启动、牌阵、公开 ID、牌义和随机分布保持不变。
+- 每次新增活动 JS 模块同步更新临时 Service Worker 资源列表。
+- 当前提交必须取得匹配 CWapi RESULT。
+
+## 8. 阶段状态
 
 - Phase 0：`DONE`
-- Phase M：`PARENT-IN-PROGRESS`，当前叶子任务 `MOD-002` 等待闭环
+- Phase M：`PARENT-IN-PROGRESS`，唯一下一叶子任务 `MOD-003A`
 - Phase 1：`BLOCKED`，等待 `MOD-006D`
 - Phase 2、3、7、8、9：`PARENT-PENDING`
 - Phase 4、5、6：`BACKLOG`
