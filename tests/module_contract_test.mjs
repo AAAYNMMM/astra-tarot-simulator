@@ -15,6 +15,7 @@ const requiredFiles = [
   "src/generated/knowledge-registry.js", "src/generated/knowledge-manifest.json",
   "src/generated/artifact-manifest.json", "src/generated/precache-manifest.js",
   "tests/generated_artifacts_contract_test.mjs",
+  "tests/browser_harness.py", "tests/phase_m_gate_test.mjs", "docs/BROWSER_SUPPORT.md",
   "package.json", "src/README.md", "src/app/bootstrap.js", "src/app/application.js",
   "src/app/runtime-services.js",
   "src/ui/components/dialogs.js", "src/config/decks.js", "src/config/accent-tokens.js",
@@ -69,4 +70,4 @@ const resolved = new Map(baseline.resolvedDebt.map((item) => [item.path, item]))
 assert.equal(resolved.get("app.js").replacement, "src/app/application.js");
 assert.equal(resolved.get("data.js").replacement, "src/knowledge/legacy/index.js");
 assert.equal(resolved.get("src/app/legacy-runtime.js").replacement, "src/app/application.js");
-console.log("MOD-006C module contract passed: direct ESM runtime, frozen public IDs, zero oversized debt, and no legacy bridge.");
+console.log("MOD-006D module contract passed: direct ESM runtime, frozen public IDs, zero oversized debt, and no legacy bridge.");

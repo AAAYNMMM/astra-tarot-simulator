@@ -6,7 +6,9 @@ export async function bootstrapBrowser(globalScope = globalThis) {
   if (!documentRef || !windowRef) {
     return Object.freeze({ started: false, reason: "browser-globals-unavailable" });
   }
-  return startApplication({ documentRef, windowRef });
+  const result = startApplication({ documentRef, windowRef });
+  documentRef.documentElement.dataset.astraBoot = result.started ? "ready" : "skipped";
+  return result;
 }
 
 function reportBootFailure(error) {

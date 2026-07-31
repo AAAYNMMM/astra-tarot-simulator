@@ -112,3 +112,6 @@ Node 缺失属于验证失败，不得静默跳过。`package.json` 仅声明 `p
 
 
 MOD-006B后baseline先执行生成物陈旧检查和生成契约。生成命令：`node scripts/generate_artifacts.mjs`；只读检查：`node scripts/generate_artifacts.mjs --check`。
+
+
+Phase M终态与后续完整回归使用 `python automation/validate.py --scope full`；该scope要求至少一款本机Chromium浏览器，并验证所有检测到的受支持桌面浏览器。

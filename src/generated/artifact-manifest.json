@@ -142,8 +142,8 @@
     "manifest.webmanifest": "7fc57ac8ce44ce64c86f1bba38731395930fcef8b641aac18131f9567e14172f",
     "src/README.md": "5220fb1f1f47d61735eb7864ecba0e860437c96610d02823a71a154577bc946b",
     "src/__init__.py": "79e2cf890e7ca34c897a0632bf6f2559612999c1faa4f32cf379cf86f764278f",
-    "src/app/application.js": "393fac755ae3084e8da97118296d9bd8f329b8b97b115cf2125a56e395ff004e",
-    "src/app/bootstrap.js": "908c65075ff2f35228e54ee43c7019eb6532f06dfdad5a95c3a4cca9a7534498",
+    "src/app/application.js": "b051b6b979ba7118a093b09a4243a5e2bb47b949aca91733b40ff893be297648",
+    "src/app/bootstrap.js": "b5077fa69040deb35e1b9f411e792b6e4649e545a520e8da73a1b184b9b174b4",
     "src/app/controllers/reading-controller.js": "99486a97fac4fed96ae33e89e9c68e40edd5d33e4a064334e9da79deb690e53d",
     "src/app/events.js": "3f6f221ae699fb32a7c604527d1527932d3da10d281025a59a606939e1bd2939",
     "src/app/runtime-services.js": "474ca5eb0b9f2eceb98c39953524f6deefd9652f5d1c81a896fcad653191fe35",
@@ -203,5 +203,5 @@
     "sw.js": "0032b0963cb1bf03d6355e763c5e0e01600c3b4fda48fff33b453793cbb3af99"
   },
   "schemaVersion": "1.0.0",
-  "sourceSetHash": "83d4127d2c4e181f3e845fdfe4734a5162c9f33445bbd6bb93af2554170d95d0"
+  "sourceSetHash": "6093751942beadf732f87c2c336d806a77695271a9f700499a513e66a8c5fb32"
 }

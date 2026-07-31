@@ -555,3 +555,8 @@ src/storage/legacy-record.js
 ## MOD-006C离线边界
 
 经典 `sw.js` 通过 `importScripts` 读取生成清单；导航、版本化运行资源和牌组图片分别使用network-first、release cache-first和按需cache-first。离线状态由 `src/platform/offline-status.js` 暴露，图片失败由 `src/ui/image-fallback.js` 提供可访问占位，不触发重抽。
+
+
+## MOD-006D终态门禁
+
+`automation/validate.py --scope full` 在baseline之外执行Phase M综合契约、真实浏览器harness和严格规模检查。浏览器harness使用测试专用回环端点，不扩大生产服务器白名单。

@@ -36,7 +36,7 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--scope",
-        choices=("baseline",),
+        choices=("baseline", "full"),
         default="baseline",
         help="Validation scope implemented by the current project phase.",
     )
@@ -245,6 +245,18 @@ def baseline_steps(node: str) -> list[tuple[str, list[str]]]:
     ]
 
 
+def full_steps(node: str) -> list[tuple[str, list[str]]]:
+    python = sys.executable
+    return [
+        ("phase-m-terminal-gate", [node, "tests/phase_m_gate_test.mjs"]),
+        ("browser-harness", [python, "tests/browser_harness.py"]),
+        (
+            "module-size-strict",
+            [python, "scripts/check_module_size.py", "--mode", "strict", "--format", "json"],
+        ),
+    ]
+
+
 def main() -> int:
     args = parse_args()
     node, checked_node_paths = find_node_executable()
@@ -262,7 +274,10 @@ def main() -> int:
 
     started_at = datetime.now(timezone.utc)
     results: list[StepResult] = []
-    for name, command in baseline_steps(node):
+    selected_steps = baseline_steps(node)
+    if args.scope == "full":
+        selected_steps.extend(full_steps(node))
+    for name, command in selected_steps:
         result = run_step(name, command, env)
         results.append(result)
         print_step(result)

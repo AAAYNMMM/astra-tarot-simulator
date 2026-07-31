@@ -26,6 +26,7 @@ export function startApplication({ windowRef = globalThis.window, documentRef = 
   const window = windowRef;
   const document = documentRef;
   assertKnowledgeCatalog(TarotData);
+  const { deck, categories, spreads } = TarotData;
   const {
     randomUnit, secureShuffle, registerServiceWorker, registerLocalLifecycle,
     loadSettings, saveSettings, loadHistory,
