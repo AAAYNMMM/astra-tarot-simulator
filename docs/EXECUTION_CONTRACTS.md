@@ -380,3 +380,19 @@ PO-002A single与timeline固定结构图
 - Card、Question、Position或固定图变化会使Phase 4报告失效并重跑。
 
 阶段出口：4图19节点21固定边合法；90题×19牌位及78牌×19牌位的正逆位场景Schema、确定性和真实引用通过率100%；同牌不同牌位路径差异通过率100%；当前commit取得CWapi full RESULT。
+
+## 19. Phase 5：Relation Graph
+
+固定顺序：
+
+```text
+MR-001固定结构边转Relation候选
+→ MR-002问题维度与牌位职责
+→ MR-003语义、状态、行动与逆位关系
+→ MR-004元素、数字、宫廷与阶段辅助关系
+→ MR-005Relation全量测试与终态门禁
+```
+
+`MR-001`只把Phase 4冻结的结构边映射为有限候选。每条结构边恰好对应一个候选；single为零；输出按图边顺序确定。候选不得提前确定最终Relation类型、强度或语义成立，也不得建立非结构边或凯尔特十字全量两两组合。
+
+Card、Question、Position、Observation或固定结构图变化会使Phase 5相关验证失效并重跑。

@@ -1,6 +1,6 @@
 {
   "appVersion": "2.0.0-dev",
-  "engineManifestHash": "9d4f4fdb7ac103400b27e5c0bba7a33a21b451eaa1586690ad7bdfdf2bfc5f66",
+  "engineManifestHash": "e305f09118016fe478cfd2d06dab7b5b8a4e1edb1400d010016419a46ca15558",
   "generatorHash": "efeb76569667843ead911adb0e64c4608c5779d779c74e5c9f3a964861b3e8f8",
   "generatorVersion": "1.0.0",
   "knowledgeManifestHash": "bd93f68c374515c5b7a15475ed2e89970f8b3500571d29994412ccfd29fe3d06",
@@ -233,6 +233,7 @@
     "src/engine/observations/observation-engine.js": "3d6d4f1a3d42280d579f1b485e4e7eac3b401e9cfb547f874dfab6c82a2b6e8e",
     "src/engine/observations/semantic-selector.js": "0ae48fec20b06d52bb3c94197cc96b66ffac11ebf605be5e10b52a50a15dea42",
     "src/engine/observations/spread-graphs.js": "6b83b17ad16ffd62e4729b232e0559f459c0925fea8c7031f934ee0bf3c0a444",
+    "src/engine/relations/structural-relation-candidates.js": "0959f95711a0e0ad63db10f24900d56aa4dce95cd886991420032b690b9034c7",
     "src/engine/validation/card-profile-validator.js": "fdc881c76f43e9538cb19fb999b392f3aa6ba128d8d4360bc22511911a507770",
     "src/engine/validation/card-quality-gate.js": "64ef43c1f06df10782bad17320e11af8ce0123097164afe194c119e00db4508f",
     "src/engine/validation/observation-validator.js": "ea679d06ad5b044628340c79226242e4106b756e42330a31451e9f5a2ac5b5e4",
@@ -479,5 +480,5 @@
     "sw.js": "0032b0963cb1bf03d6355e763c5e0e01600c3b4fda48fff33b453793cbb3af99"
   },
   "schemaVersion": "1.0.0",
-  "sourceSetHash": "1efff5adcd7e4254977ebd4b89bd1dd8f51dd8ff2126a57630de4c96c61bae39"
+  "sourceSetHash": "38bf87f4de931e9b6daa89a7d34a1a8975fdf78a7e3183a195c5b06c1595f0a3"
 }

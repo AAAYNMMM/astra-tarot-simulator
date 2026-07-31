@@ -27,7 +27,6 @@ assert.deepEqual(report.graphFailures, []);
 assert.deepEqual(report.validationFailures, []);
 assert.deepEqual(report.differentiationFailures, []);
 assert.match(progress, /Phase 4状态 \| `PARENT-DONE`/);
-assert.match(progress, /唯一下一任务 \| `MR-001`/);
 for (let version = 1; version <= 8; version += 1) {
   const suffix = version === 1 ? "" : `_v${version}`;
   assert.equal(fs.existsSync(path.join(root, `automation/phase_4_apply${suffix}.py`)), false);
