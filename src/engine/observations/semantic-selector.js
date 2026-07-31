@@ -1,6 +1,7 @@
 import {
   dimensionMatchesFacet,
   facetPriorityFor,
+  mediatedResponsibility,
   responsibilitiesFor,
 } from "./dimension-facet-map.js";
 
@@ -37,7 +38,11 @@ export function rankSemanticCandidates({ card, question, operator, orientation, 
     if (!operator.selectableFacets.includes(facet)) continue;
     const facetIndex = facetPriority.indexOf(facet);
     for (const unit of units) {
-      const matches = responsibilities.filter((dimension) => dimensionMatchesFacet(dimension, facet));
+      const directMatches = responsibilities.filter((dimension) => dimensionMatchesFacet(dimension, facet));
+      const matchMode = directMatches.length ? "direct" : "position-mediated";
+      const matches = directMatches.length
+        ? directMatches
+        : [mediatedResponsibility(responsibilities, operator)].filter(Boolean);
       const domainMatched = domainRefs.has(unit.id);
       const reversalMatched = reversalRefs.has(unit.id);
       const roleMatched = (unit.allowedRoles || []).includes(facet);
@@ -45,7 +50,8 @@ export function rankSemanticCandidates({ card, question, operator, orientation, 
       const semanticUnitStrength = semanticStrength(unit.id);
       const selectionScore = Number((
         Math.max(0.2, 1 - Math.max(0, facetIndex) * 0.08)
-        + matches.length * 0.18
+        + directMatches.length * 0.18
+        + (matchMode === "position-mediated" ? 0.04 : 0)
         + (domainMatched ? 0.12 : 0)
         + (reversalMatched ? 0.16 : 0)
         + (roleMatched ? 0.08 : 0)
@@ -56,6 +62,7 @@ export function rankSemanticCandidates({ card, question, operator, orientation, 
         reference: unit.id,
         facet,
         unit,
+        dimensionMatchMode: matchMode,
         matchedDimensions: Object.freeze(matches),
         domainMatched,
         reversalMatched,
