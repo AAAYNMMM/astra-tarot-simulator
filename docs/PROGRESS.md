@@ -8,57 +8,34 @@
 | 项目 | 当前值 |
 |---|---|
 | 当前阶段 | Phase M：模块化基础 |
-| 当前进行中任务 | `MOD-001` 模块边界、数据边界与基线验证 |
-| 任务状态 | `BLOCKED` |
-| 下一任务 | 暂不选择；`MOD-001` 取得匹配 CWapi RESULT 后更新为 `MOD-002` |
-| 最近完成任务 | `DOC-010` 唯一执行契约与连续审查收口 |
-| 阻塞项 | CWapi 本机配置尚未允许 `AAAYNMMM/astra-tarot-simulator` |
+| 当前进行中任务 | 无 |
+| 最近完成任务 | `MOD-001` 模块边界、数据边界与基线验证 |
+| 下一任务 | `MOD-002` 拆分 CSS |
+| 阻塞项 | 无 |
+| 工作分支 | `mod-001-baseline-contracts` |
 | 最后更新时间 | 2026-07-31 |
 | 规划状态 | 已冻结且执行审查已收敛；不得继续用非阻断性规划推迟开发 |
 
-## 2. 当前活动任务
+## 2. 最近完成：MOD-001
 
-| 字段 | 当前值 |
-|---|---|
-| 任务 ID | `MOD-001` |
-| 状态 | `BLOCKED` |
-| 规范来源 | `AGENTS.md`、`DECISIONS.md`、`EXECUTION_CONTRACTS.md`、`MODULARIZATION_PLAN.md`、`DATA_ARCHITECTURE.md`、`ENGINEERING_GUARDS.md` |
-| 工作分支 | `mod-001-baseline-contracts` |
-| 起始完整 commit | `9b99b0337d93ea39f31417c56d6b75256df48533` |
-| 实现产物 commit | `deb1bda56cef85e113716f61019e0329c56bf625` |
-| 后续验证 commit | 解锁后必须读取并绑定当前分支完整 HEAD，不得复用旧 commit |
-| CWapi task_id | `01KYG9MODH01` |
-| CWapi RESULT | `REJECTED` |
-| CWapi scope | 只读哈希收集，尚未进入 `baseline` 执行 |
-| 受影响父任务 | Phase M |
-| 父任务派生状态 | `PARENT-BLOCKED` |
-| 开始时间 | 2026-07-31 08:57 +08:00 |
-| 最后更新时间 | 2026-07-31 09:31 +08:00 |
+**状态：DONE**
 
-### 已完成验收项
+### 任务范围
 
-- [x] 读取唯一执行契约和当前任务规范。
-- [x] 建立独立工作分支。
-- [x] 确认任务不改变运行行为、公开 ID、牌义、问题库或抽牌概率。
-- [x] 建立模块规模检查和已知技术债基线。
-- [x] 建立依赖方向与循环依赖检查。
-- [x] 建立 Node ESM 模块契约测试。
-- [x] 建立 `automation/validate.py --scope baseline`。
-- [x] 完成 `MODULE_MAP.md`、`src/README.md` 和数据、DOM、CSP、PWA、Node、随机及人工流程基线。
-- [x] 审查分支 diff，确认仅修改文档、测试和验证工具。
-- [x] 创建绑定实现 commit 的 CWapi 只读任务并保存终态拒绝证据。
+`MOD-001` 只建立模块边界、技术债基线、契约测试和统一验证入口，没有改变运行行为、四种牌阵、公开 ID、牌义、问题库、抽牌概率或旧历史读取方式。
 
-### 剩余验收项
+### 产物
 
-- [ ] 在 CWapi 本机配置中登记项目路径、remote 和允许仓库。
-- [ ] 重启或重新加载 CWapi Runner 配置。
-- [ ] 为当前分支 HEAD 创建新的 task_id，先收集 `automation/validate.py` 的 SHA-256。
-- [ ] 使用准确 SHA-256 创建正式 `repository_automation` baseline TASK。
-- [ ] 核对 Python、Node、规模、技术债、依赖边界、commit 和工作区证据。
-- [ ] 若验证失败，修复后使用新 commit 和新 task_id 重跑。
-- [ ] 取得匹配终态 RESULT 后把任务标记 `DONE`，父任务恢复 `PARENT-IN-PROGRESS`，唯一 `NEXT` 更新为 `MOD-002`。
+- `docs/MODULE_MAP.md`
+- `scripts/check_module_size.py`
+- `scripts/check_import_boundaries.py`
+- `tests/module_contract_test.mjs`
+- `automation/validate.py`
+- `automation/README.md`
+- `automation/quality-baseline.json`
+- `src/README.md`
 
-### 本轮修改文件
+### 修改文件
 
 - `automation/README.md`
 - `automation/quality-baseline.json`
@@ -70,53 +47,91 @@
 - `src/README.md`
 - `tests/module_contract_test.mjs`
 
+未修改：
+
+- `app.js`
+- `data.js`
+- `styles.css`
+- `index.html`
+- `sw.js`
+- `run.py`
+
+### 验收结果
+
+- [x] 三个现有大型文件按已知技术债规则报告 `WARN`，没有增长。
+- [x] 新人工文件超限、旧债增长、未登记越界和已解决债务重现会返回 `FAIL`。
+- [x] 旧职责拥有唯一目标模块和迁移任务。
+- [x] 依赖方向、裸导入、越界导入和循环依赖可机器检查。
+- [x] 静态知识、运行状态、用户数据、人工源和生成文件边界已记录。
+- [x] 78 张牌、42 个问题、六个领域和四种固定牌阵契约已冻结。
+- [x] `localStorage` 设置键、历史键、历史字段和迁移输入已记录。
+- [x] DOM/CSP、Service Worker、Node 格式、业务随机和平台随机基线已记录。
+- [x] `automation/validate.py --scope baseline` 可由 CWapi 对固定 commit 执行。
+- [x] 没有运行行为变化。
+
+## 3. CWapi 验证记录
+
+### 已通过的实现提交
+
+| 项目 | 值 |
+|---|---|
+| commit | `280b63b50044a8f4d153e0ba162fc66c4b772bbe` |
+| task_id | `01KYG9MODB03` |
+| RESULT | `COMPLETED` |
+| scope | `baseline` |
+| Runner | `cwapi-win-01` |
+| Python | `3.12.2` |
+| Node | `24.18.0`，WinGet 当前用户安装 |
+| 工作区 | 执行前后均干净 |
+| RESULT manifest SHA-256 | `f59e0f4ed2ed4eda04046262efab940064a2b77303ba978f933ffeebac6525dc` |
+| Drive 相对路径 | `CWapi/AAAYNMMM__astra-tarot-simulator/01KYG9MODB03` |
+
 ### 自动测试摘要
 
-- 正式 CWapi baseline 尚未执行。
-- task `01KYG9MODH01` 在执行前被 Runner 拒绝，未运行任何仓库命令。
-- 不得把静态审查或连接器可读性检查表述为本地测试通过。
+| 检查 | 结果 |
+|---|---|
+| Python unittest | `13 passed` |
+| 旧 Node 数据 smoke test | `PASS` |
+| Node ESM 模块契约测试 | `PASS` |
+| 模块规模和技术债 | `PASS`，3 个预期 `WARN` |
+| 导入边界和循环依赖 | `PASS` |
+| Python compileall | `PASS` |
+| 关键产物哈希收集 | 8 个文件，0 skipped |
 
-### 人工检查摘要
+### 关键产物 SHA-256
 
-- 变更只包含 MOD-001 的文档、测试和验证入口，没有修改 `app.js`、`data.js`、`styles.css`、`index.html`、`sw.js` 或 `run.py`。
-- 当前公开 ID、四牌阵、旧存储键、脚本入口、Service Worker 行为和随机降级均由模块契约测试冻结。
-- `MODULE_MAP.md` 已记录唯一迁移目标、旧历史输入、DOM/CSP风险、PWA缓存、Node格式、业务随机与平台随机边界。
+| 文件 | SHA-256 |
+|---|---|
+| `automation/README.md` | `56177c653cd0cacc4742740bb8dacbff1e6266816d32591ccbcaf66781036c25` |
+| `automation/quality-baseline.json` | `a5a9340cdc384c6069bb15cb872fb3584435a5dbbfe6d91116d6c422f8e93bc6` |
+| `automation/validate.py` | `229768a22fd665daac5b60205a22cee200923da787ed90841513222e2d5d2b5a` |
+| `docs/MODULE_MAP.md` | `0593892b3613ed0e91ae48e08d0dd9c80f9e25ea92c700a5861b2ed43e63e0c6` |
+| `scripts/check_import_boundaries.py` | `6aa5b3550a7c9db6abfaa3861691bbfa5b83624e89979fe2ca44de09e0b75a29` |
+| `scripts/check_module_size.py` | `c820814a16746f30ccdd1bc9f9ea0050ef49688cd33b1197f15867d9b0d709ce` |
+| `src/README.md` | `8a721c07536ccf5320adfa59c2277d85440312f1310534d19afb704a74badec9` |
+| `tests/module_contract_test.mjs` | `634f4a6ccca61f03bde0598848609517fd527ba675a9b7a96e9d16a8acd7e924` |
 
-### 关键产物与证据
+### 闭环复验
 
-- 实现产物 commit：`deb1bda56cef85e113716f61019e0329c56bf625`
-- 拒绝 task_id：`01KYG9MODH01`
-- 拒绝原因：`不允许的仓库：AAAYNMMM/astra-tarot-simulator`
-- 验证脚本 SHA-256：尚未取得；Git blob SHA 不得冒充 SHA-256。
+本文件所在最终进度 commit 由 CWapi task `01KYG9MODB04` 使用相同 `baseline` 范围复验。该任务必须匹配本文件所在 commit，且执行后不得再修改 MOD-001 产物或本文件；否则旧 RESULT 失效。
 
-### 阻塞原因
+### 失败与恢复记录
 
-CWapi 本机 `config/cwapi.yaml` 的 `projects` 与 `security.allowed_repositories` 尚未登记 `AAAYNMMM/astra-tarot-simulator`。Runner 因协议白名单在执行前拒绝任务，仓库代码本身尚未进入验证。
-
-### 下一具体动作
-
-在 CWapi 本机配置中增加该仓库的真实本地路径和 remote，并把仓库名加入 `security.allowed_repositories`；重新加载 Runner 后，为当前分支 HEAD 使用新 task_id 创建只读哈希任务。
-
-## 3. MOD-001 产物
-
-- `docs/MODULE_MAP.md`
-- `scripts/check_module_size.py`
-- `scripts/check_import_boundaries.py`
-- `tests/module_contract_test.mjs`
-- `automation/validate.py`
-- `automation/README.md`
-- `automation/quality-baseline.json`
-- `src/README.md`
+- `01KYG9MODH01`：Runner 白名单尚未登记仓库，`REJECTED`，未执行仓库命令。
+- `01KYG9MODB01`：CWapi 隔离 PATH 中找不到 Node，`FAILED`。
+- `01KYG9MODB02`：常见安装位置无 Node，`FAILED`。
+- `01KYG9MODN02`：WinGet 已成功安装 Node 24.18.0，但同一旧进程未刷新命令别名；安装后验证脚本增加 WinGet Links/Packages 发现逻辑。
+- `01KYG9MODB03`：正式 baseline 全部通过。
 
 ## 4. 已知技术债
 
-| 文件 | 当前行数 | 本任务结果 | 最迟清除 |
+| 文件 | 冻结行数 | 当前判定 | 最迟清除 |
 |---|---:|---|---|
-| `app.js` | 1528 | WARN，不得增长 | `MOD-006A` |
-| `styles.css` | 4918 | WARN，不得增长 | `MOD-002` |
-| `data.js` | 637 | WARN，不得增长 | `MOD-006A` |
+| `app.js` | 1528 | `WARN`，不得增长 | `MOD-006A` |
+| `styles.css` | 4918 | `WARN`，不得增长 | `MOD-002` |
+| `data.js` | 637 | `WARN`，不得增长 | `MOD-006A` |
 
-旧债增长、新人工超限、未登记越界和已清除债务重现必须 FAIL；Phase M full 时清零。
+旧债增长、新人工超限、未登记越界和已清除债务重现必须 `FAIL`；`MOD-006D` 时人工文件超限清零。
 
 ## 5. 当前代码与平台基线
 
@@ -138,10 +153,25 @@ CWapi 本机 `config/cwapi.yaml` 的 `projects` 与 `security.allowed_repositori
 | 浏览器自动化 | 尚无仓库 harness | `MOD-006D` 逐步建立 |
 | GitHub Actions | 不使用 | CWapi 本地验证 |
 
-## 6. 阶段状态
+## 6. 下一任务：MOD-002
+
+**状态：NEXT**
+
+目标：把活动样式从根目录 `styles.css` 渐进迁入 `src/styles/`，真实页面立即使用拆出的文件，保持现有视觉、动画、响应式和可访问行为。
+
+主要约束：
+
+- 不改变产品视觉设计或交互流程。
+- 不一次性重写全部 CSS。
+- 每个新增活动样式文件立即加入当前页面和临时 Service Worker 资源列表。
+- `styles.css` 不得增长，任务结束时旧超限技术债必须清除。
+- 人工 CSS 文件不得超过 900 行。
+- 继续使用 CWapi 固定 commit 验证，不使用 GitHub Actions。
+
+## 7. 阶段状态
 
 - Phase 0：`DONE`
-- Phase M：`PARENT-BLOCKED`，当前叶子任务 `MOD-001`
+- Phase M：`PARENT-IN-PROGRESS`，下一叶子任务 `MOD-002`
 - Phase 1：`BLOCKED`，等待 `MOD-006D`
 - Phase 2、3、7、8、9：`PARENT-PENDING`
 - Phase 4、5、6：`BACKLOG`
