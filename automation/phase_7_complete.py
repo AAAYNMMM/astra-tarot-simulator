@@ -10,7 +10,7 @@ import zlib
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-PARTS = [ROOT / "automation" / f"phase_7_payload_{index:02d}.txt" for index in range(12)]
+PAYLOAD_PATH = ROOT / "automation" / "phase_7_payload.txt"
 COMPRESSED_SHA256 = "548b3c0949e32cc8e07e594e164c55f1097ef675eb585265813263957814ba4a"
 PAYLOAD_SHA256 = "c03412f956d9ace3e61dbc87db6b949a35780fef151ec0a978dba75784df5b89"
 CONTRACT_APPEND = '\n### Phase 7终态要求\n\n`AU-001B`至`AU-003C`必须作为同一阶段连续收口：\n\n- 生产抽牌、正逆位和渲染从同一版本化根种子派生独立流；消费任一流不得改变其他流。\n- Reading保存根种子、算法、版本、熵来源和派生流信息，相同输入必须可重放。\n- ReadingRecord 2.0保存抽牌、结构化证据槽位和本次artifact消费指纹，不写最终Git commit。\n- IndexedDB包含readings与meta存储；旧localStorage迁移幂等，失败不删除旧数据或写完成标记。\n- 导出包必须带稳定校验和；导入在写入前完成Schema、重复ID、校验和和冲突策略验证。\n- 容量与配额达到阈值时给出可执行提醒；IndexedDB或配额失败时保留内存待导出副本，不静默截断或删除记录。\n- 阶段出口：生产随机可重放、结构化历史可保存、迁移幂等、导入导出可验证、容量降级无静默丢失；当前commit取得CWapi full RESULT。\n'
@@ -32,7 +32,7 @@ def replace_once(relative: str, old: str, new: str) -> None:
     write_lf(path, content.replace(old, new, 1))
 
 
-encoded = "".join(path.read_text(encoding="ascii").strip() for path in PARTS)
+encoded = PAYLOAD_PATH.read_text(encoding="ascii").strip()
 compressed = base64.b64decode(encoded, validate=True)
 if hashlib.sha256(compressed).hexdigest() != COMPRESSED_SHA256:
     raise RuntimeError("Phase 7 compressed payload fingerprint mismatch.")
