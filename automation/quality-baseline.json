@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "task": "MOD-005",
+  "task": "MOD-006A",
   "manualFileLimits": {
     "javascript": 600,
     "css": 900,
@@ -21,26 +21,7 @@
       "src/generated"
     ]
   },
-  "knownDebt": [
-    {
-      "path": "app.js",
-      "kind": "javascript",
-      "baselineLines": 630,
-      "hardLimit": 600,
-      "statusAtOrBelowBaseline": "WARN",
-      "mustNotGrow": true,
-      "expiresAfterTask": "MOD-006A"
-    },
-    {
-      "path": "data.js",
-      "kind": "javascript",
-      "baselineLines": 637,
-      "hardLimit": 600,
-      "statusAtOrBelowBaseline": "WARN",
-      "mustNotGrow": true,
-      "expiresAfterTask": "MOD-006A"
-    }
-  ],
+  "knownDebt": [],
   "policy": {
     "knownDebtAtOrBelowBaseline": "WARN",
     "knownDebtGrowth": "FAIL",
@@ -50,6 +31,24 @@
     "fullScopeRequiresNoOverLimitManualFiles": true
   },
   "resolvedDebt": [
+    {
+      "path": "app.js",
+      "kind": "javascript",
+      "resolvedByTask": "MOD-006A",
+      "replacement": "src/app/application.js"
+    },
+    {
+      "path": "data.js",
+      "kind": "javascript",
+      "resolvedByTask": "MOD-006A",
+      "replacement": "src/knowledge/legacy/index.js"
+    },
+    {
+      "path": "src/app/legacy-runtime.js",
+      "kind": "javascript",
+      "resolvedByTask": "MOD-006A",
+      "replacement": "src/app/application.js"
+    },
     {
       "path": "styles.css",
       "kind": "css",

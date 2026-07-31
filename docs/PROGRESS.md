@@ -8,7 +8,7 @@
 | 项目 | 当前值 |
 |---|---|
 | 当前阶段 | Phase M：模块化基础 |
-| 当前进行中任务 | `MOD-005` 人工知识源与旧版解读 |
+| 当前进行中任务 | `MOD-006A` 删除兼容桥、旧全局和旧大型文件 |
 | 最近完成任务 | `MOD-003B` 基础模块与随机边界 |
 | 下一任务 | 无；Phase M连续执行中 |
 | 阻塞项 | 无 |
@@ -161,3 +161,6 @@ tests/foundation_contract_test.mjs
 
 - `MOD-004B`：`DONE`，产物提交 `e1b2c8e73ad9c4e40cb5264aade7f60fe86618a9`，测试发现修复 `b31c2af465eb68466929d1c40938c409b60937d8`。
 - `MOD-005`：`IN_PROGRESS`。
+
+- `MOD-005`：`DONE`，产物提交 `b03ca2602a36c4f96f2f2cf3c54d085db729116f`，固定复验 `01KYG9PHM5B2` COMPLETED。
+- `MOD-006A`：`IN_PROGRESS`。

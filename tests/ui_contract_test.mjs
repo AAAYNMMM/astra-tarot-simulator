@@ -64,7 +64,7 @@ for (const relative of [
   assert.equal(source.includes("insertAdjacentHTML"), false, `${relative} must not append untrusted HTML`);
 }
 
-const appSource = fs.readFileSync(path.join(root, "app.js"), "utf8");
+const appSource = fs.readFileSync(path.join(root, "src/app/application.js"), "utf8");
 for (const removed of [
   "const state = {",
   "function currentCategory()",

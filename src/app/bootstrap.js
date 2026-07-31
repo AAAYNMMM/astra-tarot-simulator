@@ -1,4 +1,4 @@
-import { startLegacyRuntime } from "./legacy-runtime.js";
+import { startApplication } from "./application.js";
 
 export async function bootstrapBrowser(globalScope = globalThis) {
   const documentRef = globalScope.document;
@@ -6,8 +6,7 @@ export async function bootstrapBrowser(globalScope = globalThis) {
   if (!documentRef || !windowRef) {
     return Object.freeze({ started: false, reason: "browser-globals-unavailable" });
   }
-  await startLegacyRuntime({ documentRef, windowRef });
-  return Object.freeze({ started: true });
+  return startApplication({ documentRef, windowRef });
 }
 
 function reportBootFailure(error) {

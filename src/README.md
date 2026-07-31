@@ -149,3 +149,8 @@ src/app/
 ## MOD-005人工知识源
 
 `src/knowledge/legacy/` 是Phase M期间的人工主来源，`metadata.js` 明确标记其过渡性质；`src/engine/legacy/` 保留旧解读兼容算法，均可在Node中直接导入。
+
+
+## MOD-006A入口收口
+
+`src/app/application.js` 是唯一应用组合模块，`src/app/bootstrap.js` 是唯一页面入口；根目录不再存在业务JavaScript单体或旧全局桥。

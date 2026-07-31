@@ -538,3 +538,10 @@ src/storage/legacy-record.js
 ## MOD-005知识与旧引擎边界
 
 78张牌、42个问题和4个牌阵的人工源迁入 `src/knowledge/legacy/` 与 `src/knowledge/spreads/`；根 `data.js` 仅作为临时兼容快照，不再由页面或Service Worker加载。旧单牌解释和综合推理迁入 `src/engine/legacy/`，页面结果与公开ID保持不变。
+
+
+## MOD-006A直接ESM运行时
+
+根 `app.js`、`data.js` 与 `src/app/legacy-runtime.js` 已删除。`src/app/application.js` 直接导入配置、知识、引擎、存储、平台与UI模块；`bootstrap.js` 不再创建或读取 `window.TarotData`、`window.AstraRuntime`。
+
+`src/app/runtime-services.js` 负责把浏览器随机、生命周期、PWA与旧本地存储工厂适配为应用组合层使用的稳定接口。

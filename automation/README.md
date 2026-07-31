@@ -17,7 +17,8 @@ python automation/validate.py --scope baseline
 3. `node tests/foundation_contract_test.mjs`
 4. `node tests/ui_contract_test.mjs`
 5. `node tests/knowledge_contract_test.mjs`
-6. `node tests/module_contract_test.mjs`
+6. `node tests/application_contract_test.mjs`
+7. `node tests/module_contract_test.mjs`
 5. `python scripts/check_module_size.py --mode baseline --format json`
 6. `python scripts/check_import_boundaries.py --format json`
 
