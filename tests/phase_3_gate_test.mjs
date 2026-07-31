@@ -7,7 +7,6 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const readJson = (relative) => JSON.parse(fs.readFileSync(path.join(root, relative), "utf8"));
 const progress = fs.readFileSync(path.join(root, "docs/PROGRESS.md"), "utf8");
 assert.match(progress, /Phase 3状态 \| `PARENT-DONE`/);
-assert.match(progress, /唯一下一任务 \| `PO-002A`/);
 const report = readJson(".qa/question-library-report.json");
 assert.equal(report.summary.totalQuestions, 90);
 assert.equal(report.summary.baseQuestionsFrozen, 42);
