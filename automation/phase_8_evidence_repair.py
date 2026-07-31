@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Track Phase 8 aggregate evidence so a fresh worktree can run the terminal gate."""
+"""Track Phase 8 development and aggregate evidence for clean-worktree validation."""
 
 from pathlib import Path
 
@@ -16,6 +16,8 @@ def write_lf(path: Path, content: str) -> None:
 gitignore_path = ROOT / ".gitignore"
 gitignore = gitignore_path.read_text(encoding="utf-8")
 for exception in [
+    "!.qa/evaluation/multi-card-corpus.json",
+    "!.qa/evaluation/human-review-packet.json",
     "!.qa/evaluation/phase-8-evaluation-report.json",
     "!.qa/evaluation/blind-result.json",
 ]:
@@ -32,4 +34,4 @@ for relative in ["docs/PROGRESS.md", "docs/PHASE_8_QUALITY_UI.md"]:
         raise RuntimeError(f"Final validation task marker missing in {relative}.")
     write_lf(path, content)
 
-print("Phase 8 aggregate evidence tracking and final validation metadata repaired.")
+print("Phase 8 development and aggregate evidence tracking repaired.")
