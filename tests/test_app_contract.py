@@ -48,6 +48,7 @@ class TarotAppContractTests(unittest.TestCase):
             "sw.js",
             "icon.svg",
             "package.json",
+            "package.json",
         }
         self.assertTrue(required.issubset({path.name for path in ROOT.iterdir()}))
         for relative_path in STYLE_FILES:
@@ -88,6 +89,34 @@ class TarotAppContractTests(unittest.TestCase):
         self.assertNotIn('id="soundButton"', html)
         self.assertNotIn('id="copyButton"', html)
         self.assertNotIn('id="saveButton"', html)
+
+    def test_mod_004a_uses_active_ui_modules_and_safe_history_dom(self) -> None:
+        app_source = (ROOT / "app.js").read_text(encoding="utf-8")
+        runtime_source = (ROOT / "src/app/legacy-runtime.js").read_text(encoding="utf-8")
+        history_source = (ROOT / "src/ui/renderers/history.js").read_text(encoding="utf-8")
+        toast_source = (ROOT / "src/ui/components/toast.js").read_text(encoding="utf-8")
+        for relative_path in (
+            "src/app/events.js",
+            "src/app/controllers/reading-controller.js",
+            "src/app/selectors/current-selection.js",
+            "src/app/state/reading-state.js",
+            "src/ui/animations/reading.js",
+            "src/ui/components/toast.js",
+            "src/ui/dom.js",
+            "src/ui/safe-dom.js",
+            "src/ui/renderers/history.js",
+            "src/ui/renderers/setup.js",
+            "tests/ui_contract_test.mjs",
+        ):
+            self.assertTrue((ROOT / relative_path).is_file(), relative_path)
+            if relative_path.startswith("src/"):
+                self.assertIn(relative_path, (ROOT / "sw.js").read_text(encoding="utf-8"))
+        self.assertIn("createHistoryRenderer", runtime_source)
+        self.assertIn("createEventBinder", runtime_source)
+        self.assertNotIn("function renderHistory()", app_source)
+        self.assertNotIn("function bindEvents()", app_source)
+        self.assertNotIn("innerHTML", history_source)
+        self.assertNotIn("innerHTML", toast_source)
 
     def test_four_complete_local_tarot_decks_are_bundled(self) -> None:
         ranks = (
@@ -158,7 +187,8 @@ class TarotAppContractTests(unittest.TestCase):
         self.assertNotIn("zoom: 1.1", styles)
         self.assertIn("zoom: 1.5", styles)
         self.assertIn('data-spread-id="cross"', styles)
-        self.assertIn('<span>展开查看</span>', app_source)
+        history_source = (ROOT / "src/ui/renderers/history.js").read_text(encoding="utf-8")
+        self.assertIn('text: "展开查看"', history_source)
         self.assertNotIn('<b aria-hidden="true">⌄</b>', app_source)
         self.assertNotIn(".history-view-button b", styles)
 

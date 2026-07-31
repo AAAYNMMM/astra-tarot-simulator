@@ -1,3 +1,12 @@
+import { createEventBinder } from "./events.js";
+import { createReadingFactory } from "./controllers/reading-controller.js";
+import { createSelectionSelectors } from "./selectors/current-selection.js";
+import { createReadingState, resetReadingState } from "./state/reading-state.js";
+import { createReadingAnimation } from "../ui/animations/reading.js";
+import { createToast } from "../ui/components/toast.js";
+import { bindDom } from "../ui/dom.js";
+import { createHistoryRenderer } from "../ui/renderers/history.js";
+import { createSetupRenderer } from "../ui/renderers/setup.js";
 import { DECK_STYLES, LEGACY_DECK_IDS, resolveDeckStyle } from "../config/decks.js";
 import { escapeHtml } from "../core/html.js";
 import { createBusinessRandom } from "../core/random/business-random.js";
@@ -53,6 +62,20 @@ export function createLegacyRuntimeBindings(windowRef = globalThis.window) {
   const lifecycle = createLifecycleClient({ windowRef });
 
   return Object.freeze({
+    app: Object.freeze({
+      createReadingState,
+      resetReadingState,
+      createSelectionSelectors,
+      createReadingFactory,
+      createEventBinder,
+    }),
+    ui: Object.freeze({
+      bindDom,
+      createSetupRenderer,
+      createReadingAnimation,
+      createToast,
+      createHistoryRenderer,
+    }),
     config: Object.freeze({ DECK_STYLES, LEGACY_DECK_IDS }),
     core: Object.freeze({
       escapeHtml,

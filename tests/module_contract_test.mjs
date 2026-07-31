@@ -25,6 +25,17 @@ const requiredFiles = [
   "automation/README.md",
   "automation/quality-baseline.json",
   "src/README.md",
+  "src/app/events.js",
+  "src/app/controllers/reading-controller.js",
+  "src/app/selectors/current-selection.js",
+  "src/app/state/reading-state.js",
+  "src/ui/animations/reading.js",
+  "src/ui/components/toast.js",
+  "src/ui/dom.js",
+  "src/ui/safe-dom.js",
+  "src/ui/renderers/history.js",
+  "src/ui/renderers/setup.js",
+  "tests/ui_contract_test.mjs",
   "package.json",
   "src/app/bootstrap.js",
   "src/app/legacy-runtime.js",
@@ -214,7 +225,7 @@ for (const relativePath of cssImports) {
 
 const serviceWorkerSource = read("sw.js");
 assert.match(serviceWorkerSource, /cache\.addAll\(CORE_FILES\)/, "Current precache baseline changed");
-assert.match(serviceWorkerSource, /astra-tarot-v8/, "MOD-003B must bump the cache version");
+assert.match(serviceWorkerSource, /astra-tarot-v9/, "MOD-003B must bump the cache version");
 for (const relativePath of [
   "src/styles/index.css",
   ...cssImports,
@@ -231,6 +242,16 @@ for (const relativePath of [
   "src/storage/settings.js",
   "src/storage/legacy-history.js",
   "src/storage/legacy-record.js",
+  "src/app/events.js",
+  "src/app/controllers/reading-controller.js",
+  "src/app/selectors/current-selection.js",
+  "src/app/state/reading-state.js",
+  "src/ui/animations/reading.js",
+  "src/ui/components/toast.js",
+  "src/ui/dom.js",
+  "src/ui/safe-dom.js",
+  "src/ui/renderers/history.js",
+  "src/ui/renderers/setup.js",
   "data.js",
   "app.js",
 ]) {
@@ -250,7 +271,7 @@ assert.equal(qualityBaseline.schemaVersion, 1);
 assert.deepEqual(
   qualityBaseline.knownDebt.map((item) => [item.path, item.baselineLines, item.expiresAfterTask]),
   [
-    ["app.js", 1353, "MOD-006A"],
+    ["app.js", 921, "MOD-006A"],
     ["data.js", 637, "MOD-006A"],
   ],
 );
@@ -276,5 +297,5 @@ for (const requiredText of [
 }
 
 console.log(
-  "MOD-003B module contract passed: foundation modules are wired through the controlled bridge while public IDs, CSS, and PWA resources remain stable.",
+  "MOD-004A module contract passed: foundation modules are wired through the controlled bridge while public IDs, CSS, and PWA resources remain stable.",
 );

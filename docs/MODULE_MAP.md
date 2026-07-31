@@ -523,3 +523,8 @@ src/storage/legacy-record.js
 - 业务随机与平台安全熵分开；仅业务随机允许显式普通随机回退。
 - 平台安全熵不可用时，本地生命周期客户端禁用，不使用弱随机伪装安全ID。
 - 旧 `window.TarotData` 和 `window.AstraRuntime` 只属于Phase M兼容层，删除任务为 `MOD-006A`。
+
+
+## MOD-004A活动边界
+
+页面状态、选择器、读牌创建、设置页渲染、洗牌动画、事件绑定、提示消息和历史记录渲染已迁入 `src/app/` 与 `src/ui/`。历史和提示不再使用 `innerHTML`，恶意持久化字段通过DOM节点与 `textContent` 输出。

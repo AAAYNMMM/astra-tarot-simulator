@@ -22,6 +22,10 @@ const {
     readingRecord,
   },
 } = runtime;
+const {
+  app: { createReadingState, resetReadingState, createSelectionSelectors, createReadingFactory, createEventBinder },
+  ui: { bindDom, createSetupRenderer, createReadingAnimation, createToast, createHistoryRenderer },
+} = runtime;
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 const storedSettings = loadSettings();
 const storedDeckStyle = LEGACY_DECK_IDS[storedSettings.deckStyle] || storedSettings.deckStyle;
@@ -29,237 +33,47 @@ const initialDeckStyle = DECK_STYLES.some((style) => style.id === storedDeckStyl
   ? storedDeckStyle
   : "rws";
 
-const byId = (id) => document.getElementById(id);
-  const dom = {
-    brandHome: byId("brandHome"),
-    categoryGrid: byId("categoryGrid"),
-    categoryTagline: byId("categoryTagline"),
-    questionPickerButton: byId("questionPickerButton"),
-    selectedQuestionLabel: byId("selectedQuestionLabel"),
-    selectedQuestionText: byId("selectedQuestionText"),
-    questionList: byId("questionList"),
-    questionDialog: byId("questionDialog"),
-    questionDialogHint: byId("questionDialogHint"),
-    spreadList: byId("spreadList"),
-    deckStyleList: byId("deckStyleList"),
-    startReading: byId("startReading"),
-    readingPanel: document.querySelector(".reading-panel"),
-    readingKicker: byId("readingKicker"),
-    readingTitle: byId("readingTitle"),
-    readingMeta: byId("readingMeta"),
-    metaCategory: byId("metaCategory"),
-    metaSpread: byId("metaSpread"),
-    readingStage: byId("readingStage"),
-    idleState: byId("idleState"),
-    idleDeckImage: byId("idleDeckImage"),
-    shuffleScene: byId("shuffleScene"),
-    shuffleDeck: byId("shuffleDeck"),
-    shufflePhase: byId("shufflePhase"),
-    shuffleProgress: byId("shuffleProgress"),
-    cardTable: byId("cardTable"),
-    stageGuidance: byId("stageGuidance"),
-    guidanceText: byId("guidanceText"),
-    statusText: byId("statusText"),
-    insightTabs: byId("insightTabs"),
-    insightContent: byId("insightContent"),
-    newReadingButton: byId("newReadingButton"),
-    revealAllButton: byId("revealAllButton"),
-    historyButton: byId("historyButton"),
-    helpButton: byId("helpButton"),
-    historyDialog: byId("historyDialog"),
-    helpDialog: byId("helpDialog"),
-    confirmDialog: byId("confirmDialog"),
-    confirmTitle: byId("confirmTitle"),
-    confirmMessage: byId("confirmMessage"),
-    confirmAccept: byId("confirmAccept"),
-    historyList: byId("historyList"),
-    clearHistoryButton: byId("clearHistoryButton"),
-    toastRegion: byId("toastRegion"),
-    installButton: byId("installButton"),
-  };
-
+const dom = bindDom(document);
   const emptyInsightMarkup = dom.insightContent.innerHTML;
-
-  const state = {
-    categoryId: categories[0].id,
-    questionId: categories[0].questions[0].id,
-    spreadId: "timeline",
-    deckStyleId: initialDeckStyle,
-    phase: "setup",
-    reading: null,
-    revealed: new Set(),
-    selectedIndex: null,
-    activeTab: "card",
-    completing: false,
-    confirmResolver: null,
-    installPrompt: null,
-  };
+  const state = createReadingState({ categories, initialDeckStyle });
+  const selectors = createSelectionSelectors({ categories, spreads, deckStyles: DECK_STYLES, state });
+  const { currentCategory, currentQuestion, currentSpread, currentDeckStyle } = selectors;
+  const {
+    renderCategories,
+    renderQuestions,
+    renderDeckStyles,
+    renderSpreads,
+    setSetupLocked,
+    setJourneyStep,
+  } = createSetupRenderer({
+    documentRef: document,
+    categories,
+    spreads,
+    deckStyles: DECK_STYLES,
+    state,
+    dom,
+    selectors,
+    cardImagePath,
+    cardBackPath,
+  });
+  const { delay, runShuffleAnimation } = createReadingAnimation({
+    windowRef: window,
+    documentRef: document,
+    reducedMotion,
+    state,
+    dom,
+    cardBackPath,
+  });
+  const createReading = createReadingFactory({ deck, selectors, secureShuffle, randomUnit });
+  const showToast = createToast({ documentRef: document, windowRef: window, dom, reducedMotion });
 function writeHistory(records) {
   const saved = writeHistoryToStorage(records);
   if (!saved) showToast("浏览器阻止了本地存储，本次记录未保存", "!");
   return saved;
 }
 
-function delay(milliseconds) {
-    const duration = reducedMotion.matches ? Math.min(milliseconds, 35) : milliseconds;
-    return new Promise((resolve) => window.setTimeout(resolve, duration));
-  }
-
-  function currentCategory() {
-    return categories.find((category) => category.id === state.categoryId) || categories[0];
-  }
-
-  function currentQuestion() {
-    const category = currentCategory();
-    return category.questions.find((question) => question.id === state.questionId) || category.questions[0];
-  }
-
-  function currentSpread() {
-    return spreads.find((spread) => spread.id === state.spreadId) || spreads[1];
-  }
-
-  function currentDeckStyle() {
-    return DECK_STYLES.find((style) => style.id === state.deckStyleId) || DECK_STYLES[0];
-  }
-
-  function renderCategories() {
-    dom.categoryGrid.innerHTML = categories
-      .map(
-        (category) => `
-          <button
-            class="category-option ${category.id === state.categoryId ? "is-selected" : ""}"
-            type="button"
-            data-category-id="${category.id}"
-            style="--category-accent: ${category.accent}"
-            aria-pressed="${category.id === state.categoryId}"
-          >
-            <span class="category-icon" aria-hidden="true">${category.icon}</span>
-            <span class="category-name">${category.name}</span>
-          </button>
-        `,
-      )
-      .join("");
-  }
-
-  function renderQuestions() {
-    const category = currentCategory();
-    const question = currentQuestion();
-    dom.categoryTagline.textContent = category.tagline;
-    dom.questionDialogHint.textContent = `${category.name} · 从以下 ${category.questions.length} 个问题中选择一项`;
-    dom.selectedQuestionLabel.textContent = question.label;
-    dom.selectedQuestionText.textContent = question.text;
-    dom.questionPickerButton.style.setProperty("--active-accent", category.accent);
-    dom.questionList.style.setProperty("--active-accent", category.accent);
-    dom.questionList.innerHTML = category.questions
-      .map(
-        (question) => `
-          <button
-            class="question-option ${question.id === state.questionId ? "is-selected" : ""}"
-            type="button"
-            data-question-id="${question.id}"
-            aria-pressed="${question.id === state.questionId}"
-          >
-            <span class="radio-mark" aria-hidden="true"></span>
-            <span class="question-copy">
-              <strong>${escapeHtml(question.text)}</strong>
-              <small>${question.label}</small>
-            </span>
-          </button>
-        `,
-      )
-      .join("");
-  }
-
-  function renderDeckStyles() {
-    dom.deckStyleList.innerHTML = DECK_STYLES.map(
-      (style) => `
-        <button
-          class="deck-style-option deck-style-${style.id} ${style.id === state.deckStyleId ? "is-selected" : ""}"
-          type="button"
-          data-deck-style-id="${style.id}"
-          aria-pressed="${style.id === state.deckStyleId}"
-          aria-label="选择${style.name}牌面"
-        >
-          <span class="deck-style-preview" aria-hidden="true">
-            <img class="deck-style-face" src="${cardImagePath(style.previewCard, style)}" alt="" />
-            <img class="deck-style-back" src="${cardBackPath(style)}" alt="" />
-          </span>
-          <span class="deck-style-copy">
-            <strong>${style.name}</strong>
-            <small>${style.description}</small>
-          </span>
-          <span class="deck-style-check" aria-hidden="true">✓</span>
-        </button>
-      `,
-    ).join("");
-    document.documentElement.dataset.deckStyle = state.deckStyleId;
-    dom.readingPanel.dataset.deckStyle = state.deckStyleId;
-    dom.idleDeckImage.src = cardBackPath();
-    dom.idleDeckImage.alt = `${currentDeckStyle().name}牌背`;
-  }
-
-  function renderSpreads() {
-    dom.spreadList.innerHTML = spreads
-      .map((spread) => {
-        const glyphs = Array.from(
-          { length: spread.positions.length },
-          () => "<i aria-hidden=\"true\"></i>",
-        ).join("");
-        return `
-          <button
-            class="spread-option ${spread.id === state.spreadId ? "is-selected" : ""}"
-            type="button"
-            data-spread-id="${spread.id}"
-            aria-pressed="${spread.id === state.spreadId}"
-          >
-            <span class="spread-glyph" data-cards="${spread.positions.length}" aria-hidden="true">
-              ${glyphs}
-            </span>
-            <span class="spread-copy">
-              <strong>${spread.name}</strong>
-              <small>${spread.description}</small>
-            </span>
-            <span class="spread-count">${spread.short}</span>
-          </button>
-        `;
-      })
-      .join("");
-  }
-
-  function setSetupLocked(locked) {
-    dom.categoryGrid.querySelectorAll("button").forEach((button) => {
-      button.disabled = locked;
-    });
-    dom.questionList.querySelectorAll("button").forEach((button) => {
-      button.disabled = locked;
-    });
-    dom.spreadList.querySelectorAll("button").forEach((button) => {
-      button.disabled = locked;
-    });
-    dom.deckStyleList.querySelectorAll("button").forEach((button) => {
-      button.disabled = locked;
-    });
-    dom.questionPickerButton.disabled = locked;
-    dom.startReading.disabled = locked;
-  }
-
-  function setJourneyStep(activeStep) {
-    document.querySelectorAll(".journey-step").forEach((step) => {
-      const stepNumber = Number(step.dataset.step);
-      step.classList.toggle("is-active", stepNumber === activeStep);
-      step.classList.toggle("is-complete", stepNumber < activeStep);
-      const badge = step.querySelector("span");
-      badge.textContent = stepNumber < activeStep ? "✓" : String(stepNumber);
-    });
-  }
-
   function resetReadingView() {
-    state.phase = "setup";
-    state.reading = null;
-    state.revealed = new Set();
-    state.selectedIndex = null;
-    state.activeTab = "card";
-    state.completing = false;
+    resetReadingState(state);
 
     setSetupLocked(false);
     setJourneyStep(1);
@@ -278,30 +92,6 @@ function delay(milliseconds) {
     dom.insightContent.innerHTML = emptyInsightMarkup;
     dom.newReadingButton.hidden = true;
     dom.revealAllButton.hidden = true;
-  }
-
-  function createReading() {
-    const category = currentCategory();
-    const question = currentQuestion();
-    const spread = currentSpread();
-    const selectedCards = secureShuffle(deck).slice(0, spread.positions.length);
-    const draws = selectedCards.map((card, index) => ({
-      card,
-      reversed: randomUnit() < 0.33,
-      position: spread.positions[index],
-      index,
-    }));
-
-    return {
-      id: `reading-${Date.now()}-${Math.floor(randomUnit() * 100000)}`,
-      createdAt: new Date().toISOString(),
-      category,
-      question,
-      spread,
-      deckStyle: currentDeckStyle(),
-      draws,
-      synthesis: null,
-    };
   }
 
   async function startReading() {
@@ -341,55 +131,6 @@ function delay(milliseconds) {
 
     await runShuffleAnimation();
     await dealCards();
-  }
-
-  async function runShuffleAnimation() {
-    dom.shuffleScene.hidden = false;
-    const backPath = cardBackPath(state.reading?.deckStyle);
-    dom.shuffleDeck.innerHTML = Array.from(
-      { length: 7 },
-      (_, index) =>
-        `<span class="shuffle-card" style="--i: ${index}"><img src="${backPath}" alt="" /></span>`,
-    ).join("");
-
-    const phases = [
-      { at: 0, text: "正在净化牌面能量" },
-      { at: 34, text: "正在回应你的问题" },
-      { at: 68, text: "正在寻找回应问题的牌" },
-      { at: 92, text: "牌阵即将显现" },
-    ];
-    const totalDuration = reducedMotion.matches ? 90 : 2350;
-    const startedAt = performance.now();
-    let lastPhase = -1;
-
-    await new Promise((resolve) => {
-      const tick = (now) => {
-        const elapsed = now - startedAt;
-        const percentage = Math.min(100, (elapsed / totalDuration) * 100);
-        dom.shuffleProgress.style.width = `${percentage}%`;
-        let phaseIndex = 0;
-        for (let index = phases.length - 1; index >= 0; index -= 1) {
-          if (percentage >= phases[index].at) {
-            phaseIndex = index;
-            break;
-          }
-        }
-        if (phaseIndex !== lastPhase) {
-          lastPhase = phaseIndex;
-          dom.shufflePhase.textContent = phases[phaseIndex].text;
-        }
-        if (percentage < 100) {
-          requestAnimationFrame(tick);
-        } else {
-          resolve();
-        }
-      };
-      requestAnimationFrame(tick);
-    });
-
-    await delay(180);
-    dom.shuffleScene.hidden = true;
-    dom.shuffleProgress.style.width = "0";
   }
 
   function cardMarkup(draw) {
@@ -1036,90 +777,14 @@ function delay(milliseconds) {
     }
   }
 
-  function showToast(message, icon = "✦") {
-    const toast = document.createElement("div");
-    toast.className = "toast";
-    toast.innerHTML = `<span aria-hidden="true">${escapeHtml(icon)}</span>${escapeHtml(message)}`;
-    dom.toastRegion.appendChild(toast);
-    window.setTimeout(
-      () => {
-        toast.classList.add("is-leaving");
-        window.setTimeout(() => toast.remove(), 260);
-      },
-      reducedMotion.matches ? 900 : 2800,
-    );
-  }
-
-  function renderHistory() {
-    const records = loadHistory();
-    dom.clearHistoryButton.hidden = records.length === 0;
-    if (records.length === 0) {
-      dom.historyList.innerHTML = `
-        <div class="history-empty">
-          <div><span>☾</span>还没有占卜记录<br />完成一次牌阵后，它会出现在这里。</div>
-        </div>
-      `;
-      return;
-    }
-    dom.historyList.innerHTML = records
-      .map(
-        (record) => `
-          <article class="history-item" data-history-id="${escapeHtml(record.id)}" style="--history-accent: ${record.categoryAccent || "#d8bb7a"}">
-            <span class="history-icon" aria-hidden="true">${record.categoryIcon || "✦"}</span>
-            <div class="history-summary">
-              <strong>${escapeHtml(record.question)}</strong>
-              <small>${escapeHtml(record.categoryName)} · ${escapeHtml(record.spreadName)} · ${escapeHtml(record.headline || "牌阵已完成")}</small>
-              <time>${escapeHtml(formatDate(record.createdAt))}</time>
-            </div>
-            <div class="history-actions">
-              <button class="history-view-button" type="button" data-history-action="view" title="展开查看" aria-label="展开查看" aria-expanded="false">
-                <span>展开查看</span>
-              </button>
-              <button class="history-delete-button" type="button" data-history-action="delete" title="删除记录" aria-label="删除记录">×</button>
-            </div>
-          </article>
-        `,
-      )
-      .join("");
-  }
-
-  function toggleHistoryDetail(item, record) {
-    const existing = item.querySelector(".history-expanded");
-    const viewButton = item.querySelector('[data-history-action="view"]');
-    if (existing) {
-      existing.remove();
-      viewButton?.setAttribute("aria-expanded", "false");
-      viewButton?.setAttribute("aria-label", "展开查看");
-      const label = viewButton?.querySelector("span");
-      if (label) label.textContent = "展开查看";
-      return;
-    }
-    const detail = document.createElement("div");
-    detail.className = "history-expanded";
-    const cards = (record.cards || [])
-      .map(
-        (card) =>
-          `<span><b>${escapeHtml(card.position)}</b>${escapeHtml(card.name)} · ${escapeHtml(card.orientation)}</span>`,
-      )
-      .join("");
-    detail.innerHTML = `
-      <small>牌面：${escapeHtml(record.deckName || "经典韦特")}</small>
-      <p>${escapeHtml(record.headline || "这次牌阵已完成。")}</p>
-      <div>${cards}</div>
-    `;
-    item.appendChild(detail);
-    viewButton?.setAttribute("aria-expanded", "true");
-    viewButton?.setAttribute("aria-label", "收起记录");
-    const label = viewButton?.querySelector("span");
-    if (label) label.textContent = "收起记录";
-  }
-
-  function deleteHistoryRecord(id) {
-    const records = loadHistory().filter((record) => record.id !== id);
-    writeHistory(records);
-    renderHistory();
-    showToast("该条记录已删除", "×");
-  }
+  const { renderHistory, toggleHistoryDetail, deleteHistoryRecord } = createHistoryRenderer({
+    documentRef: document,
+    dom,
+    loadHistory,
+    writeHistory,
+    showToast,
+    formatDate,
+  });
 
   function openDialog(dialog) {
     if (typeof dialog.showModal === "function") {
@@ -1208,132 +873,35 @@ function delay(milliseconds) {
     showToast(`已切换为${currentDeckStyle().name}牌面`, "✦");
   }
 
-  function bindEvents() {
-    dom.categoryGrid.addEventListener("click", onCategoryClick);
-    dom.questionList.addEventListener("click", onQuestionClick);
-    dom.spreadList.addEventListener("click", onSpreadClick);
-    dom.deckStyleList.addEventListener("click", onDeckStyleClick);
-    dom.questionPickerButton.addEventListener("click", () => {
-      if (state.phase !== "setup") return;
-      openDialog(dom.questionDialog);
-    });
-    dom.startReading.addEventListener("click", startReading);
-    dom.cardTable.addEventListener("click", (event) => {
-      const button = event.target.closest(".card-hitbox");
-      if (!button) return;
-      revealCard(Number(button.dataset.cardIndex));
-    });
-    dom.revealAllButton.addEventListener("click", revealAllCards);
-    dom.newReadingButton.addEventListener("click", requestNewReading);
-
-    dom.insightTabs.addEventListener("click", (event) => {
-      const button = event.target.closest("[data-tab]");
-      if (!button || !state.reading) return;
-      const tab = button.dataset.tab;
-      if (tab === "summary" && !state.reading.synthesis) {
-        showToast("翻开全部牌面后会生成综合结论", "☾");
-        return;
-      }
-      state.activeTab = tab;
-      updateInsightTabs();
-      if (tab === "summary") {
-        renderSummary();
-      } else {
-        const index =
-          state.selectedIndex ??
-          [...state.revealed].sort((a, b) => a - b)[0];
-        if (index !== undefined) renderCardInsight(index);
-      }
-    });
-
-    dom.historyButton.addEventListener("click", () => {
-      renderHistory();
-      openDialog(dom.historyDialog);
-    });
-    dom.helpButton.addEventListener("click", () => openDialog(dom.helpDialog));
-    dom.brandHome.addEventListener("click", async (event) => {
-      event.preventDefault();
-      await requestNewReading();
-    });
-
-    document.querySelectorAll("[data-close-dialog]").forEach((button) => {
-      button.addEventListener("click", () => {
-        const dialog = button.closest("dialog");
-        if (dialog) closeDialog(dialog);
-      });
-    });
-
-    document.querySelectorAll(".app-dialog").forEach((dialog) => {
-      dialog.addEventListener("click", (event) => {
-        if (event.target === dialog) closeDialog(dialog);
-      });
-    });
-
-    document.querySelectorAll("[data-confirm-cancel]").forEach((button) => {
-      button.addEventListener("click", () => resolveConfirmation(false));
-    });
-    dom.confirmAccept.addEventListener("click", () => resolveConfirmation(true));
-    dom.confirmDialog.addEventListener("cancel", (event) => {
-      event.preventDefault();
-      resolveConfirmation(false);
-    });
-
-    dom.historyList.addEventListener("click", (event) => {
-      const button = event.target.closest("[data-history-action]");
-      const item = event.target.closest("[data-history-id]");
-      if (!button || !item) return;
-      const record = loadHistory().find((entry) => entry.id === item.dataset.historyId);
-      if (!record) return;
-      const action = button.dataset.historyAction;
-      if (action === "view") toggleHistoryDetail(item, record);
-      if (action === "delete") deleteHistoryRecord(record.id);
-    });
-
-    dom.clearHistoryButton.addEventListener("click", async () => {
-      const confirmed = await confirmAction(
-        "清空全部记录？",
-        "这会删除保存在此浏览器中的所有占卜记录，且无法恢复。",
-        "全部清空",
-      );
-      if (!confirmed) return;
-      writeHistory([]);
-      renderHistory();
-      showToast("全部占卜记录已清空", "×");
-    });
-
-    window.addEventListener("beforeinstallprompt", (event) => {
-      event.preventDefault();
-      state.installPrompt = event;
-      dom.installButton.hidden = false;
-    });
-    dom.installButton.addEventListener("click", async () => {
-      if (!state.installPrompt) return;
-      state.installPrompt.prompt();
-      await state.installPrompt.userChoice;
-      state.installPrompt = null;
-      dom.installButton.hidden = true;
-    });
-
-    window.addEventListener("appinstalled", () => {
-      state.installPrompt = null;
-      dom.installButton.hidden = true;
-      showToast("星纱塔罗已安装到桌面", "✦");
-    });
-
-    document.addEventListener("keydown", (event) => {
-      if ((event.ctrlKey || event.metaKey) && event.key === "Enter" && state.phase === "setup") {
-        event.preventDefault();
-        startReading();
-      }
-      if (event.key.toLowerCase() === "r" && state.phase === "revealing" && !event.ctrlKey && !event.metaKey) {
-        const tagName = document.activeElement?.tagName;
-        if (!["INPUT", "TEXTAREA", "SELECT"].includes(tagName)) {
-          event.preventDefault();
-          revealAllCards();
-        }
-      }
-    });
-  }
+  const bindEvents = createEventBinder({
+    windowRef: window,
+    documentRef: document,
+    state,
+    dom,
+    loadHistory,
+    callbacks: {
+      onCategoryClick,
+      onQuestionClick,
+      onSpreadClick,
+      onDeckStyleClick,
+      openDialog,
+      closeDialog,
+      startReading,
+      revealCard,
+      revealAllCards,
+      requestNewReading,
+      updateInsightTabs,
+      renderSummary,
+      renderCardInsight,
+      showToast,
+      renderHistory,
+      toggleHistoryDetail,
+      deleteHistoryRecord,
+      resolveConfirmation,
+      confirmAction,
+      writeHistory,
+    },
+  });
 
   function initialize() {
     if (deck.length !== 78) {

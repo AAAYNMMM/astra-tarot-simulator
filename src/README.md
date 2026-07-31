@@ -134,3 +134,8 @@ src/app/
 ## 当前活动JavaScript基础模块
 
 `MOD-003B` 已让配置、核心工具、平台客户端和存储适配器通过 `src/app/legacy-runtime.js` 被真实页面使用。业务随机位于core层；安全熵、生命周期和PWA位于platform层；设置与旧历史位于storage层。旧 `app.js` 只通过受控 `window.AstraRuntime` 消费这些能力。
+
+
+## MOD-004A活动模块
+
+`src/app/state`、`selectors`、`controllers`、`events.js` 与 `src/ui/dom.js`、`safe-dom.js`、`renderers`、`animations`、`components` 已由真实页面兼容运行时消费。

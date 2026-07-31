@@ -8,11 +8,11 @@
 | 项目 | 当前值 |
 |---|---|
 | 当前阶段 | Phase M：模块化基础 |
-| 当前进行中任务 | 无 |
+| 当前进行中任务 | `MOD-004A` 状态、控制器、渲染器与DOM安全 |
 | 最近完成任务 | `MOD-003B` 基础模块与随机边界 |
-| 下一任务 | `MOD-004A` 状态、控制器、渲染器与DOM安全 |
+| 下一任务 | 无；Phase M连续执行中 |
 | 阻塞项 | 无 |
-| 工作分支 | `mod-003b-foundation-boundaries` |
+| 工作分支 | `phase-m-completion` |
 | 实现提交 | `dfd8a1e1ea5428c5e589b50a38173c0224bb0442` |
 | 验收修复提交 | `76b7396f8c198d01811a689bc9063f78c94bafb3` |
 | 最后更新时间 | 2026-07-31 |
@@ -150,3 +150,8 @@ tests/foundation_contract_test.mjs
 - Phase 4、5、6：`BACKLOG`
 
 后续完整任务图以 `docs/EXECUTION_CONTRACTS.md` 为唯一来源。
+
+## Phase M连续执行现场
+
+- `MOD-004A`：`IN_PROGRESS`。
+- 后续叶子任务将按执行契约连续推进，不在每个任务结束后暂停。
