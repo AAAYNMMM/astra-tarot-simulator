@@ -21,6 +21,7 @@
     "semanticTags",
     "questionDimensions",
     "matchedDimensions",
+    "dimensionMatchMode",
     "positionRole",
     "dimensions",
     "scoreBreakdown",
@@ -93,6 +94,7 @@
       "uniqueItems": true,
       "items": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" }
     },
+    "dimensionMatchMode": { "enum": ["direct", "position-mediated"] },
     "positionRole": {
       "type": "object",
       "additionalProperties": false,
