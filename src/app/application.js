@@ -14,6 +14,7 @@ import { cardBackPath, cardImagePath } from "../platform/assets.js";
 import { createReadingAnimation } from "../ui/animations/reading.js";
 import { createDialogController, formatDate } from "../ui/components/dialogs.js";
 import { createToast } from "../ui/components/toast.js";
+import { installImageFallbacks } from "../ui/image-fallback.js";
 import { bindDom } from "../ui/dom.js";
 import { createHistoryRenderer } from "../ui/renderers/history.js";
 import { createSetupRenderer } from "../ui/renderers/setup.js";
@@ -28,7 +29,7 @@ export function startApplication({ windowRef = globalThis.window, documentRef = 
   const {
     randomUnit, secureShuffle, registerServiceWorker, registerLocalLifecycle,
     loadSettings, saveSettings, loadHistory,
-    writeHistory: writeHistoryToStorage, readingRecord,
+    writeHistory: writeHistoryToStorage, readingRecord, offlineStatus,
   } = createRuntimeServices(window);
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
   const storedSettings = loadSettings();
@@ -37,6 +38,7 @@ export function startApplication({ windowRef = globalThis.window, documentRef = 
     ? storedDeckStyle
     : "rws";
 
+  installImageFallbacks(document);
   const dom = bindDom(document);
     const emptyInsightMarkup = dom.insightContent.innerHTML;
     const state = createReadingState({ categories, initialDeckStyle });
@@ -532,6 +534,7 @@ export function startApplication({ windowRef = globalThis.window, documentRef = 
       state.deckStyleId = button.dataset.deckStyleId;
       saveSettings({ deckStyle: state.deckStyleId });
       renderDeckStyles();
+      void offlineStatus.cacheDeck(state.deckStyleId);
       showToast(`已切换为${currentDeckStyle().name}牌面`, "✦");
     }
 
@@ -575,7 +578,7 @@ export function startApplication({ windowRef = globalThis.window, documentRef = 
       renderDeckStyles();
       bindEvents();
       resetReadingView();
-      registerServiceWorker();
+      void registerServiceWorker().then(() => offlineStatus.start({ selectedDeckId: initialDeckStyle }));
       registerLocalLifecycle();
     }
 

@@ -1,5 +1,6 @@
 import { createBusinessRandom } from "../core/random/business-random.js";
 import { createLifecycleClient } from "../platform/lifecycle-client.js";
+import { createOfflineStatusClient } from "../platform/offline-status.js";
 import { registerServiceWorker as registerPwaServiceWorker } from "../platform/pwa-client.js";
 import { createLegacyHistoryStore } from "../storage/legacy-history.js";
 import { createLegacyReadingRecord } from "../storage/legacy-record.js";
@@ -23,6 +24,7 @@ export function createRuntimeServices(windowRef = globalThis.window) {
     fallbackRandom: windowRef.Math?.random?.bind(windowRef.Math) ?? Math.random,
   });
   const lifecycle = createLifecycleClient({ windowRef });
+  const offlineStatus = createOfflineStatusClient({ windowRef });
 
   return Object.freeze({
     randomUnit: businessRandom.randomUnit,
@@ -33,6 +35,7 @@ export function createRuntimeServices(windowRef = globalThis.window) {
         locationRef: windowRef.location,
       }),
     registerLocalLifecycle: lifecycle.register,
+    offlineStatus,
     loadSettings: settings.load,
     saveSettings: settings.save,
     loadHistory: history.load,

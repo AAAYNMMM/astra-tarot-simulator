@@ -10,6 +10,7 @@
     "test:application": "node tests/application_contract_test.mjs",
     "generate": "node scripts/generate_artifacts.mjs",
     "check:generated": "node scripts/generate_artifacts.mjs --check",
-    "test:generated": "node tests/generated_artifacts_contract_test.mjs"
+    "test:generated": "node tests/generated_artifacts_contract_test.mjs",
+    "test:pwa": "node tests/pwa_contract_test.mjs"
   }
 }

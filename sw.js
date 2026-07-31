@@ -1,117 +1,241 @@
-const CACHE_NAME = "astra-tarot-v12";
-const CARD_RANKS = [
-  "ace",
-  "two",
-  "three",
-  "four",
-  "five",
-  "six",
-  "seven",
-  "eight",
-  "nine",
-  "ten",
-  "page",
-  "knight",
-  "queen",
-  "king",
-];
-const CARD_SUITS = ["wands", "cups", "swords", "pentacles"];
-const CARD_IDS = [
-  ...Array.from({ length: 22 }, (_, index) => `major-${index}`),
-  ...CARD_SUITS.flatMap((suit) => CARD_RANKS.map((rank) => `${suit}-${rank}`)),
-];
-const DECK_FILES = [
-  ...CARD_IDS.map((cardId) => `./assets/rws/${cardId}.jpg`),
-  "./assets/rws/card-back-rws.jpg",
-  ...CARD_IDS.map((cardId) => `./assets/decks/arnoult/${cardId}.png`),
-  "./assets/decks/arnoult/card-back.jpg",
-  ...CARD_IDS.map(
-    (cardId) =>
-      `./assets/decks/swiss-1jj/${cardId}.${cardId === "major-5" ? "png" : "jpg"}`,
+importScripts("./src/generated/precache-manifest.js");
+
+const MANIFEST = self.__ASTRA_PRECACHE_MANIFEST__;
+if (!MANIFEST) throw new Error("Generated precache manifest was not loaded.");
+
+const RELEASE_ID = MANIFEST.releaseId;
+const SHELL_CACHE = `astra-shell-${RELEASE_ID}`;
+const STATUS_CACHE = `astra-status-${RELEASE_ID}`;
+const STATUS_URL = new URL("./__astra-offline-status__", self.registration.scope).href;
+const DEFAULT_DECK_ID = "rws";
+const REQUIRED_URLS = Object.freeze(
+  [...new Set(Object.values(MANIFEST.required).flat())].map((item) => new URL(item, self.registration.scope).href),
+);
+const REQUIRED_SET = new Set(REQUIRED_URLS);
+const DECK_URLS = Object.freeze(
+  Object.fromEntries(
+    Object.entries(MANIFEST.optionalDecks).map(([deckId, files]) => [
+      deckId,
+      Object.freeze(files.map((item) => new URL(item, self.registration.scope).href)),
+    ]),
   ),
-  "./assets/decks/swiss-1jj/card-back.png",
-  ...CARD_IDS.map((cardId) => `./assets/decks/piedmont/${cardId}.jpg`),
-  "./assets/decks/piedmont/card-back.jpg",
-];
-const CORE_FILES = [
-  "./",
-  "./index.html",
-  "./src/styles/index.css",
-  "./src/styles/foundation.css",
-  "./src/styles/setup.css",
-  "./src/styles/cards.css",
-  "./src/styles/insights.css",
-  "./src/styles/history.css",
-  "./src/styles/desktop.css",
-  "./src/styles/wide.css",
-  "./src/styles/responsive.css",
-  "./src/styles/accent-tokens.css",
-  "./src/app/bootstrap.js",
-  "./src/app/application.js",
-  "./src/app/runtime-services.js",
-  "./src/ui/components/dialogs.js",
-  "./src/app/events.js",
-  "./src/app/controllers/reading-controller.js",
-  "./src/app/selectors/current-selection.js",
-  "./src/app/state/reading-state.js",
-  "./src/ui/animations/reading.js",
-  "./src/ui/components/toast.js",
-  "./src/ui/dom.js",
-  "./src/ui/safe-dom.js",
-  "./src/ui/renderers/history.js",
-  "./src/ui/renderers/setup.js",
-  "./src/config/decks.js",
-  "./src/config/accent-tokens.js",
-  "./src/config/legacy-storage.js",
-  "./src/core/html.js",
-  "./src/core/random/business-random.js",
-  "./src/platform/assets.js",
-  "./src/platform/entropy.js",
-  "./src/platform/lifecycle-client.js",
-  "./src/platform/pwa-client.js",
-  "./src/storage/settings.js",
-  "./src/storage/legacy-history.js",
-  "./src/storage/legacy-record.js",
-  "./src/engine/legacy/card-reading.js",
-  "./src/engine/legacy/synthesis.js",
-  "./src/knowledge/legacy/cards/major.js",
-  "./src/knowledge/legacy/cards/minor.js",
-  "./src/knowledge/legacy/questions.js",
-  "./src/knowledge/spreads/definitions.js",
-  "./src/knowledge/legacy/build.js",
-  "./src/knowledge/legacy/metadata.js",
-  "./src/knowledge/legacy/index.js",
-  "./icon.svg",
-  "./manifest.webmanifest",
-  ...DECK_FILES,
-];
+);
+const DECK_BY_URL = new Map(
+  Object.entries(DECK_URLS).flatMap(([deckId, files]) => files.map((item) => [item, deckId])),
+);
+
+function deckCacheName(deckId) {
+  return `astra-deck-${RELEASE_ID}-${deckId}`;
+}
+
+function emptyStatus() {
+  return {
+    releaseId: RELEASE_ID,
+    artifactManifestHash: MANIFEST.artifactManifestHash,
+    states: {
+      "APP-SHELL-READY": false,
+      "DEFAULT-DECK-READY": false,
+      "SELECTED-DECKS-READY": [],
+    },
+  };
+}
+
+async function readStatus() {
+  const cache = await caches.open(STATUS_CACHE);
+  const response = await cache.match(STATUS_URL);
+  if (!response) return emptyStatus();
+  try {
+    const parsed = await response.json();
+    return parsed?.releaseId === RELEASE_ID ? parsed : emptyStatus();
+  } catch {
+    return emptyStatus();
+  }
+}
+
+async function writeStatus(update) {
+  const current = await readStatus();
+  const next = {
+    ...current,
+    ...update,
+    states: { ...current.states, ...(update.states || {}) },
+  };
+  const cache = await caches.open(STATUS_CACHE);
+  await cache.put(
+    STATUS_URL,
+    new Response(JSON.stringify(next), {
+      headers: { "content-type": "application/json; charset=utf-8" },
+    }),
+  );
+  return next;
+}
+
+function expectedType(url) {
+  const pathname = new URL(url).pathname.toLowerCase();
+  if (pathname.endsWith(".js")) return "javascript";
+  if (pathname.endsWith(".css")) return "text/css";
+  if (pathname.endsWith(".json") || pathname.endsWith(".webmanifest")) return "json";
+  if (/\.(?:jpg|jpeg|png|webp|svg)$/.test(pathname)) return "image/";
+  if (pathname.endsWith("/") || pathname.endsWith(".html")) return "text/html";
+  return null;
+}
+
+function responseIsCacheable(response, url, { navigation = false } = {}) {
+  if (!response || !response.ok || response.redirected || response.type === "opaque") return false;
+  const contentType = String(response.headers.get("content-type") || "").toLowerCase();
+  const expected = navigation ? "text/html" : expectedType(url);
+  if (!expected) return false;
+  if (expected === "javascript") return contentType.includes("javascript");
+  if (expected === "json") return contentType.includes("json");
+  return contentType.includes(expected);
+}
+
+async function fetchCacheable(url, options = {}) {
+  const response = await fetch(url, { cache: "reload", credentials: "same-origin" });
+  if (!responseIsCacheable(response, url, options)) {
+    throw new Error(`Refused non-cacheable response: ${url}`);
+  }
+  return response;
+}
+
+async function cacheRequiredResources() {
+  const cache = await caches.open(SHELL_CACHE);
+  try {
+    for (const url of REQUIRED_URLS) {
+      const response = await fetchCacheable(url, { navigation: url.endsWith("/index.html") || url.endsWith("/") });
+      await cache.put(url, response.clone());
+    }
+    await writeStatus({ states: { "APP-SHELL-READY": true } });
+  } catch (error) {
+    await caches.delete(SHELL_CACHE);
+    await writeStatus({ states: { "APP-SHELL-READY": false } });
+    throw error;
+  }
+}
+
+async function deckIsComplete(deckId) {
+  const files = DECK_URLS[deckId];
+  if (!files) return false;
+  const cache = await caches.open(deckCacheName(deckId));
+  const matches = await Promise.all(files.map((url) => cache.match(url)));
+  return matches.every(Boolean);
+}
+
+async function updateDeckStatus(deckId, ready) {
+  const current = await readStatus();
+  const selected = new Set(current.states["SELECTED-DECKS-READY"] || []);
+  if (ready) selected.add(deckId);
+  else selected.delete(deckId);
+  return writeStatus({
+    states: {
+      "DEFAULT-DECK-READY": deckId === DEFAULT_DECK_ID
+        ? ready
+        : current.states["DEFAULT-DECK-READY"],
+      "SELECTED-DECKS-READY": [...selected].sort(),
+    },
+  });
+}
+
+async function cacheDeck(deckId) {
+  const files = DECK_URLS[deckId];
+  if (!files) return false;
+  const cacheName = deckCacheName(deckId);
+  const cache = await caches.open(cacheName);
+  try {
+    for (const url of files) {
+      if (await cache.match(url)) continue;
+      const response = await fetchCacheable(url);
+      await cache.put(url, response.clone());
+    }
+    const ready = await deckIsComplete(deckId);
+    await updateDeckStatus(deckId, ready);
+    return ready;
+  } catch {
+    await caches.delete(cacheName);
+    await updateDeckStatus(deckId, false);
+    return false;
+  }
+}
+
+async function navigationResponse(event) {
+  try {
+    const response = await fetch(event.request);
+    if (!responseIsCacheable(response, event.request.url, { navigation: true })) return response;
+    const cache = await caches.open(SHELL_CACHE);
+    event.waitUntil(cache.put(new URL("./index.html", self.registration.scope).href, response.clone()));
+    return response;
+  } catch {
+    const cache = await caches.open(SHELL_CACHE);
+    return cache.match(new URL("./index.html", self.registration.scope).href);
+  }
+}
+
+async function shellResponse(event) {
+  const cache = await caches.open(SHELL_CACHE);
+  const cached = await cache.match(event.request);
+  if (cached) return cached;
+  const response = await fetch(event.request);
+  if (responseIsCacheable(response, event.request.url)) {
+    event.waitUntil(cache.put(event.request, response.clone()));
+  }
+  return response;
+}
+
+async function deckResponse(event, deckId) {
+  const cache = await caches.open(deckCacheName(deckId));
+  const cached = await cache.match(event.request);
+  if (cached) return cached;
+  const response = await fetch(event.request);
+  if (responseIsCacheable(response, event.request.url)) {
+    event.waitUntil(
+      cache.put(event.request, response.clone()).then(async () => {
+        const ready = await deckIsComplete(deckId);
+        await updateDeckStatus(deckId, ready);
+      }),
+    );
+  }
+  return response;
+}
 
 self.addEventListener("install", (event) => {
-  event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(CORE_FILES)));
-  self.skipWaiting();
+  event.waitUntil(
+    cacheRequiredResources().then(() => cacheDeck(DEFAULT_DECK_ID).catch(() => false)),
+  );
 });
 
 self.addEventListener("activate", (event) => {
-  event.waitUntil(
-    caches
-      .keys()
-      .then((keys) =>
-        Promise.all(keys.filter((key) => key !== CACHE_NAME).map((key) => caches.delete(key))),
-      ),
-  );
-  self.clients.claim();
+  event.waitUntil(readStatus());
 });
 
 self.addEventListener("fetch", (event) => {
-  if (event.request.method !== "GET") return;
-  if (new URL(event.request.url).pathname.startsWith("/__astra/")) return;
-  event.respondWith(
-    fetch(event.request)
-      .then((response) => {
-        const copy = response.clone();
-        caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
-        return response;
-      })
-      .catch(() => caches.match(event.request).then((cached) => cached || caches.match("./index.html"))),
-  );
+  const request = event.request;
+  if (request.method !== "GET") return;
+  const url = new URL(request.url);
+  if (url.origin !== self.location.origin || url.pathname.startsWith("/__astra/")) return;
+  if (request.mode === "navigate") {
+    event.respondWith(navigationResponse(event));
+    return;
+  }
+  const deckId = DECK_BY_URL.get(url.href);
+  if (deckId) {
+    event.respondWith(deckResponse(event, deckId));
+    return;
+  }
+  if (REQUIRED_SET.has(url.href)) event.respondWith(shellResponse(event));
+});
+
+self.addEventListener("message", (event) => {
+  const port = event.ports?.[0];
+  if (!port) return;
+  if (event.data?.type === "ASTRA_OFFLINE_STATUS") {
+    event.waitUntil(readStatus().then((status) => port.postMessage(status)));
+    return;
+  }
+  if (event.data?.type === "ASTRA_CACHE_DECK") {
+    const deckId = String(event.data.deckId || "");
+    event.waitUntil(
+      cacheDeck(deckId).then(async (ready) => {
+        port.postMessage({ ready, deckId, status: await readStatus() });
+      }),
+    );
+  }
 });

@@ -550,3 +550,8 @@ src/storage/legacy-record.js
 ## MOD-006B生成链
 
 人工源和运行资源经 `scripts/generate_artifacts.mjs` 依次生成轻量目录、动态注册表、knowledge清单、artifact manifest和经典SW预缓存清单。`--check` 以字节级比较阻止陈旧产物；artifact和precache遵守无自引用哈希图。
+
+
+## MOD-006C离线边界
+
+经典 `sw.js` 通过 `importScripts` 读取生成清单；导航、版本化运行资源和牌组图片分别使用network-first、release cache-first和按需cache-first。离线状态由 `src/platform/offline-status.js` 暴露，图片失败由 `src/ui/image-fallback.js` 提供可访问占位，不触发重抽。

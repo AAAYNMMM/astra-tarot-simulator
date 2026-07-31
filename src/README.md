@@ -159,3 +159,8 @@ src/app/
 ## 正式生成文件
 
 `src/generated/` 由 `node scripts/generate_artifacts.mjs` 生成并提交，禁止手工编辑。人工知识、引擎入口或活动资源变化后必须立即重建；`node scripts/generate_artifacts.mjs --check` 检查陈旧产物。
+
+
+## 经典Service Worker
+
+`sw.js` 不使用ESM；通过生成的 `precache-manifest.js` 建立release缓存。安装失败只阻断必需壳资源，牌组失败不会破坏当前稳定壳缓存；更新激活与旧缓存清理由后续 `PLAT-001` 协调。

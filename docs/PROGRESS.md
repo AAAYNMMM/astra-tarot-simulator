@@ -7,8 +7,8 @@
 | 项目 | 当前值 |
 |---|---|
 | 当前阶段 | Phase M：模块化基础 |
-| 当前进行中任务 | `MOD-006C` 经典Service Worker策略与离线状态 |
-| 最近完成任务 | `MOD-006B` 正式生成、规范哈希与manifest |
+| 当前进行中任务 | `MOD-006D` Phase M终态验证 |
+| 最近完成任务 | `MOD-006C` 经典Service Worker策略与离线状态 |
 | 下一任务 | 无；Phase M连续执行中 |
 | 阻塞项 | 无 |
 | 工作分支 | `phase-m-completion` |
@@ -26,8 +26,8 @@
 | `MOD-005` | `DONE` | `b03ca2602a36c4f96f2f2cf3c54d085db729116f`；固定复验 `01KYG9PHM5B2` |
 | `MOD-006A` | `DONE` | `72cd7fa7ba05dab81b0f36a41c17d025002d8e29`；固定复验 `01KYG9PHM6AK2` |
 | `MOD-006B` | `DONE` | 永久生成器、轻量目录、动态注册表、knowledge/artifact/precache清单和陈旧产物门禁 |
-| `MOD-006C` | `IN_PROGRESS` | 下一步接线经典SW与离线状态 |
-| `MOD-006D` | `BACKLOG` | 等待 `MOD-006C` |
+| `MOD-006C` | `DONE` | 经典SW、三层离线状态和可访问图片占位 |
+| `MOD-006D` | `IN_PROGRESS` | full、浏览器、CSP、DOM、历史、PWA与模块边界终态验证 |
 
 ## 当前不变量
 
@@ -36,6 +36,6 @@
 - 人工JS/CSS无超限技术债；不引入npm依赖、构建步骤或GitHub Actions。
 - 人工源是唯一真相；`src/generated/` 只能由 `scripts/generate_artifacts.mjs` 重建。
 
-## 当前任务：MOD-006C
+## 当前任务：MOD-006D
 
-按生成的 `src/generated/precache-manifest.js` 分类导航、版本化运行资源和牌组图片；建立 `APP-SHELL-READY`、`DEFAULT-DECK-READY`、`SELECTED-DECKS-READY` 状态，失败图片使用可访问占位且不重抽。
+执行Phase M full验证、浏览器harness、CSP与DOM注入、历史兼容、PWA缓存分类和模块边界检查；通过后将Phase M标记为PARENT-DONE并释放唯一NEXT `TQ-001`。

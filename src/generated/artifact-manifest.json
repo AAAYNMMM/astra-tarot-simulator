@@ -1,7 +1,7 @@
 {
   "appVersion": "2.0.0-dev",
   "engineManifestHash": "212977b2911125c936f540c8af4135e1b2305a9d3045053b333c47f8250d0be6",
-  "generatorHash": "8aae4fb29a36350aef4501c86df39d960eb01102223f93e0a75e9e6b14999537",
+  "generatorHash": "76bc2d029b5c973668ff17558c7aa12244f63093801358b36b552c7c6f03b584",
   "generatorVersion": "1.0.0",
   "knowledgeManifestHash": "0edf02dda8871c17c08a6203d0f54155072c50de0acb8d54a1bc699fc55f78b5",
   "modules": {
@@ -140,13 +140,13 @@
     "icon.svg": "e18d78ebfd11b33ca57e90aa5043706107326941f25905684fbabc20a621c297",
     "index.html": "d263b5f9ee986ebcb8bde2494b238e8751f41a7c85b19666d3b3f36b890a7423",
     "manifest.webmanifest": "7fc57ac8ce44ce64c86f1bba38731395930fcef8b641aac18131f9567e14172f",
-    "src/README.md": "db9357cd74fcdfa9f87b7e75639f42736cca2e2a7655a7cf70067d0245b9e596",
+    "src/README.md": "5220fb1f1f47d61735eb7864ecba0e860437c96610d02823a71a154577bc946b",
     "src/__init__.py": "79e2cf890e7ca34c897a0632bf6f2559612999c1faa4f32cf379cf86f764278f",
-    "src/app/application.js": "00d3c8a247a5a9c863d7b51a149cfc5d44e357ab9899890949b351f6fabffada",
+    "src/app/application.js": "393fac755ae3084e8da97118296d9bd8f329b8b97b115cf2125a56e395ff004e",
     "src/app/bootstrap.js": "908c65075ff2f35228e54ee43c7019eb6532f06dfdad5a95c3a4cca9a7534498",
     "src/app/controllers/reading-controller.js": "99486a97fac4fed96ae33e89e9c68e40edd5d33e4a064334e9da79deb690e53d",
     "src/app/events.js": "3f6f221ae699fb32a7c604527d1527932d3da10d281025a59a606939e1bd2939",
-    "src/app/runtime-services.js": "1dade89495a77ad6651c6d9dc926723bd67d189bcf8160e1468c777a067beb27",
+    "src/app/runtime-services.js": "474ca5eb0b9f2eceb98c39953524f6deefd9652f5d1c81a896fcad653191fe35",
     "src/app/selectors/current-selection.js": "bbb319597876b365e262b1a2d251d51ee12ef2c1c9270c8559c0d1868790b533",
     "src/app/state/reading-state.js": "de31765a03e804305f7e2aa0ff4c4f973cd54effde9f307c7a21217794fa9411",
     "src/config/accent-tokens.js": "e26ac1533de60a846b35a1490d2a0d55a488d50763d359f04e1fee332656a2c0",
@@ -171,7 +171,8 @@
     "src/platform/assets.js": "0b65428b4f91f5957a9bee71851b729bb71e746f38463e3b9fa8a6d300a3c030",
     "src/platform/entropy.js": "c11dcc43360723ccfbeb319e108f84f44909fa84d6ab0a1838550d70c47ee1a2",
     "src/platform/lifecycle-client.js": "e2a07897da27638c8c4e9e256af2d032a7cac0dc44a34c68b4fdd7573b212f2f",
-    "src/platform/pwa-client.js": "d08494477a6094b41e03f192551120e485fc0a02b364496fa4ea146de585cb5f",
+    "src/platform/offline-status.js": "1e125746d3784fcecbce0be16285f3f9c8d53e2c7a7679debb1134eb34720115",
+    "src/platform/pwa-client.js": "81420940e0b04ebfca5ece9bc0d6043a153a53df5a9e843be72bfcf2b908be11",
     "src/server/__init__.py": "5c2655e3f19e2f666e7f136bfda7bbfa06b5eae7a2db91fbcc805bcc452dc734",
     "src/server/app.py": "d47b0cddeaf7a16485d5b23add2c1bf0dcb32b5b2ee6a001b234daf0c48664a6",
     "src/server/http.py": "b0a431849b424102e4bf1fad7483421f04d17da8a6d1a904d003210527286391",
@@ -182,7 +183,7 @@
     "src/storage/legacy-record.js": "3787101177c8002573fb3efe6c074b8d2d76383cbab44068ac522f68e04ebe19",
     "src/storage/settings.js": "ec5ad7fa074df2498bf698e0776e57236031987c890e33d92b3d49906eadebe9",
     "src/styles/accent-tokens.css": "324df2a7d1dca1cf8c6ddbbb52f11fea07874088e3eae5bfe91a607bd78bd313",
-    "src/styles/cards.css": "47f7c3e36998e68e4cc5a2c6c8c1ad19504f3fa07c8516786d8a076f69f6bc45",
+    "src/styles/cards.css": "0e180cabebb528aff735bfb0eb4cba71ebdc699e184bc2497b0d85c23e80c423",
     "src/styles/desktop.css": "3abf52fc5d81edcca70597c0548ab5aa6207e90fc4456918a2fabf31ce6820ad",
     "src/styles/foundation.css": "30f101afc46b23e987a2721aa19b75bef70c3e0c8665195a39f8a4baf1815e7c",
     "src/styles/history.css": "bfcdf01b1e5d68a1fead3c51479d4ac6b2846718a04f4ed63b062f89354724bb",
@@ -195,11 +196,12 @@
     "src/ui/components/dialogs.js": "9684a129f9a08244d9b3116ceb0155fc8e6232681e2c8b8cccc23a88d1bfe886",
     "src/ui/components/toast.js": "a0eff02799f1cafbd5ba20f690ad8ba1d1ae9ec9d5ce1f9cf47cf3621eb10393",
     "src/ui/dom.js": "a1204ce5666f37447a1884e2b94f84ba10b3fc9a51e8958f3697a91baaf72dcb",
+    "src/ui/image-fallback.js": "ee50787bb11ae42c25792bada1369eeec885a42f1f905a7c3743b429a1f9c7c2",
     "src/ui/renderers/history.js": "398a17c64611aec6ef91993db7537aac653c4c2d122a3f657947dd5161d51083",
     "src/ui/renderers/setup.js": "b8456a2134a8c8f67df291c0a73dd1e8a78b5b18cc4da80594ba2c1f3bb7cf02",
     "src/ui/safe-dom.js": "882f55730daf9c65093cd7592769d61ce7ba79568a037c32c32858af0993cec2",
-    "sw.js": "470991d3d21e72724b85b496d2369abcb58776eda4e83683f99b7a4295ca5774"
+    "sw.js": "0032b0963cb1bf03d6355e763c5e0e01600c3b4fda48fff33b453793cbb3af99"
   },
   "schemaVersion": "1.0.0",
-  "sourceSetHash": "4e29b5cffbbe2eb6920311572391174d0e19bbff7685100270dd380da814be9d"
+  "sourceSetHash": "83d4127d2c4e181f3e845fdfe4734a5162c9f33445bbd6bb93af2554170d95d0"
 }

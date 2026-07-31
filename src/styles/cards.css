@@ -647,3 +647,9 @@
   padding: 20px 3px;
   text-align: center;
 }
+
+img[data-image-status="unavailable"] {
+  object-fit: contain;
+  padding: 18%;
+  background: rgba(12, 11, 24, 0.92);
+}

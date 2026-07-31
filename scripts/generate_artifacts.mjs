@@ -192,6 +192,7 @@ function buildOutputs() {
     ...walk("src/core").map((item) => `./${item}`),
     ...walk("src/platform").map((item) => `./${item}`),
     ...walk("src/storage").map((item) => `./${item}`),
+    ...walk("src/ui").map((item) => `./${item}`),
   ];
   const requiredKnowledge = [
     ...walk("src/knowledge").map((item) => `./${item}`),
