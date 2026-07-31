@@ -37,7 +37,7 @@
 - `UI-002`：兼容历史显示结构化结论、置信度、证据、关系、条件、冲突和覆盖缺口摘要。
 - `AX-002`：动态牌桌序号、牌位、正逆位、状态和方向键回归完成。
 - 阶段实现CWapi任务：`01KYWN5T8C2M7R4H9V1Q6P0ZAD`。
-- 最终full复验CWapi任务：`01KYWP3H7M1B8F6D2Q9S7V0ZKC`；最终commit以终态RESULT和远端分支核验为准。
+- 最终full复验CWapi任务：`01KYWQ6V9M1B7F3D2H8N5Z0KCA`；最终commit以终态RESULT和远端分支核验为准。
 
 ## 冻结不变量
 
