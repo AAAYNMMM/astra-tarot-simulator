@@ -1,6 +1,6 @@
-# MOD-001 模块、数据与平台基线
+# Phase M 模块、数据与平台基线
 
-**状态：MOD-001 基线**
+**状态：MOD-003A ESM入口已接线**
 
 本文件记录当前大型文件的职责、唯一迁移目标、公开 ID、存储结构和平台行为。它描述当前事实与后续归属，不切换运行入口，也不实现后期架构。
 
@@ -10,16 +10,18 @@
 
 ```text
 index.html
-├── styles.css
-├── data.js  → window.TarotData
-└── app.js   → 读取 window.TarotData
+├── src/styles/index.css
+└── src/app/bootstrap.js  → native ES Module
+    └── src/app/legacy-runtime.js  → controlled compatibility bridge
+        ├── data.js  → window.TarotData
+        └── app.js   → 读取 window.TarotData
 ```
 
 | 文件 | 当前行数 | 当前职责 | 本阶段判定 |
 |---|---:|---|---|
-| `app.js` | 1528 | 状态、随机、存储、控制器、渲染、动画、旧解读、历史、PWA和生命周期 | 已登记技术债，WARN，不得增长 |
-| `styles.css` | 4918 | 令牌、布局、组件、牌桌、牌阵、动画、弹窗、历史和响应式 | 已登记技术债，WARN，不得增长 |
-| `data.js` | 637 | 78张牌、42问题、4牌阵及旧全局导出 | 已登记技术债，WARN，不得增长 |
+| `app.js` | 1526 | 状态、随机、存储、控制器、渲染、动画、旧解读、历史、PWA和生命周期 | 已登记技术债，WARN，不得增长 |
+| `src/styles/` | 9个活动文件，最大714行 | 固定入口与八个连续规则模块 | `MOD-002` 已完成，全部低于硬上限 |
+| `data.js` | 635 | 78张牌、42问题、4牌阵及旧全局导出 | 已登记技术债，WARN，不得增长 |
 | `run.py` | 243 | 本地HTTP服务、生命周期、端口与浏览器启动 | 规模可接受，访问边界待强化 |
 | `sw.js` | 77 | 全资源预缓存、运行时缓存和离线回退 | 行为待 `MOD-006C` 分阶段替换 |
 
@@ -482,3 +484,16 @@ python automation/validate.py --scope baseline
 - `src/styles/responsive.css`
 
 Service Worker临时资源列表已同步并提升缓存版本。根目录旧样式文件不得重新出现；所有人工CSS继续受900行硬上限约束。
+
+
+---
+
+## 11. MOD-003A 当前运行入口
+
+- `package.json` 只声明私有仓库和原生 ESM 格式，不含任何依赖。
+- `index.html` 只加载 `src/app/bootstrap.js` 模块入口。
+- `src/app/legacy-runtime.js` 是旧 `data.js` 与 `app.js` 的唯一页面加载桥，顺序固定为数据后应用。
+- 两个新模块均可在 Node 中导入而不于顶层访问 DOM；浏览器启动只在检测到 `window` 与 `document` 后发生。
+- `tests/smoke_test.js` 已转换为 ESM，原命令 `node tests/smoke_test.js` 保持可用。
+- Service Worker 临时清单缓存模块入口、兼容桥及两个旧脚本。
+- 兼容桥与 `window.TarotData` 的删除任务仍为 `MOD-006A`。

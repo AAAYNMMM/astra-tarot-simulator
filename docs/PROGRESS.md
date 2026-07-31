@@ -8,11 +8,11 @@
 | 项目 | 当前值 |
 |---|---|
 | 当前阶段 | Phase M：模块化基础 |
-| 当前进行中任务 | 无 |
+| 当前进行中任务 | `MOD-003A` ES Module 入口、Node 模块格式与兼容桥 |
 | 最近完成任务 | `MOD-002` 拆分 CSS |
-| 下一任务 | `MOD-003A` ES Module 入口、Node 模块格式与兼容桥 |
+| 下一任务 | 无；`MOD-003A` 正在执行 |
 | 阻塞项 | 无 |
-| 工作分支 | `mod-002-split-css` |
+| 工作分支 | `mod-003a-esm-entry` |
 | 实现提交 | `4451e5da53d6ba81569a25c81a7d4cb4d77894ab` |
 | 最后更新时间 | 2026-07-31 |
 | 规划状态 | 已冻结且执行审查已收敛；不得继续用非阻断性规划推迟开发 |
@@ -191,9 +191,11 @@ src/styles/
 | 浏览器自动化 | 尚无仓库 harness | `MOD-006D` 逐步建立 |
 | GitHub Actions | 不使用 | CWapi 本地验证 |
 
-## 7. 下一任务：MOD-003A
+## 7. 当前任务：MOD-003A
 
-**状态：NEXT**
+**状态：IN_PROGRESS**
+
+起始提交：`fbcb3d0c4b2e99f800bc2adb316870aa1c57e69c`。实现分支：`mod-003a-esm-entry`。
 
 目标：建立最小 ES Module 页面入口和受控兼容桥，提交无依赖 `package.json`，明确 Node 脚本格式，并让旧 `app.js`、`data.js` 在渐进迁移期间继续由真实页面使用。
 
@@ -210,7 +212,7 @@ src/styles/
 ## 8. 阶段状态
 
 - Phase 0：`DONE`
-- Phase M：`PARENT-IN-PROGRESS`，唯一下一叶子任务 `MOD-003A`
+- Phase M：`PARENT-IN-PROGRESS`，当前叶子任务 `MOD-003A`
 - Phase 1：`BLOCKED`，等待 `MOD-006D`
 - Phase 2、3、7、8、9：`PARENT-PENDING`
 - Phase 4、5、6：`BACKLOG`

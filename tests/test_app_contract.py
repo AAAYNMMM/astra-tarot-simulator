@@ -47,11 +47,14 @@ class TarotAppContractTests(unittest.TestCase):
             "manifest.webmanifest",
             "sw.js",
             "icon.svg",
+            "package.json",
         }
         self.assertTrue(required.issubset({path.name for path in ROOT.iterdir()}))
         for relative_path in STYLE_FILES:
             self.assertTrue((ROOT / relative_path).is_file(), relative_path)
         self.assertFalse((ROOT / "styles.css").exists())
+        self.assertTrue((ROOT / "src/app/bootstrap.js").is_file())
+        self.assertTrue((ROOT / "src/app/legacy-runtime.js").is_file())
 
     def test_html_has_primary_interaction_contract(self) -> None:
         html = (ROOT / "index.html").read_text(encoding="utf-8")
@@ -68,8 +71,9 @@ class TarotAppContractTests(unittest.TestCase):
             "historyDialog",
         ):
             self.assertIn(f'id="{element_id}"', html)
-        self.assertIn('src="data.js"', html)
-        self.assertIn('src="app.js"', html)
+        self.assertIn('type="module" src="src/app/bootstrap.js"', html)
+        self.assertNotIn('<script src="data.js"></script>', html)
+        self.assertNotIn('<script src="app.js"></script>', html)
         self.assertNotIn('id="soundButton"', html)
         self.assertNotIn('id="copyButton"', html)
         self.assertNotIn('id="saveButton"', html)
@@ -219,7 +223,13 @@ class TarotAppContractTests(unittest.TestCase):
         self.assertNotIn("mix-blend-mode", styles)
 
     def test_static_assets_do_not_require_remote_cdn(self) -> None:
-        for filename in ("index.html", "data.js", "app.js"):
+        for filename in (
+            "index.html",
+            "data.js",
+            "app.js",
+            "src/app/bootstrap.js",
+            "src/app/legacy-runtime.js",
+        ):
             content = (ROOT / filename).read_text(encoding="utf-8")
             self.assertNotIn("https://cdn.", content)
             self.assertNotIn("fonts.googleapis.com", content)

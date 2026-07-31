@@ -4,7 +4,7 @@
 
 ## 当前实现范围
 
-Phase M 的 `MOD-001` 与 `MOD-002` 当前实现：
+Phase M 的 `MOD-001`、`MOD-002` 与 `MOD-003A` 当前实现：
 
 ```text
 python automation/validate.py --scope baseline
@@ -68,7 +68,7 @@ python scripts/check_import_boundaries.py --format json
 - 不需要 `npm install`。
 - 不创建或依赖 GitHub Actions。
 
-Node 缺失属于验证失败，不得静默跳过。
+Node 缺失属于验证失败，不得静默跳过。`package.json` 仅声明 `private: true` 与 `type: module`，不需要 `npm install`；`tests/smoke_test.js` 和运行源码均使用原生 ESM。
 
 ## CWapi证据要求
 

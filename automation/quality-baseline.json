@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "task": "MOD-002",
+  "task": "MOD-003A",
   "manualFileLimits": {
     "javascript": 600,
     "css": 900,

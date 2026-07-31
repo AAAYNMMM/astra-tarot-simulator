@@ -3,7 +3,7 @@ import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import vm from "node:vm";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
 const testDirectory = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(testDirectory, "..");
@@ -25,11 +25,42 @@ const requiredFiles = [
   "automation/README.md",
   "automation/quality-baseline.json",
   "src/README.md",
+  "package.json",
+  "src/app/bootstrap.js",
+  "src/app/legacy-runtime.js",
 ];
 
 for (const relativePath of requiredFiles) {
   assert.equal(exists(relativePath), true, `Missing MOD-001 deliverable: ${relativePath}`);
 }
+
+const packageMetadata = JSON.parse(read("package.json"));
+assert.equal(packageMetadata.private, true, "package.json must remain private");
+assert.equal(packageMetadata.type, "module", "Node .js files must use native ESM");
+assert.equal("dependencies" in packageMetadata, false, "MOD-003A may not add runtime dependencies");
+assert.equal("devDependencies" in packageMetadata, false, "MOD-003A may not add development dependencies");
+assert.equal(packageMetadata.scripts["test:smoke"], "node tests/smoke_test.js");
+assert.equal(packageMetadata.scripts["test:contracts"], "node tests/module_contract_test.mjs");
+
+const runtimeModule = await import(
+  pathToFileURL(path.join(root, "src/app/legacy-runtime.js")).href
+);
+assert.deepEqual([...runtimeModule.LEGACY_SCRIPT_PATHS], ["../../data.js", "../../app.js"]);
+assert.equal(runtimeModule.LEGACY_GLOBAL_NAME, "TarotData");
+assert.equal(typeof runtimeModule.startLegacyRuntime, "function");
+const bootstrapModule = await import(
+  pathToFileURL(path.join(root, "src/app/bootstrap.js")).href
+);
+assert.equal(typeof bootstrapModule.bootstrapBrowser, "function");
+const nodeBootstrap = await bootstrapModule.bootstrapBrowser({});
+assert.deepEqual(nodeBootstrap, {
+  started: false,
+  reason: "browser-globals-unavailable",
+});
+
+const smokeSource = read("tests/smoke_test.js");
+assert.match(smokeSource, /import fs from "node:fs";/, "smoke_test.js must use ESM imports");
+assert.equal(smokeSource.includes("require("), false, "smoke_test.js still uses CommonJS require");
 
 const dataSource = read("data.js");
 const sandbox = { window: {} };
@@ -100,14 +131,23 @@ const appSource = read("app.js");
 assert.match(appSource, /astra-tarot-history-v1/, "Legacy history storage key changed");
 assert.match(appSource, /astra-tarot-settings-v1/, "Legacy settings storage key changed");
 assert.match(appSource, /const HISTORY_LIMIT = 20;/, "Legacy history limit baseline changed");
-assert.match(appSource, /window\.TarotData/, "Legacy data bridge changed before MOD-003A");
+assert.match(appSource, /window\.TarotData/, "Legacy app must remain behind the MOD-003A bridge until MOD-006A");
 assert.match(appSource, /Math\.random\(\)/, "Current random fallback must be recorded until MOD-003B");
 
 const indexSource = read("index.html");
-const dataScriptIndex = indexSource.indexOf('<script src="data.js"></script>');
-const appScriptIndex = indexSource.indexOf('<script src="app.js"></script>');
-assert.ok(dataScriptIndex >= 0, "index.html must still load data.js during MOD-001");
-assert.ok(appScriptIndex > dataScriptIndex, "index.html must still load app.js after data.js");
+assert.ok(
+  indexSource.includes('<script type="module" src="src/app/bootstrap.js"></script>'),
+  "index.html must use the native ESM bootstrap",
+);
+assert.equal(indexSource.includes('<script src="data.js"></script>'), false);
+assert.equal(indexSource.includes('<script src="app.js"></script>'), false);
+const bootstrapSource = read("src/app/bootstrap.js");
+assert.match(bootstrapSource, /from "\.\/legacy-runtime\.js"/);
+assert.match(bootstrapSource, /bootstrapBrowser/);
+const legacyRuntimeSource = read("src/app/legacy-runtime.js");
+assert.match(legacyRuntimeSource, /LEGACY_SCRIPT_PATHS/);
+assert.match(legacyRuntimeSource, /data\.js/);
+assert.match(legacyRuntimeSource, /app\.js/);
 
 assert.ok(
   indexSource.includes('<link rel="stylesheet" href="src/styles/index.css" />'),
@@ -143,8 +183,15 @@ for (const relativePath of cssImports) {
 
 const serviceWorkerSource = read("sw.js");
 assert.match(serviceWorkerSource, /cache\.addAll\(CORE_FILES\)/, "Current precache baseline changed");
-assert.match(serviceWorkerSource, /astra-tarot-v6/, "MOD-002 must bump the cache version");
-for (const relativePath of ["src/styles/index.css", ...cssImports]) {
+assert.match(serviceWorkerSource, /astra-tarot-v7/, "MOD-003A must bump the cache version");
+for (const relativePath of [
+  "src/styles/index.css",
+  ...cssImports,
+  "src/app/bootstrap.js",
+  "src/app/legacy-runtime.js",
+  "data.js",
+  "app.js",
+]) {
   assert.ok(serviceWorkerSource.includes(`"./${relativePath}"`), `SW missing ${relativePath}`);
 }
 assert.equal(serviceWorkerSource.includes('"./styles.css"'), false, "SW still caches styles.css");
@@ -187,5 +234,5 @@ for (const requiredText of [
 }
 
 console.log(
-  "MOD-002 module contract passed: CSS cascade, public IDs, legacy storage, PWA resources, and debt baseline are preserved.",
+  "MOD-003A module contract passed: native ESM entry, controlled legacy bridge, Node format, CSS cascade, and PWA resources are preserved.",
 );

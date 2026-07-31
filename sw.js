@@ -1,4 +1,4 @@
-const CACHE_NAME = "astra-tarot-v6";
+const CACHE_NAME = "astra-tarot-v7";
 const CARD_RANKS = [
   "ace",
   "two",
@@ -45,6 +45,8 @@ const CORE_FILES = [
   "./src/styles/desktop.css",
   "./src/styles/wide.css",
   "./src/styles/responsive.css",
+  "./src/app/bootstrap.js",
+  "./src/app/legacy-runtime.js",
   "./data.js",
   "./app.js",
   "./icon.svg",

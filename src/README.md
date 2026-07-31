@@ -1,6 +1,6 @@
 # `src/` 目标职责
 
-`MOD-001` 只建立职责边界，不把现有运行入口切换到这里。真实 ES Module 接线从 `MOD-003A` 开始。
+`MOD-003A` 已建立真实 ES Module 页面入口；旧业务代码暂时只通过受控兼容桥运行，并将在 `MOD-006A` 删除。
 
 ## 目标目录
 
@@ -118,3 +118,14 @@ src/styles/
 ```
 
 `index.css` 只固定导入顺序；具体规则保留在八个连续模块中。后续修改不得重新创建根目录 `styles.css`。
+
+
+## 当前活动JavaScript入口
+
+```text
+src/app/
+├── bootstrap.js
+└── legacy-runtime.js
+```
+
+`bootstrap.js` 是 `index.html` 的唯一脚本入口。`legacy-runtime.js` 顺序加载根目录 `data.js` 和 `app.js`，并验证 `window.TarotData` 已建立。两个模块不引入依赖、不使用裸导入，并可被 Node 安全导入；旧全局和大型文件继续受 `MOD-006A` 删除门禁约束。

@@ -1,10 +1,10 @@
-"use strict";
+import fs from "node:fs";
+import path from "node:path";
+import vm from "node:vm";
+import { fileURLToPath } from "node:url";
 
-const fs = require("node:fs");
-const path = require("node:path");
-const vm = require("node:vm");
-
-const root = path.resolve(__dirname, "..");
+const testDirectory = path.dirname(fileURLToPath(import.meta.url));
+const root = path.resolve(testDirectory, "..");
 const source = fs.readFileSync(path.join(root, "data.js"), "utf8");
 const sandbox = { window: {} };
 vm.createContext(sandbox);
@@ -58,4 +58,4 @@ for (const card of data.deck) {
   }
 }
 
-console.log("Tarot data smoke test passed: 78 cards, 42 questions, and 1/3/5/10-card mainstream spreads.");
+console.log("Tarot data smoke test passed: ESM runner, 78 cards, 42 questions, and 1/3/5/10-card mainstream spreads.");
