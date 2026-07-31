@@ -89,8 +89,44 @@ def collect_findings(root: Path, baseline: dict[str, Any], mode: str) -> list[Fi
     excluded = set(baseline["scan"]["excludedDirectories"])
     extensions = set(baseline["scan"]["extensions"])
     debts = {item["path"]: item for item in baseline["knownDebt"]}
+    resolved_debts = {item["path"]: item for item in baseline.get("resolvedDebt", [])}
     findings: list[Finding] = []
     visited: set[str] = set()
+
+    for relative_name, debt in sorted(resolved_debts.items()):
+        relative_path = Path(relative_name)
+        absolute_path = root / relative_path
+        kind = debt["kind"]
+        limit = int(limits[kind])
+        visited.add(relative_path.as_posix())
+        if absolute_path.exists():
+            lines = line_count(absolute_path) if absolute_path.is_file() else 0
+            findings.append(
+                Finding(
+                    path=relative_path.as_posix(),
+                    kind=kind,
+                    lines=lines,
+                    limit=limit,
+                    status="FAIL",
+                    reason=(
+                        f"resolved debt path reintroduced after {debt['resolvedByTask']}; "
+                        f"use {debt['replacement']}"
+                    ),
+                    expires_after_task=debt["resolvedByTask"],
+                )
+            )
+        else:
+            findings.append(
+                Finding(
+                    path=relative_path.as_posix(),
+                    kind=kind,
+                    lines=0,
+                    limit=limit,
+                    status="PASS",
+                    reason=f"resolved debt remains absent; replacement is {debt['replacement']}",
+                    expires_after_task=debt["resolvedByTask"],
+                )
+            )
 
     for relative_name, debt in sorted(debts.items()):
         relative_path = Path(relative_name)

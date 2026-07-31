@@ -99,3 +99,22 @@ config    → 无
 - `MOD-003A` 建立模块入口与旧代码兼容桥。
 - `MOD-006A` 只删除已经被验证替代的旧入口、全局和大型文件。
 - 现有公开 ID、牌阵、抽牌分布、交互和旧历史读取在 Phase M 保持不变。
+
+## 当前活动CSS结构
+
+`MOD-002` 已将根目录单体样式迁入以下真实页面入口：
+
+```text
+src/styles/
+├── index.css
+├── foundation.css
+├── setup.css
+├── cards.css
+├── insights.css
+├── history.css
+├── desktop.css
+├── wide.css
+└── responsive.css
+```
+
+`index.css` 只固定导入顺序；具体规则保留在八个连续模块中。后续修改不得重新创建根目录 `styles.css`。

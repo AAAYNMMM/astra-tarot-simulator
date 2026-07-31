@@ -4,7 +4,7 @@
 
 ## 当前实现范围
 
-Phase M 的 `MOD-001` 只实现：
+Phase M 的 `MOD-001` 与 `MOD-002` 当前实现：
 
 ```text
 python automation/validate.py --scope baseline
@@ -41,8 +41,9 @@ ASTRA_VALIDATION_SUMMARY={...}
 | 文件 | 冻结行数 | 硬上限 | 最迟清除 |
 |---|---:|---:|---|
 | `app.js` | 1528 | 600 | `MOD-006A` |
-| `styles.css` | 4918 | 900 | `MOD-002` |
 | `data.js` | 637 | 600 | `MOD-006A` |
+
+`styles.css` 已由 `MOD-002` 清除；`src/styles/index.css` 固定导入八个活动样式模块，每个人工 CSS 文件均不超过 900 行。
 
 ## 单独运行检查
 

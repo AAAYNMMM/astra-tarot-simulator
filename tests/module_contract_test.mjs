@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import vm from "node:vm";
@@ -108,8 +109,45 @@ const appScriptIndex = indexSource.indexOf('<script src="app.js"></script>');
 assert.ok(dataScriptIndex >= 0, "index.html must still load data.js during MOD-001");
 assert.ok(appScriptIndex > dataScriptIndex, "index.html must still load app.js after data.js");
 
+assert.ok(
+  indexSource.includes('<link rel="stylesheet" href="src/styles/index.css" />'),
+  "index.html must load the MOD-002 stylesheet index",
+);
+assert.equal(indexSource.includes('href="styles.css"'), false, "Legacy styles.css must not be loaded");
+assert.equal(exists("styles.css"), false, "Legacy styles.css must be removed after MOD-002");
+
+const styleIndex = read("src/styles/index.css");
+const cssImports = [...styleIndex.matchAll(/@import url\("\.\/(.+?)"\);/g)].map(
+  (match) => `src/styles/${match[1]}`,
+);
+assert.deepEqual(cssImports, [
+  "src/styles/foundation.css",
+  "src/styles/setup.css",
+  "src/styles/cards.css",
+  "src/styles/insights.css",
+  "src/styles/history.css",
+  "src/styles/desktop.css",
+  "src/styles/wide.css",
+  "src/styles/responsive.css"
+]);
+const reconstructedCss = cssImports.map((relativePath) => read(relativePath)).join("");
+assert.equal(
+  crypto.createHash("sha256").update(reconstructedCss).digest("hex"),
+  "087ab37e367357fbb1ea4532f0f0d9a81973e2dadd163a6d7c104cfbc6c466db",
+  "Split CSS modules must reconstruct the exact original stylesheet bytes",
+);
+for (const relativePath of cssImports) {
+  const lines = read(relativePath).split(/\r?\n/).length;
+  assert.ok(lines <= 901, `${relativePath} exceeds the 900-line manual CSS limit`);
+}
+
 const serviceWorkerSource = read("sw.js");
 assert.match(serviceWorkerSource, /cache\.addAll\(CORE_FILES\)/, "Current precache baseline changed");
+assert.match(serviceWorkerSource, /astra-tarot-v6/, "MOD-002 must bump the cache version");
+for (const relativePath of ["src/styles/index.css", ...cssImports]) {
+  assert.ok(serviceWorkerSource.includes(`"./${relativePath}"`), `SW missing ${relativePath}`);
+}
+assert.equal(serviceWorkerSource.includes('"./styles.css"'), false, "SW still caches styles.css");
 assert.match(serviceWorkerSource, /self\.skipWaiting\(\)/, "Current skipWaiting baseline changed");
 assert.match(serviceWorkerSource, /self\.clients\.claim\(\)/, "Current clients.claim baseline changed");
 assert.match(
@@ -124,9 +162,12 @@ assert.deepEqual(
   qualityBaseline.knownDebt.map((item) => [item.path, item.baselineLines, item.expiresAfterTask]),
   [
     ["app.js", 1528, "MOD-006A"],
-    ["styles.css", 4918, "MOD-002"],
     ["data.js", 637, "MOD-006A"],
   ],
+);
+assert.deepEqual(
+  qualityBaseline.resolvedDebt.map((item) => [item.path, item.resolvedByTask, item.replacement]),
+  [["styles.css", "MOD-002", "src/styles/index.css"]],
 );
 assert.equal(qualityBaseline.policy.knownDebtGrowth, "FAIL");
 assert.equal(qualityBaseline.policy.newUnregisteredOverLimitFile, "FAIL");
@@ -146,5 +187,5 @@ for (const requiredText of [
 }
 
 console.log(
-  "MOD-001 module contract passed: public IDs, legacy storage, runtime entry, PWA behavior, and debt baseline are recorded.",
+  "MOD-002 module contract passed: CSS cascade, public IDs, legacy storage, PWA resources, and debt baseline are preserved.",
 );

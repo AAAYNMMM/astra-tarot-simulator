@@ -3,6 +3,7 @@ from __future__ import annotations
 import functools
 import http.server
 import pathlib
+import re
 import threading
 import unittest
 import urllib.request
@@ -11,13 +12,35 @@ import run as launcher
 
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
+STYLE_FILES = (
+    "src/styles/index.css",
+    "src/styles/foundation.css",
+    "src/styles/setup.css",
+    "src/styles/cards.css",
+    "src/styles/insights.css",
+    "src/styles/history.css",
+    "src/styles/desktop.css",
+    "src/styles/wide.css",
+    "src/styles/responsive.css",
+)
+
+
+def read_styles() -> str:
+    index_source = (ROOT / STYLE_FILES[0]).read_text(encoding="utf-8")
+    imported_names = re.findall(r'@import url\("\./(.+?)"\);', index_source)
+    expected_names = [pathlib.PurePosixPath(item).name for item in STYLE_FILES[1:]]
+    if imported_names != expected_names:
+        raise AssertionError(f"Unexpected CSS import order: {imported_names!r}")
+    return "".join(
+        (ROOT / relative_path).read_text(encoding="utf-8")
+        for relative_path in STYLE_FILES[1:]
+    )
 
 
 class TarotAppContractTests(unittest.TestCase):
     def test_required_files_exist(self) -> None:
         required = {
             "index.html",
-            "styles.css",
             "data.js",
             "app.js",
             "run.py",
@@ -26,6 +49,9 @@ class TarotAppContractTests(unittest.TestCase):
             "icon.svg",
         }
         self.assertTrue(required.issubset({path.name for path in ROOT.iterdir()}))
+        for relative_path in STYLE_FILES:
+            self.assertTrue((ROOT / relative_path).is_file(), relative_path)
+        self.assertFalse((ROOT / "styles.css").exists())
 
     def test_html_has_primary_interaction_contract(self) -> None:
         html = (ROOT / "index.html").read_text(encoding="utf-8")
@@ -113,7 +139,7 @@ class TarotAppContractTests(unittest.TestCase):
 
     def test_centered_display_scale_and_plain_history_toggle(self) -> None:
         app_source = (ROOT / "app.js").read_text(encoding="utf-8")
-        styles = (ROOT / "styles.css").read_text(encoding="utf-8")
+        styles = read_styles()
         self.assertNotIn("zoom: 1.1", styles)
         self.assertIn("zoom: 1.5", styles)
         self.assertIn('data-spread-id="cross"', styles)
@@ -124,7 +150,7 @@ class TarotAppContractTests(unittest.TestCase):
     def test_mainstream_spreads_and_richer_interpretation_contract(self) -> None:
         app_source = (ROOT / "app.js").read_text(encoding="utf-8")
         data_source = (ROOT / "data.js").read_text(encoding="utf-8")
-        styles = (ROOT / "styles.css").read_text(encoding="utf-8")
+        styles = read_styles()
         for expected in (
             'id: "cross"',
             'name: "五牌十字"',
@@ -152,7 +178,7 @@ class TarotAppContractTests(unittest.TestCase):
         self.assertIn("rotate(90deg)", styles)
 
     def test_celtic_cross_scales_to_the_stage_and_keeps_both_center_cards_clickable(self) -> None:
-        styles = (ROOT / "styles.css").read_text(encoding="utf-8")
+        styles = read_styles()
         self.assertIn("container-type: size", styles)
         self.assertIn("min(15cqw, 12.8cqh)", styles)
         self.assertIn(
@@ -168,7 +194,7 @@ class TarotAppContractTests(unittest.TestCase):
 
     def test_deck_selection_switches_real_faces_and_backs_without_color_filters(self) -> None:
         app_source = (ROOT / "app.js").read_text(encoding="utf-8")
-        styles = (ROOT / "styles.css").read_text(encoding="utf-8")
+        styles = read_styles()
         html = (ROOT / "index.html").read_text(encoding="utf-8")
         for deck_id, deck_name, asset_directory in (
             ("rws", "经典韦特", "assets/rws"),
@@ -193,8 +219,12 @@ class TarotAppContractTests(unittest.TestCase):
         self.assertNotIn("mix-blend-mode", styles)
 
     def test_static_assets_do_not_require_remote_cdn(self) -> None:
-        for filename in ("index.html", "styles.css", "data.js", "app.js"):
+        for filename in ("index.html", "data.js", "app.js"):
             content = (ROOT / filename).read_text(encoding="utf-8")
+            self.assertNotIn("https://cdn.", content)
+            self.assertNotIn("fonts.googleapis.com", content)
+        for relative_path in STYLE_FILES:
+            content = (ROOT / relative_path).read_text(encoding="utf-8")
             self.assertNotIn("https://cdn.", content)
             self.assertNotIn("fonts.googleapis.com", content)
 

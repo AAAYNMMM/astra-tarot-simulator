@@ -467,3 +467,18 @@ python automation/validate.py --scope baseline
 - 没有运行代码、公开ID或用户数据行为变化。
 
 通过后唯一下一叶子任务为 `MOD-002`。
+
+## MOD-002 CSS迁移结果
+
+`styles.css` 已按原始顶层规则边界拆分，字节级拼接结果与原文件一致。`index.html` 只加载 `src/styles/index.css`，该入口按固定顺序导入：
+
+- `src/styles/foundation.css`
+- `src/styles/setup.css`
+- `src/styles/cards.css`
+- `src/styles/insights.css`
+- `src/styles/history.css`
+- `src/styles/desktop.css`
+- `src/styles/wide.css`
+- `src/styles/responsive.css`
+
+Service Worker临时资源列表已同步并提升缓存版本。根目录旧样式文件不得重新出现；所有人工CSS继续受900行硬上限约束。

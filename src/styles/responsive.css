@@ -1,0 +1,365 @@
+
+@media screen and (max-width: 760px) {
+  .card-table[data-spread-id="cross"] {
+    grid-template-columns: repeat(3, minmax(60px, 82px));
+    grid-template-rows: repeat(3, auto);
+    gap: 4px 12px;
+    padding: 8px 8px 34px;
+  }
+
+  .card-table[data-spread-id="cross"] .drawn-card:nth-child(1) {
+    grid-column: 2;
+    grid-row: 2;
+  }
+
+  .card-table[data-spread-id="cross"] .drawn-card:nth-child(2) {
+    grid-column: 1;
+    grid-row: 2;
+    margin-left: 0;
+  }
+
+  .card-table[data-spread-id="cross"] .drawn-card:nth-child(3) {
+    grid-column: 3;
+    grid-row: 2;
+  }
+
+  .card-table[data-spread-id="cross"] .drawn-card:nth-child(4) {
+    grid-column: 2;
+    grid-row: 1;
+    margin-left: 0;
+  }
+
+  .card-table[data-spread-id="cross"] .drawn-card:nth-child(5) {
+    grid-column: 2;
+    grid-row: 3;
+    margin-left: 0;
+  }
+
+  .card-table[data-spread-id="cross"] .card-hitbox {
+    transform: none;
+  }
+
+  .card-table[data-spread-id="cross"] .position-tag {
+    min-height: 28px;
+    margin-top: 6px;
+  }
+}
+
+@media screen and (max-height: 760px) and (min-width: 1221px) {
+  .card-table[data-spread-id="cross"] {
+    grid-template-columns: repeat(3, minmax(62px, 78px));
+    gap: 2px 16px;
+    padding: 4px 12px 30px;
+  }
+
+  .card-table[data-spread-id="cross"] .position-tag {
+    min-height: 24px;
+    margin-top: 4px;
+  }
+}
+
+.card-table[data-spread-id="celtic"] .drawn-card:nth-child(2) {
+  pointer-events: none;
+}
+
+.card-table[data-spread-id="celtic"] .drawn-card:nth-child(2) .card-hitbox {
+  pointer-events: auto;
+}
+
+@media screen and (min-width: 761px) {
+  .card-table[data-spread-id="celtic"] {
+    grid-template-columns:
+      repeat(3, max-content)
+      clamp(10px, 1.7vw, 28px)
+      max-content;
+    grid-template-rows: repeat(4, max-content);
+    align-content: center;
+    column-gap: clamp(8px, 1.05vw, 18px);
+    column-gap: clamp(8px, 1.05cqw, 20px);
+    row-gap: clamp(5px, 1.15vh, 14px);
+    row-gap: clamp(8px, 1.3cqh, 18px);
+    padding: 5px 16px 31px;
+  }
+
+  .card-table[data-spread-id="celtic"] .drawn-card {
+    width: clamp(46px, min(4.4vw, 8vh), 82px);
+    width: clamp(54px, min(15cqw, 12.8cqh), 190px);
+    align-self: center;
+    justify-self: center;
+  }
+
+  .card-table[data-spread-id="celtic"] .card-hitbox {
+    transform: none;
+  }
+
+  .card-table[data-spread-id="celtic"] .card-hitbox:hover {
+    transform: translateY(-3px);
+  }
+
+  .card-table[data-spread-id="celtic"] .position-tag {
+    position: absolute;
+    top: calc(100% + 3px);
+    left: 50%;
+    width: max-content;
+    max-width: 118px;
+    min-height: 0;
+    gap: 3px;
+    margin: 0;
+    transform: translateX(-50%);
+  }
+
+  .card-table[data-spread-id="celtic"] .position-tag b {
+    width: 14px;
+    height: 14px;
+    font-size: 7px;
+  }
+
+  .card-table[data-spread-id="celtic"] .position-tag span {
+    max-width: 92px;
+    font-size: clamp(8.5px, 0.62vw, 10.5px);
+    font-size: clamp(9px, 1.05cqw, 12px);
+  }
+
+  .card-table[data-spread-id="celtic"] .drawn-card:nth-child(1) {
+    z-index: 2;
+    grid-column: 2;
+    grid-row: 2;
+  }
+
+  .card-table[data-spread-id="celtic"] .drawn-card:nth-child(2) {
+    z-index: 4;
+    grid-column: 2;
+    grid-row: 2;
+  }
+
+  .card-table[data-spread-id="celtic"] .drawn-card:nth-child(2) .card-hitbox,
+  .card-table[data-spread-id="celtic"] .drawn-card:nth-child(2) .card-hitbox:disabled:hover {
+    transform: rotate(90deg) scale(0.69);
+  }
+
+  .card-table[data-spread-id="celtic"] .drawn-card:nth-child(2) .card-hitbox:hover {
+    transform: rotate(90deg) scale(0.72);
+  }
+
+  .card-table[data-spread-id="celtic"] .drawn-card:nth-child(2) .position-tag {
+    top: -8px;
+    color: var(--gold-light);
+  }
+
+  .card-table[data-spread-id="celtic"] .drawn-card:nth-child(3) {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .card-table[data-spread-id="celtic"] .drawn-card:nth-child(4) {
+    grid-column: 3;
+    grid-row: 2;
+  }
+
+  .card-table[data-spread-id="celtic"] .drawn-card:nth-child(5) {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .card-table[data-spread-id="celtic"] .drawn-card:nth-child(5) .position-tag {
+    top: 50%;
+    left: calc(100% + 5px);
+    transform: translateY(-50%);
+  }
+
+  .card-table[data-spread-id="celtic"] .drawn-card:nth-child(6) {
+    grid-column: 2;
+    grid-row: 3;
+  }
+
+  .card-table[data-spread-id="celtic"] .drawn-card:nth-child(7) {
+    grid-column: 5;
+    grid-row: 4;
+  }
+
+  .card-table[data-spread-id="celtic"] .drawn-card:nth-child(8) {
+    grid-column: 5;
+    grid-row: 3;
+  }
+
+  .card-table[data-spread-id="celtic"] .drawn-card:nth-child(9) {
+    grid-column: 5;
+    grid-row: 2;
+  }
+
+  .card-table[data-spread-id="celtic"] .drawn-card:nth-child(10) {
+    grid-column: 5;
+    grid-row: 1;
+  }
+
+  .card-table[data-spread-id="celtic"] .drawn-card:nth-child(n + 7) .position-tag {
+    top: 50%;
+    left: calc(100% + 5px);
+    max-width: 104px;
+    transform: translateY(-50%);
+  }
+}
+
+@media screen and (max-width: 760px) {
+  .reading-panel[data-spread-id="celtic"] {
+    min-height: 680px;
+  }
+
+  .card-table[data-spread-id="celtic"] {
+    grid-template-columns: repeat(3, max-content) 7px max-content;
+    grid-template-rows: repeat(4, max-content);
+    align-content: center;
+    column-gap: 6px;
+    row-gap: 8px;
+    padding: 8px 6px 35px;
+  }
+
+  .card-table[data-spread-id="celtic"] .drawn-card {
+    width: clamp(43px, 13vw, 58px);
+    align-self: center;
+    justify-self: center;
+  }
+
+  .card-table[data-spread-id="celtic"] .card-hitbox {
+    transform: none;
+  }
+
+  .card-table[data-spread-id="celtic"] .position-tag {
+    position: absolute;
+    top: calc(100% + 2px);
+    left: 50%;
+    width: max-content;
+    max-width: 76px;
+    min-height: 0;
+    gap: 2px;
+    margin: 0;
+    transform: translateX(-50%);
+  }
+
+  .card-table[data-spread-id="celtic"] .position-tag b {
+    width: 12px;
+    height: 12px;
+    font-size: 6.5px;
+  }
+
+  .card-table[data-spread-id="celtic"] .position-tag span {
+    max-width: 60px;
+    font-size: 8px;
+  }
+
+  .card-table[data-spread-id="celtic"] .drawn-card:nth-child(1) {
+    z-index: 2;
+    grid-column: 2;
+    grid-row: 2;
+  }
+
+  .card-table[data-spread-id="celtic"] .drawn-card:nth-child(2) {
+    z-index: 4;
+    grid-column: 2;
+    grid-row: 2;
+  }
+
+  .card-table[data-spread-id="celtic"] .drawn-card:nth-child(2) .card-hitbox,
+  .card-table[data-spread-id="celtic"] .drawn-card:nth-child(2) .card-hitbox:disabled:hover {
+    transform: rotate(90deg) scale(0.68);
+  }
+
+  .card-table[data-spread-id="celtic"] .drawn-card:nth-child(2) .position-tag {
+    top: -7px;
+    color: var(--gold-light);
+  }
+
+  .card-table[data-spread-id="celtic"] .drawn-card:nth-child(3) {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .card-table[data-spread-id="celtic"] .drawn-card:nth-child(4) {
+    grid-column: 3;
+    grid-row: 2;
+  }
+
+  .card-table[data-spread-id="celtic"] .drawn-card:nth-child(5) {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .card-table[data-spread-id="celtic"] .drawn-card:nth-child(5) .position-tag {
+    top: 50%;
+    right: calc(100% + 3px);
+    left: auto;
+    transform: translateY(-50%);
+  }
+
+  .card-table[data-spread-id="celtic"] .drawn-card:nth-child(6) {
+    grid-column: 2;
+    grid-row: 3;
+  }
+
+  .card-table[data-spread-id="celtic"] .drawn-card:nth-child(7) {
+    grid-column: 5;
+    grid-row: 4;
+  }
+
+  .card-table[data-spread-id="celtic"] .drawn-card:nth-child(8) {
+    grid-column: 5;
+    grid-row: 3;
+  }
+
+  .card-table[data-spread-id="celtic"] .drawn-card:nth-child(9) {
+    grid-column: 5;
+    grid-row: 2;
+  }
+
+  .card-table[data-spread-id="celtic"] .drawn-card:nth-child(10) {
+    grid-column: 5;
+    grid-row: 1;
+  }
+
+  .card-table[data-spread-id="celtic"] .drawn-card:nth-child(10) .position-tag {
+    top: 50%;
+    left: calc(100% + 3px);
+    transform: translateY(-50%);
+  }
+}
+
+@media screen {
+  .question-copy small,
+  .dialog-tip {
+    font-size: 10.5px;
+  }
+
+  .position-tag b {
+    font-size: 8.5px;
+  }
+
+  .help-content section > span {
+    font-size: 9px;
+  }
+
+  .help-content h3 {
+    font-size: 13px;
+  }
+
+  .help-content p,
+  .help-note p {
+    font-size: 11.5px;
+    line-height: 1.75;
+  }
+
+  .app-footer button {
+    font-size: 9px;
+  }
+
+  .history-expanded > p {
+    font-size: 10px;
+  }
+
+  .history-expanded > div span {
+    font-size: 8.5px;
+  }
+
+  .toast {
+    font-size: 10px;
+  }
+}
