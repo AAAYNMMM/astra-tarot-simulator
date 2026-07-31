@@ -6,12 +6,12 @@
 
 | 项目 | 当前值 |
 |---|---|
-| 当前阶段 | Phase 1：质量门禁与知识协议 |
-| 当前进行中任务 | 无 |
+| 当前阶段 | Phase 1：数据、问题和牌位契约基础 |
+| 当前进行中任务 | Phase 1连续执行：`TQ-002`至`TQ-005B` |
 | 最近完成任务 | `TQ-001` CardSemanticProfile结构Schema |
-| 唯一下一任务 | `TQ-002` 词典、来源和解释政策 |
+| 唯一下一任务 | 无；阶段执行期间不释放叶子NEXT |
 | 阻塞项 | 无 |
-| 工作分支 | `phase-m-completion` |
+| 工作分支 | `phase-1-completion` |
 | Phase M状态 | `PARENT-DONE` |
 | Phase 1状态 | `PARENT-IN-PROGRESS` |
 | 最后更新时间 | 2026-07-31 |
@@ -29,20 +29,19 @@
 | `MOD-006C` | `DONE` | `b8973a7f1077234a04d115652e05324706dafd07`；分类缓存与离线状态 |
 | `MOD-006D` | `DONE` | `70e5a70ee1f66802afdff73aa97522a5183f7181`；固定full复验 `01KYG9PHM6AN7` |
 
-## Phase 1完成记录
+## Phase 1执行队列
 
-| 任务 | 状态 | 产物/证据 |
-|---|---|---|
-| `TQ-001` | `DONE` | Draft 2020-12 CardSemanticProfile Schema、无依赖验证器、合法/失败夹具、稳定错误码和full接入 |
+```text
+TQ-002 → EV-000A → TQ-003 → TQ-004
+→ QP-001 → QP-002 → PO-001 → TQ-005A → TQ-005B
+```
 
-## 冻结不变量
+本阶段只在全部叶子任务、生成产物、消费者验证和固定commit full RESULT完成后停止。
+
+## 已冻结不变量
 
 - 78张牌、42个固定问题、1/3/5/10牌阵、公开ID、旧历史键和随机分布不变。
 - 人工JS/CSS无超限技术债；不引入npm依赖、构建步骤或GitHub Actions。
 - 人工源是唯一真相；`src/generated/` 必须由永久生成器重建并通过陈旧检查。
 - `automation/validate.py --scope full` 是完整回归入口。
-- `TQ-001`只冻结Card结构；QuestionProfile和Position Operator仍分别由`QP-002`和`PO-001`冻结。
-
-## 唯一NEXT：TQ-002
-
-建立标签、角色、逆位、领域、维度、来源与解释政策的正式词典和注册规则；验证成员资格、同义词、来源引用和跨词表约束，不修改 `TQ-001` 已冻结的结构职责。
+- `TQ-001`只冻结Card结构；词典、QuestionProfile和Position Operator分别由本阶段后续任务冻结。
