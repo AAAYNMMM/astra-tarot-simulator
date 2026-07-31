@@ -533,3 +533,8 @@ src/storage/legacy-record.js
 ## MOD-004B安全边界
 
 本地服务仅公开应用壳、`assets/` 与 `src/` 运行资源；生命周期接口使用HttpOnly SameSite会话Cookie、回环Host与Origin校验。CSP不包含 `unsafe-inline`，运行时颜色通过有限accent token和外部CSS表达。
+
+
+## MOD-005知识与旧引擎边界
+
+78张牌、42个问题和4个牌阵的人工源迁入 `src/knowledge/legacy/` 与 `src/knowledge/spreads/`；根 `data.js` 仅作为临时兼容快照，不再由页面或Service Worker加载。旧单牌解释和综合推理迁入 `src/engine/legacy/`，页面结果与公开ID保持不变。

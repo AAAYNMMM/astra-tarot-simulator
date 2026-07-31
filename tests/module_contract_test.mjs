@@ -52,6 +52,16 @@ const requiredFiles = [
   "src/storage/settings.js",
   "src/storage/legacy-history.js",
   "src/storage/legacy-record.js",
+  "src/engine/legacy/card-reading.js",
+  "src/engine/legacy/synthesis.js",
+  "src/knowledge/legacy/cards/major.js",
+  "src/knowledge/legacy/cards/minor.js",
+  "src/knowledge/legacy/questions.js",
+  "src/knowledge/spreads/definitions.js",
+  "src/knowledge/legacy/build.js",
+  "src/knowledge/legacy/metadata.js",
+  "src/knowledge/legacy/index.js",
+  "tests/knowledge_contract_test.mjs",
 ];
 
 for (const relativePath of requiredFiles) {
@@ -70,7 +80,7 @@ assert.equal(packageMetadata.scripts["test:foundation"], "node tests/foundation_
 const runtimeModule = await import(
   pathToFileURL(path.join(root, "src/app/legacy-runtime.js")).href
 );
-assert.deepEqual([...runtimeModule.LEGACY_SCRIPT_PATHS], ["../../data.js", "../../app.js"]);
+assert.deepEqual([...runtimeModule.LEGACY_SCRIPT_PATHS], ["../../app.js"]);
 assert.equal(runtimeModule.LEGACY_GLOBAL_NAME, "TarotData");
 assert.equal(runtimeModule.LEGACY_RUNTIME_GLOBAL_NAME, "AstraRuntime");
 assert.equal(typeof runtimeModule.createLegacyRuntimeBindings, "function");
@@ -187,7 +197,8 @@ assert.match(bootstrapSource, /from "\.\/legacy-runtime\.js"/);
 assert.match(bootstrapSource, /bootstrapBrowser/);
 const legacyRuntimeSource = read("src/app/legacy-runtime.js");
 assert.match(legacyRuntimeSource, /LEGACY_SCRIPT_PATHS/);
-assert.match(legacyRuntimeSource, /data\.js/);
+assert.equal(legacyRuntimeSource.includes("../../data.js"), false);
+assert.match(legacyRuntimeSource, /knowledge\/legacy\/index\.js/);
 assert.match(legacyRuntimeSource, /app\.js/);
 assert.match(legacyRuntimeSource, /createLegacyRuntimeBindings/);
 assert.match(legacyRuntimeSource, /AstraRuntime/);
@@ -227,7 +238,7 @@ for (const relativePath of cssImports) {
 
 const serviceWorkerSource = read("sw.js");
 assert.match(serviceWorkerSource, /cache\.addAll\(CORE_FILES\)/, "Current precache baseline changed");
-assert.match(serviceWorkerSource, /astra-tarot-v10/, "MOD-003B must bump the cache version");
+assert.match(serviceWorkerSource, /astra-tarot-v11/, "MOD-003B must bump the cache version");
 for (const relativePath of [
   "src/styles/index.css",
   ...cssImports,
@@ -245,6 +256,15 @@ for (const relativePath of [
   "src/storage/settings.js",
   "src/storage/legacy-history.js",
   "src/storage/legacy-record.js",
+  "src/engine/legacy/card-reading.js",
+  "src/engine/legacy/synthesis.js",
+  "src/knowledge/legacy/cards/major.js",
+  "src/knowledge/legacy/cards/minor.js",
+  "src/knowledge/legacy/questions.js",
+  "src/knowledge/spreads/definitions.js",
+  "src/knowledge/legacy/build.js",
+  "src/knowledge/legacy/metadata.js",
+  "src/knowledge/legacy/index.js",
   "src/app/events.js",
   "src/app/controllers/reading-controller.js",
   "src/app/selectors/current-selection.js",
@@ -255,7 +275,6 @@ for (const relativePath of [
   "src/ui/safe-dom.js",
   "src/ui/renderers/history.js",
   "src/ui/renderers/setup.js",
-  "data.js",
   "app.js",
 ]) {
   assert.ok(serviceWorkerSource.includes(`"./${relativePath}"`), `SW missing ${relativePath}`);
@@ -274,7 +293,7 @@ assert.equal(qualityBaseline.schemaVersion, 1);
 assert.deepEqual(
   qualityBaseline.knownDebt.map((item) => [item.path, item.baselineLines, item.expiresAfterTask]),
   [
-    ["app.js", 921, "MOD-006A"],
+    ["app.js", 630, "MOD-006A"],
     ["data.js", 637, "MOD-006A"],
   ],
 );
@@ -300,5 +319,5 @@ for (const requiredText of [
 }
 
 console.log(
-  "MOD-004B module contract passed: foundation modules are wired through the controlled bridge while public IDs, CSS, and PWA resources remain stable.",
+  "MOD-005 module contract passed: foundation modules are wired through the controlled bridge while public IDs, CSS, and PWA resources remain stable.",
 );

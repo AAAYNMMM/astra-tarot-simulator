@@ -1,3 +1,6 @@
+import { categoryLens, cardStructureNote, orientationNote, reflectionPrompt } from "../engine/legacy/card-reading.js";
+import { createSynthesis } from "../engine/legacy/synthesis.js";
+import { TarotData } from "../knowledge/legacy/index.js";
 import { accentToken } from "../config/accent-tokens.js";
 import { createEventBinder } from "./events.js";
 import { createReadingFactory } from "./controllers/reading-controller.js";
@@ -20,7 +23,7 @@ import { createSettingsStore } from "../storage/settings.js";
 
 export const LEGACY_GLOBAL_NAME = "TarotData";
 export const LEGACY_RUNTIME_GLOBAL_NAME = "AstraRuntime";
-export const LEGACY_SCRIPT_PATHS = Object.freeze(["../../data.js", "../../app.js"]);
+export const LEGACY_SCRIPT_PATHS = Object.freeze(["../../app.js"]);
 
 let runtimePromise = null;
 
@@ -77,6 +80,13 @@ export function createLegacyRuntimeBindings(windowRef = globalThis.window) {
       createToast,
       createHistoryRenderer,
     }),
+    engine: Object.freeze({
+      categoryLens,
+      cardStructureNote,
+      orientationNote,
+      reflectionPrompt,
+      createSynthesis,
+    }),
     config: Object.freeze({ DECK_STYLES, LEGACY_DECK_IDS, accentToken }),
     core: Object.freeze({
       escapeHtml,
@@ -111,12 +121,9 @@ async function loadLegacyRuntime({ documentRef, windowRef, baseUrl }) {
   }
 
   windowRef[LEGACY_RUNTIME_GLOBAL_NAME] = createLegacyRuntimeBindings(windowRef);
+  windowRef[LEGACY_GLOBAL_NAME] = TarotData;
   await loadClassicScript(documentRef, LEGACY_SCRIPT_PATHS[0], baseUrl);
-  if (!windowRef[LEGACY_GLOBAL_NAME]) {
-    throw new Error("data.js did not initialize window.TarotData.");
-  }
-  await loadClassicScript(documentRef, LEGACY_SCRIPT_PATHS[1], baseUrl);
-  return windowRef[LEGACY_GLOBAL_NAME];
+  return TarotData;
 }
 
 export function startLegacyRuntime({

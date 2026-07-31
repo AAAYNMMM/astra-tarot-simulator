@@ -144,6 +144,29 @@ class TarotAppContractTests(unittest.TestCase):
             server.server_close()
             thread.join(timeout=2)
 
+    def test_mod_005_uses_esm_knowledge_and_legacy_engine_adapters(self) -> None:
+        runtime_source = (ROOT / "src/app/legacy-runtime.js").read_text(encoding="utf-8")
+        app_source = (ROOT / "app.js").read_text(encoding="utf-8")
+        worker_source = (ROOT / "sw.js").read_text(encoding="utf-8")
+        self.assertIn('../knowledge/legacy/index.js', runtime_source)
+        self.assertNotIn('../../data.js', runtime_source)
+        self.assertNotIn('"./data.js"', worker_source)
+        for relative_path in (
+            "src/engine/legacy/card-reading.js",
+            "src/engine/legacy/synthesis.js",
+            "src/knowledge/legacy/cards/major.js",
+            "src/knowledge/legacy/cards/minor.js",
+            "src/knowledge/legacy/questions.js",
+            "src/knowledge/spreads/definitions.js",
+            "src/knowledge/legacy/build.js",
+            "src/knowledge/legacy/metadata.js",
+            "src/knowledge/legacy/index.js",
+            "tests/knowledge_contract_test.mjs",
+        ):
+            self.assertTrue((ROOT / relative_path).is_file(), relative_path)
+        self.assertNotIn("function createSynthesis(", app_source)
+        self.assertNotIn("function categoryLens(", app_source)
+
     def test_four_complete_local_tarot_decks_are_bundled(self) -> None:
         ranks = (
             "ace",
@@ -240,8 +263,9 @@ class TarotAppContractTests(unittest.TestCase):
             self.assertIn(expected, data_source)
         self.assertNotIn('id: "guidance"', data_source)
         self.assertIn("dom.cardTable.dataset.spreadId", app_source)
-        self.assertIn("createSpreadNarrative", app_source)
-        self.assertIn("createConnections", app_source)
+        synthesis_source = (ROOT / "src/engine/legacy/synthesis.js").read_text(encoding="utf-8")
+        self.assertIn("createSpreadNarrative", synthesis_source)
+        self.assertIn("createConnections", synthesis_source)
         self.assertIn("牌与牌之间如何对话", app_source)
         self.assertIn("牌型与正逆位", app_source)
         self.assertIn("grid-row: 3", styles)

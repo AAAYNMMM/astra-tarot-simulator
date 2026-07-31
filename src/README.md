@@ -144,3 +144,8 @@ src/app/
 ## Python本地服务
 
 `src/server/` 负责静态白名单、会话、生命周期与安全响应头；根 `run.py` 只保留CLI兼容导出和启动入口。
+
+
+## MOD-005人工知识源
+
+`src/knowledge/legacy/` 是Phase M期间的人工主来源，`metadata.js` 明确标记其过渡性质；`src/engine/legacy/` 保留旧解读兼容算法，均可在Node中直接导入。

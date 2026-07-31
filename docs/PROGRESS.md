@@ -8,7 +8,7 @@
 | 项目 | 当前值 |
 |---|---|
 | 当前阶段 | Phase M：模块化基础 |
-| 当前进行中任务 | `MOD-004B` 服务器边界、生命周期保护与强制CSP |
+| 当前进行中任务 | `MOD-005` 人工知识源与旧版解读 |
 | 最近完成任务 | `MOD-003B` 基础模块与随机边界 |
 | 下一任务 | 无；Phase M连续执行中 |
 | 阻塞项 | 无 |
@@ -158,3 +158,6 @@ tests/foundation_contract_test.mjs
 
 - `MOD-004A`：`DONE`，产物提交 `72b55c0e8b83f44b61b966eb39a849bf613b5436`，CWapi `01KYG9PHM4AB2` COMPLETED。
 - `MOD-004B`：`IN_PROGRESS`。
+
+- `MOD-004B`：`DONE`，产物提交 `e1b2c8e73ad9c4e40cb5264aade7f60fe86618a9`，测试发现修复 `b31c2af465eb68466929d1c40938c409b60937d8`。
+- `MOD-005`：`IN_PROGRESS`。
