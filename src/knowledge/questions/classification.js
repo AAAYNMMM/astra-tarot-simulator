@@ -1,4 +1,6 @@
-export const QUESTION_CLASSIFICATIONS = Object.freeze([
+import { PHASE_3_QUESTION_DEFINITIONS } from "./phase-3-questions.js";
+
+export const PHASE_1_QUESTION_CLASSIFICATIONS = Object.freeze([
   Object.freeze({"id":"love-current","text":"这段关系当前最核心的能量是什么？","label":"关系现状","domain":"relationship","intent":"status-assessment","timeframe":"present","riskLevel":"low","answerDimensions":["current-state","core-dynamic","hidden-factor","risk","recommended-action"],"allowedConclusionTypes":["descriptive","conditional","indeterminate"]}),
   Object.freeze({"id":"love-future","text":"未来三个月，这段关系可能如何发展？","label":"近期趋势","domain":"relationship","intent":"trend-forecast","timeframe":"near-term","riskLevel":"medium","answerDimensions":["current-state","development-trend","external-condition","turning-point","recommended-action"],"allowedConclusionTypes":["growing","stabilizing","slowing","conflicted","restructuring","conditional","indeterminate"]}),
   Object.freeze({"id":"love-improve","text":"我可以怎样改善我们之间的关系？","label":"相处建议","domain":"relationship","intent":"improvement-guidance","timeframe":"open","riskLevel":"low","answerDimensions":["current-state","main-obstacle","available-resource","recommended-action","boundary"],"allowedConclusionTypes":["act-now","act-with-conditions","adjust-current-path","wait-and-prepare","indeterminate"]}),
@@ -41,4 +43,13 @@ export const QUESTION_CLASSIFICATIONS = Object.freeze([
   Object.freeze({"id":"daily-action","text":"今天做哪一个小行动最有帮助？","label":"行动提示","domain":"daily","intent":"improvement-guidance","timeframe":"today","riskLevel":"low","answerDimensions":["current-state","main-obstacle","available-resource","recommended-action","boundary"],"allowedConclusionTypes":["act-now","act-with-conditions","adjust-current-path","wait-and-prepare","indeterminate"]}),
   Object.freeze({"id":"daily-relationship","text":"今天与他人相处时，我最需要保持什么态度？","label":"人际提醒","domain":"daily","intent":"communication-guidance","timeframe":"today","riskLevel":"low","answerDimensions":["relationship-pattern","communication-focus","hidden-factor","boundary","recommended-action"],"allowedConclusionTypes":["open-dialogue","protect-boundary","act-with-conditions","wait-and-prepare","indeterminate"]}),
   Object.freeze({"id":"daily-rest","text":"今天我该如何安排休息与恢复？","label":"身心节奏","domain":"daily","intent":"self-care","timeframe":"today","riskLevel":"low","answerDimensions":["current-state","self-care-need","recovery-need","boundary","recommended-action"],"allowedConclusionTypes":["prioritize-recovery","protect-boundary","adjust-current-path","conditional","indeterminate"]}),
+]);
+
+export const QUESTION_CLASSIFICATIONS = Object.freeze([
+  ...PHASE_1_QUESTION_CLASSIFICATIONS,
+  ...PHASE_3_QUESTION_DEFINITIONS.map((item) => Object.freeze({
+    id: item.id, text: item.text, label: item.label, domain: item.domain,
+    intent: item.intent, timeframe: item.timeframe, riskLevel: item.riskLevel,
+    answerDimensions: item.answerDimensions, allowedConclusionTypes: item.allowedConclusionTypes,
+  })),
 ]);

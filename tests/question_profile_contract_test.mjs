@@ -2,13 +2,13 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { QUESTION_CLASSIFICATIONS } from "../src/knowledge/questions/classification.js";
+import { PHASE_1_QUESTION_CLASSIFICATIONS as QUESTION_CLASSIFICATIONS } from "../src/knowledge/questions/classification.js";
 import { QUESTION_PROFILE_IDS, loadQuestionProfile } from "../src/knowledge/questions/registry.js";
 import { validateQuestionProfile } from "../src/engine/validation/question-profile-validator.js";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const schema = JSON.parse(fs.readFileSync(path.join(root, "src/knowledge/schemas/question-profile.schema.json"), "utf8"));
-assert.equal(QUESTION_PROFILE_IDS.length, 42);
+assert.ok(QUESTION_PROFILE_IDS.length >= 42);
 for (const classification of QUESTION_CLASSIFICATIONS) {
   const profile = await loadQuestionProfile(classification.id);
   assert.equal(profile.id, classification.id);

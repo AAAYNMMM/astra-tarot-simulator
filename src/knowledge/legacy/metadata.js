@@ -4,6 +4,6 @@ export const LEGACY_KNOWLEDGE_METADATA = Object.freeze({
   transitional: true,
   removalTask: "MOD-006A",
   cardCount: 78,
-  questionCount: 42,
+  questionCount: 90,
   spreadCount: 4,
 });

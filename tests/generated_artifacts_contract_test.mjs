@@ -12,11 +12,12 @@ import { CARD_REGISTRY, QUESTION_REGISTRY, SPREAD_REGISTRY, assertKnowledgeCatal
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const read = (relative) => fs.readFileSync(path.join(root, relative), "utf8");
 const hash = (value) => crypto.createHash("sha256").update(value).digest("hex");
+const questionCount = TarotData.categories.reduce((sum, item) => sum + item.questions.length, 0);
 assert.equal(assertKnowledgeCatalog(TarotData), true);
 assert.equal(CARD_CATALOG.length, 78);
-assert.equal(QUESTION_CATALOG.reduce((sum, item) => sum + item.questions.length, 0), 42);
+assert.equal(QUESTION_CATALOG.reduce((sum, item) => sum + item.questions.length, 0), questionCount);
 assert.equal(Object.keys(CARD_REGISTRY).length, 78);
-assert.equal(Object.keys(QUESTION_REGISTRY).length, 42);
+assert.equal(Object.keys(QUESTION_REGISTRY).length, questionCount);
 assert.equal(Object.keys(SPREAD_REGISTRY).length, 4);
 assert.equal((await CARD_REGISTRY["major-0"]()).id, "major-0");
 assert.equal((await QUESTION_REGISTRY[TarotData.categories[0].questions[0].id]()).id, TarotData.categories[0].questions[0].id);
@@ -31,7 +32,7 @@ for (const forbidden of ["finalCommit", "commit", "precacheManifestHash", "artif
 }
 assert.equal(artifact.generatorVersion, "1.0.0");
 assert.equal(Object.keys(artifact.modules.cards).length, 78);
-assert.equal(Object.keys(artifact.modules.questions).length, 42);
+assert.equal(Object.keys(artifact.modules.questions).length, questionCount);
 assert.ok(Object.keys(artifact.modules.vocabularies).length >= 5);
 assert.ok(Object.keys(artifact.modules.schemas).length >= 4);
 assert.equal(Object.keys(artifact.modules.positionOperators).length, 5);

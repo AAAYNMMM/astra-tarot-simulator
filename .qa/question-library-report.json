@@ -1,0 +1,30 @@
+{
+  "schemaVersion": "1.0.0",
+  "scope": "phase-3-question-library-and-spread-adaptation",
+  "generatedAt": "2026-07-31",
+  "summary": {
+    "totalQuestions": 90,
+    "baseQuestionsFrozen": 42,
+    "addedQuestions": 48,
+    "domains": {
+      "relationship": 15,
+      "career": 15,
+      "finance": 15,
+      "growth": 15,
+      "decision": 15,
+      "daily": 15
+    },
+    "schemaPassRate": 1,
+    "nearSynonymPairs": 0,
+    "nearSynonymRatio": 0,
+    "highRiskQuestions": 19,
+    "spreadScenarioPassed": 1710,
+    "spreadScenarioTotal": 1710,
+    "spreadScenarioPassRate": 1
+  },
+  "frozenFailures": [],
+  "validationFailures": [],
+  "nearSynonyms": [],
+  "highRiskFailures": [],
+  "scenarioFailures": []
+}

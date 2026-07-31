@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
   "algorithm": "sha256-json-stringify",
-  "sha256": "302e2dbe1b0717c8f4e4817b725cea584baa07b3d26461baf420aaca14fcae43",
-  "bytes": 65896,
+  "sha256": "1c50c1c816c8db2d3b12857392627d4b5c56e732e2be51d6e4382caacd8a3c7c",
+  "bytes": 71318,
   "cards": 78,
-  "questions": 42,
+  "questions": 90,
   "spreads": 4,
-  "sourceCommit": "b03ca2602a36c4f96f2f2cf3c54d085db729116f"
+  "sourceCommit": "phase-3-question-expansion"
 }

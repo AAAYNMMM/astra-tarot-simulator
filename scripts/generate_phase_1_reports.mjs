@@ -2,7 +2,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { QUESTION_CLASSIFICATIONS } from "../src/knowledge/questions/classification.js";
+import { PHASE_1_QUESTION_CLASSIFICATIONS as QUESTION_CLASSIFICATIONS } from "../src/knowledge/questions/classification.js";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const stable = (value) => Array.isArray(value)

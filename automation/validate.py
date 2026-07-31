@@ -217,6 +217,10 @@ def baseline_steps(node: str) -> list[tuple[str, list[str]]]:
         ("node-consumer-fixture-contract", [node, "tests/consumer_fixture_contract_test.mjs"]),
         ("node-consumer-validation", [node, "tests/consumer_validation_test.mjs"]),
         ("phase-2-card-report-check", [node, "scripts/score_all_cards.mjs", "--check"]),
+        ("legacy-fingerprint-check", [node, "scripts/generate_legacy_fingerprint.mjs", "--check"]),
+        ("phase-3-question-report-check", [node, "scripts/score_question_library.mjs", "--check"]),
+        ("node-phase-3-question-library", [node, "tests/phase_3_question_library_test.mjs"]),
+        ("node-phase-3-spread-adaptation", [node, "tests/phase_3_spread_adaptation_test.mjs"]),
         ("node-phase-2-golden-freeze", [node, "tests/phase_2_golden_freeze_test.mjs"]),
         ("node-phase-2-card-profiles", [node, "tests/phase_2_card_profiles_test.mjs"]),
         (
@@ -268,6 +272,7 @@ def full_steps(node: str) -> list[tuple[str, list[str]]]:
         ("phase-m-terminal-gate", [node, "tests/phase_m_gate_test.mjs"]),
         ("phase-1-terminal-gate", [node, "tests/phase_1_gate_test.mjs"]),
         ("phase-2-terminal-gate", [node, "tests/phase_2_gate_test.mjs"]),
+        ("phase-3-terminal-gate", [node, "tests/phase_3_gate_test.mjs"]),
         ("browser-harness", [python, "tests/browser_harness.py"]),
         (
             "module-size-strict",

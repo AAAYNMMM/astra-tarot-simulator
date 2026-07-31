@@ -41,7 +41,7 @@ assert.equal(packageMetadata.type, "module");
 assert.equal("dependencies" in packageMetadata, false);
 assert.equal("devDependencies" in packageMetadata, false);
 assert.equal(data.deck.length, 78);
-assert.equal(data.categories.reduce((sum, category) => sum + category.questions.length, 0), 42);
+assert.ok(data.categories.reduce((sum, category) => sum + category.questions.length, 0) >= 42);
 assert.deepEqual(data.spreads.map((spread) => spread.positions.length), [1, 3, 5, 10]);
 const ids = [
   ...data.deck.map((card) => card.id),

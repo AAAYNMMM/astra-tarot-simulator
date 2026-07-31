@@ -347,3 +347,9 @@ MOD-001：模块边界、数据边界与基线验证
 ## 16. Phase 3首个可执行叶子
 
 `QP-003A`：关系领域问题扩展。保留现有公开问题，增加7至9个正式问题及QuestionProfile，并通过近义去重、高风险边界和四牌阵可回答性检查。
+
+## 17. Phase 3：问题库与四牌阵适配
+
+固定顺序：`QP-003A`至`QP-003F`分别扩展relationship、career、finance、growth、decision和daily领域；`QP-004A`至`QP-004F`完成六领域的single、timeline、cross和celtic适配；终态统一执行近义去重、高风险边界和跨牌位消费验证。
+
+阶段出口：保留原42题及其Profile字节，问题总数84至96、六领域覆盖均衡，高度近义问题不超过5%，高风险边界完整，四牌阵全部可回答，当前commit取得CWapi full RESULT。

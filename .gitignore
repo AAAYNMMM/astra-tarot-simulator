@@ -10,3 +10,4 @@ __pycache__/
 !.qa/question-coverage.json
 !.qa/card-profile-report.json
 design-qa.md
+!.qa/question-library-report.json

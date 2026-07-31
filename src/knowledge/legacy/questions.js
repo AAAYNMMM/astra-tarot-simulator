@@ -1,4 +1,6 @@
-export const CATEGORIES = [
+import { PHASE_3_QUESTION_DEFINITIONS } from "../questions/phase-3-questions.js";
+
+const BASE_CATEGORIES = [
   {
     id: "love",
     name: "感情关系",
@@ -99,3 +101,22 @@ export const CATEGORIES = [
   ...category,
   questions: category.questions.map(([id, text, label]) => ({ id, text, label })),
 }));
+
+const CATEGORY_DOMAIN = Object.freeze({
+  love: "relationship",
+  career: "career",
+  wealth: "finance",
+  growth: "growth",
+  decision: "decision",
+  daily: "daily",
+});
+
+export const CATEGORIES = Object.freeze(BASE_CATEGORIES.map((category) => Object.freeze({
+  ...category,
+  questions: Object.freeze([
+    ...category.questions,
+    ...PHASE_3_QUESTION_DEFINITIONS
+      .filter((item) => item.categoryId === category.id && item.domain === CATEGORY_DOMAIN[category.id])
+      .map((item) => Object.freeze({ id: item.id, text: item.text, label: item.label })),
+  ]),
+})));

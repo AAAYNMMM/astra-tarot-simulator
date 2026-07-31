@@ -13,7 +13,7 @@ const serialized = JSON.stringify(TarotData);
 assert.equal(crypto.createHash("sha256").update(serialized).digest("hex"), fingerprint.sha256);
 assert.equal(Buffer.byteLength(serialized), fingerprint.bytes);
 assert.equal(TarotData.deck.length, 78);
-assert.equal(TarotData.categories.reduce((sum, category) => sum + category.questions.length, 0), 42);
+assert.equal(TarotData.categories.reduce((sum, category) => sum + category.questions.length, 0), fingerprint.questions);
 assert.deepEqual(TarotData.spreads.map((spread) => spread.positions.length), [1, 3, 5, 10]);
 assert.equal(LEGACY_KNOWLEDGE_METADATA.transitional, true);
 
