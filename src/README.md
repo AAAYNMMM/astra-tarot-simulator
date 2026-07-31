@@ -154,3 +154,8 @@ src/app/
 ## MOD-006A入口收口
 
 `src/app/application.js` 是唯一应用组合模块，`src/app/bootstrap.js` 是唯一页面入口；根目录不再存在业务JavaScript单体或旧全局桥。
+
+
+## 正式生成文件
+
+`src/generated/` 由 `node scripts/generate_artifacts.mjs` 生成并提交，禁止手工编辑。人工知识、引擎入口或活动资源变化后必须立即重建；`node scripts/generate_artifacts.mjs --check` 检查陈旧产物。

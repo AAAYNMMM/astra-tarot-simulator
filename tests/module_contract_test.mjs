@@ -10,6 +10,11 @@ const read = (relativePath) => fs.readFileSync(path.join(root, relativePath), "u
 const exists = (relativePath) => fs.existsSync(path.join(root, relativePath));
 const requiredFiles = [
   "automation/validate.py", "automation/quality-baseline.json", "docs/MODULE_MAP.md",
+  ".gitattributes", "scripts/generate_artifacts.mjs", "src/config/version.js",
+  "src/generated/card-catalog.js", "src/generated/question-catalog.js",
+  "src/generated/knowledge-registry.js", "src/generated/knowledge-manifest.json",
+  "src/generated/artifact-manifest.json", "src/generated/precache-manifest.js",
+  "tests/generated_artifacts_contract_test.mjs",
   "package.json", "src/README.md", "src/app/bootstrap.js", "src/app/application.js",
   "src/app/runtime-services.js",
   "src/ui/components/dialogs.js", "src/config/decks.js", "src/config/accent-tokens.js",
@@ -64,4 +69,4 @@ const resolved = new Map(baseline.resolvedDebt.map((item) => [item.path, item]))
 assert.equal(resolved.get("app.js").replacement, "src/app/application.js");
 assert.equal(resolved.get("data.js").replacement, "src/knowledge/legacy/index.js");
 assert.equal(resolved.get("src/app/legacy-runtime.js").replacement, "src/app/application.js");
-console.log("MOD-006A module contract passed: direct ESM runtime, frozen public IDs, zero oversized debt, and no legacy bridge.");
+console.log("MOD-006B module contract passed: direct ESM runtime, frozen public IDs, zero oversized debt, and no legacy bridge.");

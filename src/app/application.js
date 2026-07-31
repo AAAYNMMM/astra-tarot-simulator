@@ -9,6 +9,7 @@ import { createRuntimeServices } from "./runtime-services.js";
 import { categoryLens, cardStructureNote, orientationNote, reflectionPrompt } from "../engine/legacy/card-reading.js";
 import { createSynthesis } from "../engine/legacy/synthesis.js";
 import { TarotData } from "../knowledge/legacy/index.js";
+import { assertKnowledgeCatalog } from "../generated/knowledge-registry.js";
 import { cardBackPath, cardImagePath } from "../platform/assets.js";
 import { createReadingAnimation } from "../ui/animations/reading.js";
 import { createDialogController, formatDate } from "../ui/components/dialogs.js";
@@ -23,6 +24,7 @@ export function startApplication({ windowRef = globalThis.window, documentRef = 
   }
   const window = windowRef;
   const document = documentRef;
+  assertKnowledgeCatalog(TarotData);
   const {
     randomUnit, secureShuffle, registerServiceWorker, registerLocalLifecycle,
     loadSettings, saveSettings, loadHistory,

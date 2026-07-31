@@ -109,3 +109,6 @@ Node 缺失属于验证失败，不得静默跳过。`package.json` 仅声明 `p
 - 平台安全熵位于 `src/platform/entropy.js`，生命周期ID不得使用 `Math.random`；无安全熵时禁用生命周期信号。
 - 配置、资源、设置、历史、旧ReadingRecord、PWA注册和生命周期均由真实兼容桥注入旧应用。
 - `tests/foundation_contract_test.mjs` 直接验证这些模块，不需要浏览器或npm依赖。
+
+
+MOD-006B后baseline先执行生成物陈旧检查和生成契约。生成命令：`node scripts/generate_artifacts.mjs`；只读检查：`node scripts/generate_artifacts.mjs --check`。

@@ -545,3 +545,8 @@ src/storage/legacy-record.js
 根 `app.js`、`data.js` 与 `src/app/legacy-runtime.js` 已删除。`src/app/application.js` 直接导入配置、知识、引擎、存储、平台与UI模块；`bootstrap.js` 不再创建或读取 `window.TarotData`、`window.AstraRuntime`。
 
 `src/app/runtime-services.js` 负责把浏览器随机、生命周期、PWA与旧本地存储工厂适配为应用组合层使用的稳定接口。
+
+
+## MOD-006B生成链
+
+人工源和运行资源经 `scripts/generate_artifacts.mjs` 依次生成轻量目录、动态注册表、knowledge清单、artifact manifest和经典SW预缓存清单。`--check` 以字节级比较阻止陈旧产物；artifact和precache遵守无自引用哈希图。
