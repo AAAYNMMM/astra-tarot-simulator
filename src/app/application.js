@@ -7,7 +7,7 @@ import { DECK_STYLES, LEGACY_DECK_IDS, resolveDeckStyle } from "../config/decks.
 import { escapeHtml } from "../core/html.js";
 import { createRuntimeServices } from "./runtime-services.js";
 import { categoryLens, cardStructureNote, orientationNote, reflectionPrompt } from "../engine/legacy/card-reading.js";
-import { createSynthesis } from "../engine/legacy/synthesis.js";
+import { createPhase8Runtime } from "./controllers/phase-8-runtime.js";
 import { TarotData } from "../knowledge/legacy/index.js";
 import { assertKnowledgeCatalog } from "../generated/knowledge-registry.js";
 import { cardBackPath, cardImagePath } from "../platform/assets.js";
@@ -74,6 +74,7 @@ export function startApplication({ windowRef = globalThis.window, documentRef = 
     });
     const createReading = createReadingFactory({ deck, selectors, createRandomContext: createReadingRandomContext });
     const showToast = createToast({ documentRef: document, windowRef: window, dom, reducedMotion });
+    const phase8 = createPhase8Runtime({ windowRef: window, documentRef: document, dom, showToast, retry: completeReading, saveStructuredReading });
   function writeHistory(records) {
     const saved = writeHistoryToStorage(records);
     if (!saved) showToast("浏览器阻止了本地存储，本次记录未保存", "!");
@@ -145,12 +146,13 @@ export function startApplication({ windowRef = globalThis.window, documentRef = 
       const { card, reversed, position, index } = draw;
       const deckStyle = resolveDeckStyle(state.reading?.deckStyle || currentDeckStyle());
       return `
-        <article class="drawn-card deck-style-${deckStyle.id}" data-card-index="${index}" data-accent-token="${accentToken(card.accent)}">
+        <article class="drawn-card deck-style-${deckStyle.id}" data-card-index="${index}" data-accent-token="${accentToken(card.accent)}" role="listitem">
           <button
             class="card-hitbox"
             type="button"
             data-card-index="${index}"
             aria-label="翻开第 ${index + 1} 张牌：${position.name}"
+            aria-describedby="card-position-${index}"
             disabled
           >
             <span class="tarot-card">
@@ -165,7 +167,7 @@ export function startApplication({ windowRef = globalThis.window, documentRef = 
               </span>
             </span>
           </button>
-          <div class="position-tag" title="${escapeHtml(position.prompt)}">
+          <div class="position-tag" id="card-position-${index}" title="${escapeHtml(position.prompt)}">
             <b>${String(index + 1).padStart(2, "0")}</b>
             <span>${escapeHtml(position.name)}</span>
           </div>
@@ -367,7 +369,8 @@ export function startApplication({ windowRef = globalThis.window, documentRef = 
     async function completeReading() {
       if (!state.reading || state.completing) return;
       state.completing = true;
-      state.reading.synthesis = createSynthesis(state.reading);
+      state.reading.synthesis = await phase8.synthesize(state.reading);
+      if (!state.reading.synthesis) { state.completing = false; return; }
       state.phase = "complete";
       setJourneyStep(3);
       dom.stageGuidance.hidden = false;
@@ -468,7 +471,7 @@ export function startApplication({ windowRef = globalThis.window, documentRef = 
     function persistCurrentReading() {
       if (!state.reading?.synthesis) return;
       const records = loadHistory();
-      const record = readingRecord(state.reading);
+      const record = phase8.enrichLegacyRecord(readingRecord(state.reading), state.reading);
       const existingIndex = records.findIndex((item) => item.id === record.id);
       if (existingIndex >= 0) {
         records[existingIndex] = record;
@@ -476,11 +479,9 @@ export function startApplication({ windowRef = globalThis.window, documentRef = 
         records.unshift(record);
       }
       writeHistory(records);
-      void saveStructuredReading(state.reading).then((result) => {
-        if (result.status === "degraded") showToast("结构化历史暂存于内存，请及时导出", "!");
-      });
+      void phase8.saveStructured(state.reading);
     }
-  const { openDialog, closeDialog, confirmAction, resolveConfirmation } = createDialogController({ dom, state });
+  const { openDialog, closeDialog, confirmAction, resolveConfirmation } = createDialogController({ dom, state, documentRef: document });
 
   const { renderHistory, toggleHistoryDetail, deleteHistoryRecord } = createHistoryRenderer({
       documentRef: document,

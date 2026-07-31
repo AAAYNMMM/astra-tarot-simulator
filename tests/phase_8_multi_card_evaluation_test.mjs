@@ -1,0 +1,23 @@
+import assert from "node:assert/strict";
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const read = (relative) => JSON.parse(fs.readFileSync(path.join(root, relative), "utf8"));
+const report = read(".qa/evaluation/phase-8-evaluation-report.json");
+const corpus = read(".qa/evaluation/multi-card-corpus.json");
+const review = read(".qa/evaluation/human-review-packet.json");
+const suite = report.suites.multiCard;
+assert.equal(corpus.length, 36);
+assert.equal(suite.suiteId, "EV-003-multi-card");
+assert.equal(suite.caseCount, corpus.length);
+assert.ok(suite.averageScore >= 9);
+assert.ok(suite.minimumScore >= 9);
+assert.ok(suite.passRate >= 0.95);
+assert.equal(suite.passed, true);
+assert.equal(review.sourceIdentityHidden, true);
+assert.equal(review.caseCount, 18);
+assert.ok(review.outputs.every((item) => item.sourceLabel === "candidate-A" && item.output.length > 0));
+assert.ok(review.rubric.includes("multi-card-integration"));
+console.log(`EV-003 multi-card evaluation and independent review packet passed: ${suite.caseCount}/${review.caseCount}.`);

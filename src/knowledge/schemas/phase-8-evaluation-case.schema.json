@@ -1,0 +1,62 @@
+{
+  "$id": "https://astra.local/schemas/phase-8-evaluation-case/1.0.0",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "cardIds": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 10,
+      "minItems": 1,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "group": {
+      "enum": [
+        "single-card",
+        "question-fit",
+        "multi-card",
+        "blind"
+      ],
+      "type": "string"
+    },
+    "id": {
+      "pattern": "^(?:single|fit|multi|blind)-[a-z0-9]+(?:-[a-z0-9]+)*$",
+      "type": "string"
+    },
+    "orientations": {
+      "items": {
+        "enum": [
+          "upright",
+          "reversed"
+        ]
+      },
+      "maxItems": 10,
+      "minItems": 1,
+      "type": "array"
+    },
+    "questionId": {
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+      "type": "string"
+    },
+    "spreadId": {
+      "enum": [
+        "single",
+        "timeline",
+        "cross",
+        "celtic"
+      ],
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "group",
+    "questionId",
+    "spreadId",
+    "cardIds",
+    "orientations"
+  ],
+  "type": "object"
+}

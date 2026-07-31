@@ -1,0 +1,21 @@
+import assert from "node:assert/strict";
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const read = (relative) => JSON.parse(fs.readFileSync(path.join(root, relative), "utf8"));
+const report = read(".qa/evaluation/phase-8-evaluation-report.json");
+const manifest = read(".qa/evaluation/blind-manifest.json");
+const blind = read(".qa/evaluation/blind-result.json");
+assert.equal(report.summary.status, "PASS");
+assert.ok(Object.values(report.coreScores).every((value) => value >= 9));
+assert.equal(manifest.repositoryContainsCaseContent, false);
+assert.equal(manifest.caseCount, 48);
+assert.match(manifest.contentHash, /^[a-f0-9]{64}$/);
+assert.equal(blind.datasetHash, manifest.contentHash);
+assert.equal(blind.caseCount, manifest.caseCount);
+assert.equal(blind.sourceContentLogged, false);
+assert.equal(blind.status, "PASS");
+assert.ok(blind.averageScore >= 9 && blind.minimumScore >= 9 && blind.passRate >= 0.95);
+console.log(`EV-004/EV-000B quality gate passed: blind ${blind.caseCount} cases, average ${blind.averageScore}.`);

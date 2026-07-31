@@ -6,12 +6,12 @@
 
 | 项目 | 当前值 |
 |---|---|
-| 当前阶段 | Phase 8：评测、恢复、无障碍与UI |
+| 当前阶段 | Phase 9：发布稳定化 |
 | 当前进行中任务 | 无 |
-| 最近完成任务 | Phase 7终态：`AU-003C` 容量、配额和降级 |
-| 唯一下一任务 | `EV-001` 单牌测试集与指标 |
+| 最近完成任务 | Phase 8终态：`AX-002` 动态牌桌无障碍回归 |
+| 唯一下一任务 | `PLAT-001` PWA原子更新和回滚 |
 | 阻塞项 | 无 |
-| 工作分支 | `phase-7-random-history` |
+| 工作分支 | `phase-8-quality-ui` |
 | Phase M状态 | `PARENT-DONE` |
 | Phase 1状态 | `PARENT-DONE` |
 | Phase 2状态 | `PARENT-DONE` |
@@ -20,29 +20,35 @@
 | Phase 5状态 | `PARENT-DONE` |
 | Phase 6状态 | `PARENT-DONE` |
 | Phase 7状态 | `PARENT-DONE` |
-| Phase 8状态 | `PARENT-PENDING` |
+| Phase 8状态 | `PARENT-DONE` |
+| Phase 9状态 | `PARENT-PENDING` |
 | 最后更新时间 | 2026-08-01 |
 
-## Phase 7完成记录
+## Phase 8完成记录
 
-- `AU-001B`：生产抽牌、正逆位和渲染使用版本化根种子的独立随机流，并保存可重放审计信息。
-- `AU-002`：建立ReadingRecord 2.0、IndexedDB readings/meta存储和本次消费artifact指纹。
-- `AU-003A`：旧localStorage记录幂等迁移；旧数据不删除，失败不写完成标记。
-- `AU-003B`：导出包带稳定校验和；导入支持skip、replace和keep-both冲突策略。
-- `AU-003C`：容量与配额分级提醒；IndexedDB失败时保留内存待导出副本，不静默截断。
-- 阶段实现CWapi任务：`01KYWGAFBNKMRAH9YE8G0NGYBN`。
-- 最终full复验CWapi任务：`01KYWGAFBN7P4JT89VTE1FNESB`；最终commit以终态RESULT和远端分支核验为准。
+- `EV-001`：78张牌正逆位单牌评测，语义引用、问题职责、禁止结论和复现指标进入固定报告。
+- `EV-002`：90题×四牌阵问题贴合评测，结论类型、维度覆盖和稳定性通过。
+- `EV-003A/B/C`：建立六领域36例多牌语料、自动指标以及18例匿名人工评审包。
+- `EV-004`：建立 `scripts/doctor.py`，检查三项核心质量、盲测、恢复和UI门禁。
+- `EV-000B`：48例最终盲测在CWapi受控外部文件中执行；仓库只保存 `833898d81c5dea731ec43e567024a5c7586c44189bfb0209eaec6c0ba5c4d58e`、数量和聚合结果。
+- `ERR-001A-D`：统一错误、脱敏诊断、恢复协调器和可复用恢复面板完成。
+- `AX-001`：标签页、对话框、焦点、状态朗读和键盘导航完成。
+- `UI-001`：真实应用综合解读切换为新版 Observation→Relation→Claim→Text 引擎。
+- `UI-002`：兼容历史显示结构化结论、置信度、证据、关系、条件、冲突和覆盖缺口摘要。
+- `AX-002`：动态牌桌序号、牌位、正逆位、状态和方向键回归完成。
+- 阶段实现CWapi任务：`01KYWN5T8C2M7R4H9V1Q6P0ZAD`。
+- 最终full复验CWapi任务：`01KYWJ8G4M1B8F6D2Q9S7H0ZKC`；最终commit以终态RESULT和远端分支核验为准。
 
 ## 冻结不变量
 
-- draw、orientation和rendering随机流互相独立，同一根种子与版本可稳定重放。
-- 结构化历史使用ReadingRecord 2.0和IndexedDB；旧localStorage保留给当前UI兼容读取。
-- 迁移失败不得删除或覆盖旧历史。
-- 导入必须先完成Schema、重复ID和校验和验证。
-- 配额或IndexedDB失败时不得静默丢弃记录。
-- 最终Git commit不写入每条历史，commit与manifest对应关系由CWapi保存。
+- 运行时仍为纯规则、离线、固定问题和四牌阵。
+- UI只消费新版引擎结果，不复制或改写引擎规则。
+- 已抽牌在资料或引擎失败时保持不变，不隐藏重抽。
+- 最终盲测正文不进入仓库和日志。
+- 诊断不包含问题正文、完整解读、历史正文或根种子。
+- 三项核心质量分数均不低于9.0。
 - `automation/validate.py --scope full` 是完整回归入口。
 
-## 唯一NEXT：EV-001
+## 唯一NEXT：PLAT-001
 
-建立单牌测试集与指标，覆盖语义引用、问题贴合、牌位职责、正逆位差异、禁止结论和稳定复现，不提前执行多牌评测或最终盲测。
+实现PWA原子更新、多标签协调、等待态、受控切换和上一完整release回滚，不提前执行性能预算、安装图标、许可证或最终发布。

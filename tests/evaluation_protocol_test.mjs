@@ -12,8 +12,14 @@ assert.equal(development.length, 6);
 for (const item of development) assert.deepEqual(validateJsonSchema(item, schema), []);
 const blind = readJson(".qa/evaluation/blind-manifest.json");
 assert.equal(blind.repositoryContainsCaseContent, false);
-assert.equal(blind.caseCount, 0);
-assert.equal(blind.contentHash, null);
+if (blind.status === "pending") {
+  assert.equal(blind.caseCount, 0);
+  assert.equal(blind.contentHash, null);
+} else {
+  assert.equal(blind.status, "completed");
+  assert.ok(blind.caseCount > 0);
+  assert.match(blind.contentHash, /^[a-f0-9]{64}$/);
+}
 const forbidden = [];
 function walk(directory) {
   for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {

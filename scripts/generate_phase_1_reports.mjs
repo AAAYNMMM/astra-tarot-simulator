@@ -28,7 +28,7 @@ const rubric = {
     dataIntegrity: 5,
   },
 };
-const blind = {
+const initialBlindManifest = {
   schemaVersion: "1.0.0",
   status: "not-created",
   caseCount: 0,
@@ -40,6 +40,12 @@ const blind = {
     "weight", "template", "adapter",
   ],
 };
+const blindPath = path.join(root, ".qa/evaluation/blind-manifest.json");
+let blind = initialBlindManifest;
+if (fs.existsSync(blindPath)) {
+  const currentBlind = JSON.parse(fs.readFileSync(blindPath, "utf8"));
+  if (currentBlind.status === "completed") blind = currentBlind;
+}
 const countBy = (key) => Object.fromEntries(
   [...new Set(QUESTION_CLASSIFICATIONS.map((item) => item[key]))]
     .sort()

@@ -196,6 +196,7 @@
     "src/knowledge/schemas/consumer-fixture.schema.json": "096ba93a1ee3d9ca8716a030fe537361c1a6ee166b849f8a56707be07f1ceb7a",
     "src/knowledge/schemas/evaluation-case.schema.json": "b9c0522f368171057a811682b6c38071a9c17174840894b5f7a1fd39a3d7703c",
     "src/knowledge/schemas/observation.schema.json": "11d7fe8cbb16e050302c0af47587e69f0673e6bd311e7dd84cdd876688c56bf6",
+    "src/knowledge/schemas/phase-8-evaluation-case.schema.json": "1956f337438b15976d5b0c1e63b3941e269b1c943506b368ab6bfabe91603507",
     "src/knowledge/schemas/position-operator.schema.json": "af1b46b47f2a1b2548859cafd7fb157b66c9abba259b47649f4402a4ef6ce5e9",
     "src/knowledge/schemas/question-profile.schema.json": "64a4621fb90bd642cb59a6c004613d9a3302176ca3cd373fc1a43e05d7888ad7",
     "src/knowledge/spreads/definitions.js": "e2d01ff57fe684364b641adc9f1fc7867f1555ac66783792de339956c3b714e6",

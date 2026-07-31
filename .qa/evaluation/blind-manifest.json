@@ -1,7 +1,10 @@
 {
-  "caseCount": 0,
-  "contentHash": null,
+  "aggregateResultPath": ".qa/evaluation/blind-result.json",
+  "caseCount": 48,
+  "contentHash": "833898d81c5dea731ec43e567024a5c7586c44189bfb0209eaec6c0ba5c4d58e",
   "custody": "CWapi-controlled external storage",
+  "datasetId": "astra-phase-8-blind-v1",
+  "generationPolicy": "unseen deterministic combinations across six domains, four spreads, upright and reversed orientations",
   "invalidatedBy": [
     "card-profile",
     "question-profile",
@@ -13,5 +16,5 @@
   ],
   "repositoryContainsCaseContent": false,
   "schemaVersion": "1.0.0",
-  "status": "not-created"
+  "status": "completed"
 }

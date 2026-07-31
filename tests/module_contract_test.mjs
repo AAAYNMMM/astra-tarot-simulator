@@ -57,7 +57,7 @@ assert.equal(applicationSource.includes("window.TarotData"), false);
 assert.equal(applicationSource.includes("window.AstraRuntime"), false);
 const styleIndex = read("src/styles/index.css");
 const cssImports = [...styleIndex.matchAll(/@import url\("\.\/(.+?)"\);/g)].map((match) => `src/styles/${match[1]}`);
-const originalCss = cssImports.filter((item) => !item.endsWith("accent-tokens.css")).map(read).join("");
+const originalCss = cssImports.filter((item) => !item.endsWith("accent-tokens.css") && !item.endsWith("phase-8.css")).map(read).join("");
 assert.equal(crypto.createHash("sha256").update(originalCss).digest("hex"), "ccc3f69d84fc95a20ddd6a119f87cf48343d5dff508088a1b45f57ff7c8f62d3");
 const sw = read("sw.js");
 assert.match(sw, /^importScripts\("\.\/src\/generated\/precache-manifest\.js"\);/);

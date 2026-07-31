@@ -13,15 +13,29 @@ export function formatDate(dateValue) {
   }
 }
 
-export function createDialogController({ dom, state }) {
+export function createDialogController({ dom, state, documentRef = globalThis.document }) {
+  const returnFocus = new WeakMap();
+
+  function focusFirst(dialog) {
+    const target = dialog.querySelector?.(
+      "[autofocus], button:not([disabled]), [href], [tabindex]:not([tabindex='-1'])",
+    );
+    target?.focus?.({ preventScroll: true });
+  }
+
   function openDialog(dialog) {
+    if (documentRef?.activeElement) returnFocus.set(dialog, documentRef.activeElement);
     if (typeof dialog.showModal === "function") dialog.showModal();
     else dialog.setAttribute("open", "");
+    queueMicrotask(() => focusFirst(dialog));
   }
 
   function closeDialog(dialog) {
     if (typeof dialog.close === "function") dialog.close();
     else dialog.removeAttribute("open");
+    const target = returnFocus.get(dialog);
+    returnFocus.delete(dialog);
+    queueMicrotask(() => target?.focus?.({ preventScroll: true }));
   }
 
   function confirmAction(title, message, acceptLabel = "确认") {

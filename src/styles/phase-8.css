@@ -1,0 +1,64 @@
+.recovery-panel {
+  display: grid;
+  gap: 0.85rem;
+  padding: 1.25rem;
+  border: 1px solid color-mix(in srgb, currentColor 24%, transparent);
+  border-radius: 1rem;
+  background: rgba(18, 15, 34, 0.78);
+}
+
+.recovery-panel:focus {
+  outline: 3px solid rgba(237, 211, 255, 0.85);
+  outline-offset: 3px;
+}
+
+.recovery-panel h3,
+.recovery-panel p {
+  margin: 0;
+}
+
+.recovery-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+
+.history-audit {
+  display: grid;
+  gap: 0.35rem;
+  margin-top: 0.75rem;
+  padding: 0.8rem;
+  border-radius: 0.75rem;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.history-audit span,
+.history-audit-note {
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+
+[role="tab"]:focus-visible,
+.card-hitbox:focus-visible,
+.dialog-close:focus-visible,
+.history-view-button:focus-visible,
+.history-delete-button:focus-visible {
+  outline: 3px solid rgba(237, 211, 255, 0.95);
+  outline-offset: 3px;
+}
+
+@media (forced-colors: active) {
+  .recovery-panel,
+  .history-audit {
+    border: 1px solid CanvasText;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .recovery-panel *,
+  .history-audit * {
+    scroll-behavior: auto;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}

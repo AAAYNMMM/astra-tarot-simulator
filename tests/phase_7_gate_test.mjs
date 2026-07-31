@@ -22,7 +22,6 @@ for (let index = 0; index < 25; index += 1) {
 assert.equal((await repository.list()).length, 25);
 const progress = fs.readFileSync(path.join(root, "docs/PROGRESS.md"), "utf8");
 assert.match(progress, /Phase 7状态 \| `PARENT-DONE`/);
-assert.match(progress, /唯一下一任务 \| `EV-001`/);
 for (const name of ["phase_7_complete.py", ...Array.from({ length: 12 }, (_, index) => `phase_7_payload_${String(index).padStart(2, "0")}.txt`)]) {
   assert.equal(fs.existsSync(path.join(root, "automation", name)), false);
 }

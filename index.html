@@ -232,12 +232,12 @@
               <span class="eyebrow">INTERPRETATION</span>
               <h2>牌面解读</h2>
             </div>
-            <div class="insight-tabs" id="insightTabs" hidden>
-              <button type="button" data-tab="card" class="is-active">单牌</button>
-              <button type="button" data-tab="summary">综合</button>
+            <div class="insight-tabs" id="insightTabs" role="tablist" aria-label="解读视图" hidden>
+              <button id="cardInsightTab" type="button" data-tab="card" class="is-active" role="tab" aria-selected="true" aria-controls="insightContent">单牌</button>
+              <button id="summaryInsightTab" type="button" data-tab="summary" role="tab" aria-selected="false" aria-controls="insightContent" tabindex="-1">综合</button>
             </div>
           </header>
-          <div class="insight-scroll" id="insightContent">
+          <div class="insight-scroll" id="insightContent" role="tabpanel" aria-labelledby="cardInsightTab" tabindex="0">
             <div class="insight-empty">
               <div class="empty-symbol" aria-hidden="true">
                 <span>☽</span>
