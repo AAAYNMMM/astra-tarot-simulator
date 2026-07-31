@@ -1,5 +1,9 @@
 import { validateJsonSchema } from "./schema-validator.js";
-import { dimensionMatchesFacet, responsibilitiesFor } from "../observations/dimension-facet-map.js";
+import {
+  dimensionMatchesFacet,
+  mediatedResponsibility,
+  responsibilitiesFor,
+} from "../observations/dimension-facet-map.js";
 
 function issue(code, path, value) {
   return Object.freeze({ code, path, keyword: "observationContract", value });
@@ -31,9 +35,30 @@ export function validateObservation(observation, { card, question, operator, sch
   if (JSON.stringify(observation?.questionDimensions) !== JSON.stringify(responsibilities)) {
     errors.push(issue("observation.question_dimensions_mismatch", "$.questionDimensions", observation?.questionDimensions));
   }
+  const directMatches = responsibilities.filter((dimension) => (
+    dimensionMatchesFacet(dimension, observation?.selectedFacet)
+  ));
+  if (observation?.dimensionMatchMode === "direct") {
+    if (!directMatches.length) {
+      errors.push(issue("observation.direct_match_missing", "$.dimensionMatchMode", observation?.dimensionMatchMode));
+    }
+    for (const dimension of observation?.matchedDimensions || []) {
+      if (!directMatches.includes(dimension)) {
+        errors.push(issue("observation.dimension_facet_mismatch", "$.matchedDimensions", dimension));
+      }
+    }
+  } else if (observation?.dimensionMatchMode === "position-mediated") {
+    const expected = mediatedResponsibility(responsibilities, operator);
+    if (directMatches.length) {
+      errors.push(issue("observation.mediation_unnecessary", "$.dimensionMatchMode", observation?.dimensionMatchMode));
+    }
+    if (observation?.matchedDimensions?.length !== 1 || observation.matchedDimensions[0] !== expected) {
+      errors.push(issue("observation.mediated_dimension_mismatch", "$.matchedDimensions", observation?.matchedDimensions));
+    }
+  }
   for (const dimension of observation?.matchedDimensions || []) {
-    if (!responsibilities.includes(dimension) || !dimensionMatchesFacet(dimension, observation.selectedFacet)) {
-      errors.push(issue("observation.dimension_facet_mismatch", "$.matchedDimensions", dimension));
+    if (!responsibilities.includes(dimension)) {
+      errors.push(issue("observation.dimension_not_responsibility", "$.matchedDimensions", dimension));
     }
   }
   if (observation?.orientation === "upright" && observation?.selectedReversalMode !== null) {
