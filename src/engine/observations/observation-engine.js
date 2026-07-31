@@ -69,7 +69,9 @@ export function createObservation(input) {
   const { card, question, operator, orientation, reversalMode = null } = input;
   const responsibilities = responsibilitiesFor(question, operator.spreadId, operator.positionId);
   const { selected, candidates } = selectSemanticUnit(input);
-  const questionMatch = round(Math.min(1, 0.65 + (selected.matchedDimensions.length / responsibilities.length) * 0.35));
+  const questionMatch = selected.dimensionMatchMode === "direct"
+    ? round(Math.min(1, 0.65 + (selected.matchedDimensions.length / responsibilities.length) * 0.35))
+    : 0.55;
   const scoreBreakdown = {
     positionWeight: operator.weight,
     questionMatch,
@@ -90,6 +92,7 @@ export function createObservation(input) {
   const tags = [...new Set([
     ...(selected.unit.tags || []),
     `orientation:${orientation}`,
+    `dimension-match:${selected.dimensionMatchMode}`,
     ...(orientation === "reversed" ? [`reversal:${reversalMode}`] : []),
   ])];
   return deepFreeze({
@@ -113,6 +116,7 @@ export function createObservation(input) {
     semanticTags: tags,
     questionDimensions: [...responsibilities],
     matchedDimensions: [...selected.matchedDimensions],
+    dimensionMatchMode: selected.dimensionMatchMode,
     positionRole: {
       tense: operator.tense,
       subjectScope: operator.subjectScope,
