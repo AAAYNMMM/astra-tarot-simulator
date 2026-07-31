@@ -316,18 +316,18 @@ class TarotAppContractTests(unittest.TestCase):
             serving_thread.join(timeout=2)
             monitor_thread.join(timeout=1)
 
-        def test_page_lifecycle_stream_is_wired_end_to_end(self) -> None:
-            app_source = (ROOT / "app.js").read_text(encoding="utf-8")
-            lifecycle_source = (ROOT / "src/platform/lifecycle-client.js").read_text(encoding="utf-8")
-            entropy_source = (ROOT / "src/platform/entropy.js").read_text(encoding="utf-8")
-            launcher_source = (ROOT / "run.py").read_text(encoding="utf-8")
-            worker_source = (ROOT / "sw.js").read_text(encoding="utf-8")
-            self.assertIn("registerLocalLifecycle", app_source)
-            self.assertIn("new EventSourceCtor", lifecycle_source)
-            self.assertNotIn("Math.random", lifecycle_source)
-            self.assertNotIn("Math.random", entropy_source)
-            self.assertIn("/__astra/events", launcher_source)
-            self.assertIn('startsWith("/__astra/")', worker_source)
+    def test_page_lifecycle_stream_is_wired_end_to_end(self) -> None:
+        app_source = (ROOT / "app.js").read_text(encoding="utf-8")
+        lifecycle_source = (ROOT / "src/platform/lifecycle-client.js").read_text(encoding="utf-8")
+        entropy_source = (ROOT / "src/platform/entropy.js").read_text(encoding="utf-8")
+        launcher_source = (ROOT / "run.py").read_text(encoding="utf-8")
+        worker_source = (ROOT / "sw.js").read_text(encoding="utf-8")
+        self.assertIn("registerLocalLifecycle", app_source)
+        self.assertIn("new EventSourceCtor", lifecycle_source)
+        self.assertNotIn("Math.random", lifecycle_source)
+        self.assertNotIn("Math.random", entropy_source)
+        self.assertIn("/__astra/events", launcher_source)
+        self.assertIn('startsWith("/__astra/")', worker_source)
 
 if __name__ == "__main__":
     unittest.main()
