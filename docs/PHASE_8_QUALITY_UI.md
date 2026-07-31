@@ -30,6 +30,6 @@
 
 ## CWapi证据
 
-- 阶段实现任务：`01KYWJ8G4M9T6R2C7V5P0N3XQA`
-- 最终 exact-commit full 复验任务：`01KYWP3H7M1B8F6D2Q9S7V0ZKC`
+- 阶段实现任务：`01KYWN5T8C2M7R4H9V1Q6P0ZAD`
+- 最终 exact-commit full 复验任务：`01KYWQ6V9M1B7F3D2H8N5Z0KCA`
 - 最终提交以远端分支和终态 RESULT 为准。
