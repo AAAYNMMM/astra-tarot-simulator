@@ -35,7 +35,8 @@
 - `REL-001`：所有发布前代码、数据、缓存、迁移、资源清单和生成产物之后执行 full 回归。
 - `REL-004`：2.0.0 release manifest生成并冻结关键产物哈希。
 - 阶段实现CWapi任务：`01KYXMJ0PH9M7AG00000000009`。
-- 最终full复验CWapi任务：`01KYXMN0PH9V7AG0000000000A`；最终commit以终态RESULT和远端分支核验为准。
+- 发布证据修正CWapi任务：`01KYXMP0PH9M7AG0000000000C`。
+- 最终full复验CWapi任务：`01KYXMR0PH9V7AG0000000000B`；最终commit以终态RESULT和远端分支核验为准。
 
 ## 冻结不变量
 

@@ -26,10 +26,11 @@
 - 兼容矩阵只使用 `SUPPORTED`、`SUPPORTED-WITH-DEGRADATION`、`NOT-TESTED`、`NOT-SUPPORTED`。
 - 发布验收覆盖离线状态、隐私、许可证、第三方声明、盲测和 artifact 版本。
 - `REL-001` 在全部运行代码、数据、缓存、迁移、资源清单与生成产物之后执行。
-- 2.0.0 release manifest 固定 artifact、precache、兼容矩阵、许可证、评测和验收哈希。
+- 2.0.0 release manifest 固定 artifact、precache、兼容矩阵、许可证、评测和验收哈希；性能证据哈希排除非确定性的毫秒采样值。
 
 ## CWapi证据
 
 - 阶段实现任务：`01KYXMJ0PH9M7AG00000000009`
-- 最终 exact-commit full 复验任务：`01KYXMN0PH9V7AG0000000000A`
+- 发布证据修正任务：`01KYXMP0PH9M7AG0000000000C`
+- 最终 exact-commit full 复验任务：`01KYXMR0PH9V7AG0000000000B`
 - 最终提交以远端 `phase-9-release` 分支和终态 RESULT 为准。

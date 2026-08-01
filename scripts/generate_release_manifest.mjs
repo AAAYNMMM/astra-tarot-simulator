@@ -12,6 +12,29 @@ function hash(relative) {
   return crypto.createHash("sha256").update(fs.readFileSync(path.join(root, relative))).digest("hex");
 }
 
+function canonical(value) {
+  if (Array.isArray(value)) return value.map(canonical);
+  if (!value || typeof value !== "object") return value;
+  return Object.fromEntries(
+    Object.keys(value).sort().map((key) => [key, canonical(value[key])]),
+  );
+}
+
+function stablePerformanceHash(report) {
+  const measurements = Object.fromEntries(
+    Object.entries(report.measurements || {}).filter(([key]) => !key.endsWith("Ms")),
+  );
+  const evidence = canonical({
+    schemaVersion: report.schemaVersion,
+    reportId: report.reportId,
+    budgets: report.budgets,
+    measurements,
+    checks: report.checks,
+    status: report.status,
+  });
+  return crypto.createHash("sha256").update(JSON.stringify(evidence)).digest("hex");
+}
+
 const artifact = JSON.parse(fs.readFileSync(path.join(root, "src/generated/artifact-manifest.json"), "utf8"));
 const performance = JSON.parse(fs.readFileSync(path.join(root, ".qa/release/performance-report.json"), "utf8"));
 const acceptance = JSON.parse(fs.readFileSync(path.join(root, ".qa/release/release-acceptance.json"), "utf8"));
@@ -30,7 +53,7 @@ const report = {
   licenseHash: hash("LICENSE"),
   thirdPartyNoticesHash: hash("THIRD_PARTY_NOTICES.md"),
   reports: {
-    performance: hash(".qa/release/performance-report.json"),
+    performance: stablePerformanceHash(performance),
     acceptance: hash(".qa/release/release-acceptance.json"),
     blindEvaluation: hash(".qa/evaluation/blind-result.json"),
   },
