@@ -148,11 +148,11 @@ write_lf(generated_test_path, generated_test)
 
 performance_path = ROOT / "scripts" / "measure_release.mjs"
 performance = performance_path.read_text(encoding="utf-8")
-check_start = performance.find("if (checkMode) {")
+check_start = performance.find("if (check) {")
 check_end = performance.find('if (report.status !== "PASS")', check_start)
 if check_start < 0 or check_end < 0:
-    raise RuntimeError("Performance check-mode block not found.")
-replacement = '''if (checkMode) {
+    raise RuntimeError("Performance check block not found.")
+replacement = '''if (check) {
   let committed = null;
   try {
     committed = JSON.parse(fs.readFileSync(outputPath, "utf8"));
