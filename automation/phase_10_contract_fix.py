@@ -16,6 +16,10 @@ python_test = python_test_path.read_text(encoding="utf-8")
 old_expectations = '''        for expected in ('id: "cross"', 'name: "五牌十字"', 'id: "celtic"', 'name: "凯尔特十字"', 'name: "希望与恐惧"', "createSpreadNarrative", "createConnections", "牌与牌之间如何对话", "牌型与正逆位"):
             self.assertIn(expected, knowledge + read_many(APPLICATION_FILES))'''
 new_expectations = '''        application = read_many(APPLICATION_FILES)
+        visible_runtime = read_many((
+            "src/app/application.js",
+            "src/ui/renderers/insight.js",
+        ))
         for expected in (
             'id: "cross"', 'name: "五牌十字"', 'id: "celtic"',
             'name: "凯尔特十字"', 'name: "希望与恐惧"',
@@ -23,7 +27,7 @@ new_expectations = '''        application = read_many(APPLICATION_FILES)
         ):
             self.assertIn(expected, knowledge + application)
         for removed in ("createSpreadNarrative", "createConnections", "牌与牌之间如何对话", "接下来的三步"):
-            self.assertNotIn(removed, application)'''
+            self.assertNotIn(removed, visible_runtime)'''
 if old_expectations not in python_test:
     raise RuntimeError("Legacy spread interpretation contract marker not found.")
 python_test = python_test.replace(old_expectations, new_expectations, 1)
@@ -59,4 +63,12 @@ ui_test = ui_test.replace(old_block, new_block, 1)
 ui_test = ui_test.replace('headline: synthesis.headline,', 'headline: synthesis.synthesis.judgment,', 1)
 write_lf(ui_test_path, ui_test)
 
-print("Phase 10 historical spread and accessibility contracts migrated.")
+phase9_path = ROOT / "tests" / "phase_9_gate_test.mjs"
+phase9 = phase9_path.read_text(encoding="utf-8")
+phase9 = phase9.replace('assert.match(progress, /最近完成任务 \\| Phase 9终态：`REL-004`/);\n', "")
+phase9 = phase9.replace('assert.match(progress, /唯一下一任务 \\| `无（2\\.0\\.0终态）`/);\n', "")
+if 'assert.match(progress, /Phase 9状态 \\| `PARENT-DONE`/);' not in phase9:
+    raise RuntimeError("Phase 9 completion assertion was lost.")
+write_lf(phase9_path, phase9)
+
+print("Phase 10 historical spread, accessibility, and Phase 9 contracts migrated.")
