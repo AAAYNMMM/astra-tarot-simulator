@@ -8,9 +8,9 @@ const PENALTIES = new Set(["resistance", "cost", "interCardConflict"]);
 const STANCE_VALUE = Object.freeze({ supportive: 1, transformative: 0.65, conditional: 0.5, descriptive: 0.5, cautionary: 0 });
 const WEIGHTS = Object.freeze({
   single: Object.freeze({ process: 0.35, stability: 0.2, resistance: 0.15, cost: 0.1, controllability: 0.2 }),
-  timeline: Object.freeze({ foundation: 0.1, process: 0.2, outcome: 0.28, stability: 0.1, resistance: 0.1, cost: 0.06, controllability: 0.1, interCardConflict: 0.06 }),
-  cross: Object.freeze({ foundation: 0.12, process: 0.16, outcome: 0.22, stability: 0.1, resistance: 0.12, cost: 0.08, controllability: 0.12, interCardConflict: 0.08 }),
-  celtic: Object.freeze({ foundation: 0.12, process: 0.14, outcome: 0.18, stability: 0.1, resistance: 0.12, cost: 0.08, controllability: 0.1, interCardConflict: 0.16 }),
+  timeline: Object.freeze({ foundation: 0.06, process: 0.11, outcome: 0.6, stability: 0.06, resistance: 0.06, cost: 0.03, controllability: 0.05, interCardConflict: 0.03 }),
+  cross: Object.freeze({ foundation: 0.06, process: 0.08, outcome: 0.6, stability: 0.05, resistance: 0.06, cost: 0.04, controllability: 0.06, interCardConflict: 0.05 }),
+  celtic: Object.freeze({ foundation: 0.06, process: 0.07, outcome: 0.6, stability: 0.05, resistance: 0.06, cost: 0.04, controllability: 0.05, interCardConflict: 0.07 }),
 });
 const THRESHOLDS = Object.freeze([
   ["SSS", 0.9], ["SS", 0.82], ["S", 0.74], ["A", 0.64], ["B", 0.54], ["C", 0.44], ["D", 0.3], ["E", 0],
