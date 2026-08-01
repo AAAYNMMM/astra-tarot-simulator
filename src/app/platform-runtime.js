@@ -1,21 +1,11 @@
-import { createPlatformStatusController } from "../ui/components/platform-status.js";
-
 export function createPlatformRuntime({
   windowRef,
-  dom,
   offlineStatus,
   registerServiceWorker,
   state,
-  currentDeckStyle,
-  showToast,
-}) {
-  const controller = createPlatformStatusController({
-    windowRef,
-    dom,
-    offlineStatus,
-    getSelectedDeckId: currentDeckStyle,
-    showToast,
-  });
+} = {}) {
+  let coordinator = null;
+  let updatePending = false;
 
   function clientState() {
     if (state.completing) return "pending-save";
@@ -23,20 +13,35 @@ export function createPlatformRuntime({
     return "reading";
   }
 
+  async function activateWhenIdle() {
+    coordinator?.reportState?.();
+    if (!updatePending || !coordinator || clientState() !== "idle") return false;
+    const decision = await coordinator.requestActivation({ force: false });
+    if (decision?.activated) updatePending = false;
+    return Boolean(decision?.activated);
+  }
+
   async function start(selectedDeckId) {
     const result = await registerServiceWorker({
       getClientState: clientState,
       getCurrentReleaseId: () => offlineStatus.getStatus().activeReleaseId,
-      onUpdateAvailable: controller.updateAvailable,
-      onActivated: controller.activated,
+      onUpdateAvailable() {
+        updatePending = true;
+        void activateWhenIdle();
+      },
+      onActivated() {
+        windowRef?.location?.reload?.();
+      },
     });
+    coordinator = result.coordinator;
     offlineStatus.start({ selectedDeckId });
-    controller.bind(result.coordinator);
+    void activateWhenIdle();
     return result;
   }
 
-  return Object.freeze({
-    start,
-    render: controller.render,
-  });
+  function render() {
+    void activateWhenIdle();
+  }
+
+  return Object.freeze({ start, render });
 }

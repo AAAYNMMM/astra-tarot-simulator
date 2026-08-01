@@ -1,0 +1,47 @@
+.decisive-reading .summary-hero {
+  padding-bottom: 1.1rem;
+}
+
+.decisive-reading .summary-hero h3 {
+  font-size: clamp(1.7rem, 2.5vw, 2.45rem);
+  letter-spacing: 0.08em;
+}
+
+.decisive-reading .summary-hero p {
+  max-width: 38rem;
+  font-size: 1rem;
+  line-height: 1.85;
+}
+
+.decisive-factor-list {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.decisive-factor-list li {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.25rem 0.75rem;
+  padding: 0.85rem 0.95rem;
+  border: 1px solid rgb(255 255 255 / 8%);
+  border-radius: 0.8rem;
+  background: rgb(255 255 255 / 3%);
+}
+
+.decisive-factor-list strong {
+  color: var(--text-primary);
+  font-size: 0.94rem;
+}
+
+.decisive-factor-list span {
+  color: var(--accent-color, var(--gold));
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+}
+
+.decisive-factor-list p {
+  grid-column: 1 / -1;
+  margin: 0.25rem 0 0;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}

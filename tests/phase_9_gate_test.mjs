@@ -12,8 +12,7 @@ const acceptance = readJson(".qa/release/release-acceptance.json");
 const performance = readJson(".qa/release/performance-report.json");
 
 assert.match(progress, /Phase 9状态 \| `PARENT-DONE`/);
-assert.match(progress, /最近完成任务 \| Phase 9终态：`REL-004`/);
-assert.match(progress, /唯一下一任务 \| `无（2\.0\.0终态）`/);
+assert.match(progress, /Phase 10状态 \| `PARENT-DONE`/);
 assert.equal(release.status, "RELEASED");
 assert.equal(acceptance.status, "PASS");
 assert.equal(performance.status, "PASS");

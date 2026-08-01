@@ -4,6 +4,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { createEngineSynthesis } from "../src/app/controllers/engine-synthesis.js";
+import { executeDecisiveReading } from "../src/engine/decisive/reading.js";
 import { moveRovingFocus } from "../src/ui/accessibility/controller.js";
 import { createStructuredHistorySummary } from "../src/storage/history-summary.js";
 import { historyRecordView } from "../src/ui/renderers/history.js";
@@ -27,9 +28,13 @@ const reading = {
   draws: [{ card, reversed: false, position: spread.positions[0], index: 0 }],
 };
 Object.defineProperty(reading, "renderingRandom", { value: random.streams.rendering, enumerable: false });
-const synthesis = await createEngineSynthesis(reading);
+const synthesizeReading = createEngineSynthesis({
+  workerClient: { synthesize: executeDecisiveReading },
+});
+const synthesis = await synthesizeReading(reading);
 assert.equal(synthesis.engineResult.claim.validation.status, "valid");
 assert.equal(synthesis.engineResult.rendered.plainText.length > 0, true);
+assert.notEqual(synthesis.synthesis.verdict.code, "indeterminate");
 const structured = createStructuredHistorySummary(synthesis.engineResult);
 assert.equal(structured.status, "available");
 assert.equal(structured.evidenceCount, synthesis.engineResult.claim.evidenceRefs.length);
@@ -39,7 +44,7 @@ const view = historyRecordView({
   question: question.text,
   categoryName: "每日指引",
   spreadName: spread.name,
-  headline: synthesis.headline,
+  headline: synthesis.synthesis.judgment,
   structured,
   cards: [{ position: spread.positions[0].name, name: card.name, orientation: "正位" }],
 }, (value) => value);

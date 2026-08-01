@@ -132,20 +132,6 @@
           </div>
 
           <div class="start-zone">
-            <section class="platform-status" id="platformStatus" aria-label="离线与版本状态" hidden>
-              <div class="platform-status-row"><span>离线状态</span><strong id="offlineState">正在检查</strong></div>
-              <div class="platform-status-row"><span>当前版本</span><strong id="releaseState">尚未激活</strong></div>
-              <div class="platform-status-row"><span>存储空间</span><strong id="storageState">正在估算</strong></div>
-              <div class="platform-status-row"><span>页面状态</span><strong id="clientState">idle</strong></div>
-              <div class="platform-status-row"><span>更新</span><strong id="updateState">已是当前版本</strong></div>
-              <progress id="deckCacheProgress" max="100" value="0" hidden aria-label="牌组缓存进度"></progress>
-              <span id="deckCacheText" aria-live="polite"></span>
-              <div class="platform-status-actions">
-                <button class="secondary-button" id="cacheDeckButton" type="button">缓存当前牌组</button>
-                <button class="secondary-button" id="deleteDeckButton" type="button" disabled>删除当前牌组缓存</button>
-                <button class="secondary-button" id="updateAppButton" type="button" hidden>安全更新</button>
-              </div>
-            </section>
             <button class="primary-button" id="startReading" type="button">
               <span class="button-glow" aria-hidden="true"></span>
               <span class="button-icon" aria-hidden="true">✦</span>
@@ -258,12 +244,7 @@
                 <i></i>
               </div>
               <h3>解读将在翻牌后显现</h3>
-              <p>每张牌都会结合你选择的问题与牌位，给出对应的讯息和行动建议。</p>
-              <ul>
-                <li><span>01</span> 先感受牌面的第一印象</li>
-                <li><span>02</span> 再阅读正位或逆位含义</li>
-                <li><span>03</span> 阅读综合讯息与行动建议</li>
-              </ul>
+              <p>翻牌后显示牌位判词；全部翻开后给出唯一的综合判断。</p>
             </div>
           </div>
           <footer class="insight-footer">

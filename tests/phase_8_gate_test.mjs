@@ -10,7 +10,7 @@ const progress = read("docs/PROGRESS.md");
 const report = readJson(".qa/evaluation/phase-8-evaluation-report.json");
 const blind = readJson(".qa/evaluation/blind-result.json");
 assert.match(progress, /Phase 8状态 \| `PARENT-DONE`/);
-assert.match(progress, /唯一下一任务 \| `无（2\.0\.0终态）`/);
+assert.match(progress, /Phase 10状态 \| `PARENT-DONE`/);
 assert.equal(report.summary.status, "PASS");
 assert.equal(blind.status, "PASS");
 assert.equal(report.summary.totalCases, 156 + 360 + 36);

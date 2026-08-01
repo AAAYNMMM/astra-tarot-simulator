@@ -1,4 +1,3 @@
-import { createEngineSynthesis } from "./engine-synthesis.js";
 import { createRecoveryActions } from "../recovery/recovery-actions.js";
 import { createRecoveryCoordinator } from "../recovery/recovery-coordinator.js";
 import { createDiagnosticLog } from "../../platform/diagnostics.js";
@@ -13,8 +12,10 @@ export function createPhase8Runtime({
   showToast,
   retry,
   saveStructuredReading,
+  synthesizeReading,
 } = {}) {
   if (!windowRef || !documentRef || !dom) throw new TypeError("Phase 8 runtime requires browser bindings.");
+  if (typeof synthesizeReading !== "function") throw new TypeError("Worker-backed reading synthesis is required.");
   const diagnostics = createDiagnosticLog();
   let actions;
   const recovery = createRecoveryCoordinator({
@@ -40,7 +41,7 @@ export function createPhase8Runtime({
   async function synthesize(reading) {
     const result = await recovery.execute(
       "engine",
-      () => createEngineSynthesis(reading),
+      () => synthesizeReading(reading),
       { spreadId: reading?.spread?.id, stage: "complete-reading" },
     );
     if (result.status !== "completed") return null;
@@ -49,7 +50,7 @@ export function createPhase8Runtime({
       enumerable: false,
       configurable: true,
     });
-    return result.value;
+    return result.value.synthesis;
   }
 
   function enrichLegacyRecord(record, reading) {

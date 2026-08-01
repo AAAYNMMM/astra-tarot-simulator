@@ -74,8 +74,19 @@ class TarotAppContractTests(unittest.TestCase):
     def test_spreads_and_interpretation_contract(self) -> None:
         knowledge = read_many(KNOWLEDGE_FILES)
         styles = read_styles()
-        for expected in ('id: "cross"', 'name: "五牌十字"', 'id: "celtic"', 'name: "凯尔特十字"', 'name: "希望与恐惧"', "createSpreadNarrative", "createConnections", "牌与牌之间如何对话", "牌型与正逆位"):
-            self.assertIn(expected, knowledge + read_many(APPLICATION_FILES))
+        application = read_many(APPLICATION_FILES)
+        visible_runtime = read_many((
+            "src/app/application.js",
+            "src/ui/renderers/insight.js",
+        ))
+        for expected in (
+            'id: "cross"', 'name: "五牌十字"', 'id: "celtic"',
+            'name: "凯尔特十字"', 'name: "希望与恐惧"',
+            "createDecisiveInterpretation", "最终判断", "走势依据", "决定性牌位", "改判条件",
+        ):
+            self.assertIn(expected, knowledge + application)
+        for removed in ("createSpreadNarrative", "createConnections", "牌与牌之间如何对话", "接下来的三步"):
+            self.assertNotIn(removed, visible_runtime)
         self.assertIn('data-spread-id="celtic"', styles)
         self.assertIn("rotate(90deg)", styles)
 

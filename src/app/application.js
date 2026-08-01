@@ -1,12 +1,13 @@
 import { createEventBinder } from "./events.js";
 import { createReadingFactory } from "./controllers/reading-controller.js";
+import { createEngineSynthesis } from "./controllers/engine-synthesis.js";
+import { createReadingEngineWorkerClient } from "./engine-worker-client.js";
 import { createSelectionSelectors } from "./selectors/current-selection.js";
 import { createReadingState, resetReadingState } from "./state/reading-state.js";
 import { accentToken } from "../config/accent-tokens.js";
 import { DECK_STYLES, LEGACY_DECK_IDS, resolveDeckStyle } from "../config/decks.js";
 import { escapeHtml } from "../core/html.js";
 import { createRuntimeServices } from "./runtime-services.js";
-import { categoryLens, cardStructureNote, orientationNote, reflectionPrompt } from "../engine/legacy/card-reading.js";
 import { createPhase8Runtime } from "./controllers/phase-8-runtime.js";
 import { TarotData } from "../knowledge/legacy/index.js";
 import { assertKnowledgeCatalog } from "../generated/knowledge-registry.js";
@@ -18,6 +19,7 @@ import { createPlatformRuntime } from "./platform-runtime.js";
 import { installImageFallbacks } from "../ui/image-fallback.js";
 import { bindDom } from "../ui/dom.js";
 import { createHistoryRenderer } from "../ui/renderers/history.js";
+import { createInsightRenderer } from "../ui/renderers/insight.js";
 import { createSetupRenderer } from "../ui/renderers/setup.js";
 
 export function startApplication({ windowRef = globalThis.window, documentRef = globalThis.document } = {}) {
@@ -75,7 +77,23 @@ export function startApplication({ windowRef = globalThis.window, documentRef = 
     });
     const createReading = createReadingFactory({ deck, selectors, createRandomContext: createReadingRandomContext });
     const showToast = createToast({ documentRef: document, windowRef: window, dom, reducedMotion });
-    const phase8 = createPhase8Runtime({ windowRef: window, documentRef: document, dom, showToast, retry: completeReading, saveStructuredReading });
+    const engineWorkerClient = createReadingEngineWorkerClient({ WorkerRef: window.Worker });
+    const synthesizeReading = createEngineSynthesis({ workerClient: engineWorkerClient });
+    const { renderCardInsight, renderSummary } = createInsightRenderer({
+      dom,
+      state,
+      currentDeckStyle,
+      cardImagePath,
+    });
+    const phase8 = createPhase8Runtime({
+      windowRef: window,
+      documentRef: document,
+      dom,
+      showToast,
+      retry: completeReading,
+      saveStructuredReading,
+      synthesizeReading,
+    });
   function writeHistory(records) {
     const saved = writeHistoryToStorage(records);
     if (!saved) showToast("浏览器阻止了本地存储，本次记录未保存", "!");
@@ -102,6 +120,7 @@ export function startApplication({ windowRef = globalThis.window, documentRef = 
       dom.insightContent.innerHTML = emptyInsightMarkup;
       dom.newReadingButton.hidden = true;
       dom.revealAllButton.hidden = true;
+      platformRuntime?.render?.();
     }
 
     async function startReading() {
@@ -187,9 +206,10 @@ export function startApplication({ windowRef = globalThis.window, documentRef = 
 
       const cardElements = [...dom.cardTable.querySelectorAll(".drawn-card")];
       const stageRect = dom.readingStage.getBoundingClientRect();
+      const cardRects = cardElements.map((cardElement) => cardElement.getBoundingClientRect());
+      cardElements.forEach((cardElement) => cardElement.classList.add("is-dealt"));
       for (const [index, cardElement] of cardElements.entries()) {
-        cardElement.classList.add("is-dealt");
-        const cardRect = cardElement.getBoundingClientRect();
+        const cardRect = cardRects[index];
         const originX = stageRect.left + stageRect.width / 2 - (cardRect.left + cardRect.width / 2);
         const originY = stageRect.top + stageRect.height * 0.75 - (cardRect.top + cardRect.height / 2);
         if (!reducedMotion.matches && cardElement.animate) {
@@ -294,79 +314,6 @@ export function startApplication({ windowRef = globalThis.window, documentRef = 
       updateInsightTabs();
       renderCardInsight(index);
     }
-    function renderCardInsight(index) {
-      if (!state.reading) return;
-      const draw = state.reading.draws[index];
-      const { card, reversed, position } = draw;
-      const deckStyle = resolveDeckStyle(state.reading.deckStyle || currentDeckStyle());
-      const orientation = reversed ? "逆位" : "正位";
-      const meaning = reversed ? card.reversed : card.upright;
-      const keywordMarkup = card.keywords
-        .map((keyword) => `<span>${escapeHtml(keyword)}</span>`)
-        .join("");
-
-      dom.insightContent.innerHTML = `
-        <article class="card-reading">
-          <header class="selected-card-heading">
-            <div class="mini-card deck-style-${deckStyle.id} ${reversed ? "is-reversed" : ""}" data-accent-token="${accentToken(card.accent)}">
-              <img src="${cardImagePath(card.id, deckStyle)}" alt="" />
-            </div>
-            <div class="selected-card-copy">
-              <span class="position-overline">${String(index + 1).padStart(2, "0")} · ${escapeHtml(position.name)}</span>
-              <h3>${escapeHtml(card.name)}</h3>
-              <p>${escapeHtml(card.en)}</p>
-              <span class="orientation-badge ${reversed ? "is-reversed" : ""}">
-                ${reversed ? "↧" : "↥"} ${orientation} · ${escapeHtml(card.element)}元素
-              </span>
-            </div>
-          </header>
-
-          <div class="keyword-row" data-accent-token="${accentToken(card.accent)}">
-            ${keywordMarkup}
-          </div>
-
-          <section class="reading-block">
-            <div class="reading-block-label">这张牌的核心牌义</div>
-            <p>${escapeHtml(meaning)}</p>
-          </section>
-
-          <section class="reading-block">
-            <div class="reading-block-label">牌型与正逆位</div>
-            <div class="interpretation-note">
-              <p>${escapeHtml(cardStructureNote(card))}</p>
-              <p>${escapeHtml(orientationNote(draw))}</p>
-            </div>
-          </section>
-
-          <section class="reading-block">
-            <div class="reading-block-label">${escapeHtml(position.name)} · 牌位落点</div>
-            <div class="position-context">
-              <strong>它与你的问题如何连结</strong>
-              <p>${escapeHtml(categoryLens(draw, state.reading))}</p>
-            </div>
-          </section>
-
-          <section class="reading-block">
-            <div class="reading-block-label">给自己的追问</div>
-            <div class="reflection-question">
-              <span aria-hidden="true">?</span>
-              <p>${escapeHtml(reflectionPrompt(draw, state.reading))}</p>
-            </div>
-          </section>
-
-          <section class="reading-block">
-            <div class="reading-block-label">落地建议</div>
-            <div class="action-guidance" data-accent-token="${accentToken(card.accent)}">
-              <strong>可以尝试的一步</strong>
-              <p>${escapeHtml(card.advice)}</p>
-            </div>
-          </section>
-        </article>
-      `;
-      requestAnimationFrame(() => {
-        dom.insightContent.scrollTop = 0;
-      });
-    }
     async function completeReading() {
       if (!state.reading || state.completing) return;
       state.completing = true;
@@ -400,74 +347,6 @@ export function startApplication({ windowRef = globalThis.window, documentRef = 
       });
     }
 
-    function renderSummary() {
-      if (!state.reading?.synthesis) return;
-      const { reading } = state;
-      const { synthesis, category, draws } = reading;
-      const observations = synthesis.observations
-        .map((observation) => `<li>${escapeHtml(observation)}</li>`)
-        .join("");
-      const actions = synthesis.actions
-        .map((action) => `<li>${escapeHtml(action)}</li>`)
-        .join("");
-      const connections = synthesis.connections
-        .map((connection) => `<li>${escapeHtml(connection)}</li>`)
-        .join("");
-
-      dom.insightContent.innerHTML = `
-        <article class="summary-reading" data-accent-token="${accentToken(category.accent)}">
-          <header class="summary-hero">
-            <span class="summary-overline">SYNTHESIS · 综合讯息</span>
-            <h3>${escapeHtml(synthesis.headline)}</h3>
-            <p>${escapeHtml(synthesis.overview)}</p>
-          </header>
-
-          <div class="energy-metrics">
-            <div class="energy-metric">
-              <strong>${synthesis.uprightCount}</strong>
-              <span>正位能量</span>
-            </div>
-            <div class="energy-metric">
-              <strong>${synthesis.reversedCount}</strong>
-              <span>逆位课题</span>
-            </div>
-            <div class="energy-metric">
-              <strong>${synthesis.element}</strong>
-              <span>主导元素</span>
-            </div>
-          </div>
-
-          <section class="summary-story">
-            <div class="reading-block-label">牌阵故事 · ${escapeHtml(reading.spread.name)}</div>
-            <p>${escapeHtml(synthesis.narrative)}</p>
-          </section>
-
-          ${
-            draws.length > 1
-              ? `
-                <section class="reading-block">
-                  <div class="reading-block-label">牌与牌之间如何对话</div>
-                  <ul class="summary-list connection-list">${connections}</ul>
-                </section>
-              `
-              : ""
-          }
-
-          <section class="reading-block">
-            <div class="reading-block-label">你可以留意</div>
-            <ul class="summary-list">${observations}</ul>
-          </section>
-
-          <section class="reading-block">
-            <div class="reading-block-label">接下来的三步</div>
-            <ul class="summary-list">${actions}</ul>
-          </section>
-        </article>
-      `;
-      requestAnimationFrame(() => {
-        dom.insightContent.scrollTop = 0;
-      });
-    }
 
     function persistCurrentReading() {
       if (!state.reading?.synthesis) return;
@@ -481,10 +360,11 @@ export function startApplication({ windowRef = globalThis.window, documentRef = 
       }
       writeHistory(records);
       void phase8.saveStructured(state.reading);
+      platformRuntime.render();
     }
   const { openDialog, closeDialog, confirmAction, resolveConfirmation } = createDialogController({ dom, state, documentRef: document });
 
-  const platformRuntime = createPlatformRuntime({ windowRef: window, dom, offlineStatus, registerServiceWorker, state, currentDeckStyle, showToast });
+  const platformRuntime = createPlatformRuntime({ windowRef: window, offlineStatus, registerServiceWorker, state });
 
   const { renderHistory, toggleHistoryDetail, deleteHistoryRecord } = createHistoryRenderer({
       documentRef: document,
@@ -544,7 +424,6 @@ export function startApplication({ windowRef = globalThis.window, documentRef = 
       saveSettings({ deckStyle: state.deckStyleId });
       renderDeckStyles();
       platformRuntime.render();
-      void offlineStatus.cacheDeck(state.deckStyleId);
       showToast(`已切换为${currentDeckStyle().name}牌面`, "✦");
     }
 
