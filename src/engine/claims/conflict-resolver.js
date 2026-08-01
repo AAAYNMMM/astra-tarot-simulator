@@ -60,7 +60,7 @@ export function resolveClaimConflicts(scoredBatch) {
 
   return deepFreeze({
     schemaVersion: "1.0.0",
-    questionId: scoredBatch.questionId,
+    ...(scoredBatch.questionId ? { questionId: scoredBatch.questionId } : {}),
     spreadId: scoredBatch.spreadId,
     activeCandidates,
     suppressedCandidates,

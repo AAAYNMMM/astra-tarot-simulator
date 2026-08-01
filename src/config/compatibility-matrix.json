@@ -14,12 +14,16 @@
       "reason": "legacy localStorage snapshot"
     },
     "2.0.0": {
+      "mode": "read-only",
+      "reason": "legacy structured snapshot"
+    },
+    "3.0.0": {
       "mode": "read-write",
       "reason": null
     }
   },
   "migration": {
-    "supportedFrom": ["1.0.0", "2.0.0"],
+    "supportedFrom": ["1.0.0", "2.0.0", "3.0.0"],
     "rollbackPreservesUpgradedHistory": true
   },
   "browsers": [

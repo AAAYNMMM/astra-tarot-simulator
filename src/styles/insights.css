@@ -638,3 +638,94 @@
   border-radius: 11px;
   background: rgba(255, 255, 255, 0.018);
 }
+
+.history-only-reading-notice {
+  margin: 0 0 12px;
+  padding: 9px 11px;
+  border: 1px solid rgba(216, 187, 122, 0.18);
+  border-radius: 10px;
+  background: rgba(216, 187, 122, 0.055);
+  color: var(--muted);
+  font-size: 9px;
+  line-height: 1.65;
+}
+
+.structural-factor-bands {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 7px;
+  margin: 0;
+}
+
+.factor-band {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 9px;
+  border: 1px solid rgba(216, 187, 122, 0.1);
+  border-radius: 9px;
+  background: rgba(255, 255, 255, 0.018);
+}
+
+.factor-band dt,
+.factor-band dd {
+  margin: 0;
+  font-size: 9px;
+}
+
+.factor-band dt {
+  color: var(--muted);
+}
+
+.factor-band dd {
+  color: var(--gold-light);
+}
+
+.factor-band.is-high:not(.is-penalty),
+.factor-band.is-low.is-penalty {
+  border-color: rgba(135, 196, 156, 0.28);
+}
+
+.factor-band.is-medium {
+  border-color: rgba(216, 187, 122, 0.2);
+}
+
+.factor-band.is-low:not(.is-penalty),
+.factor-band.is-high.is-penalty {
+  border-color: rgba(217, 125, 125, 0.25);
+}
+
+.factor-band.is-not-applicable {
+  opacity: 0.66;
+}
+
+.card-relation-list {
+  display: grid;
+  gap: 7px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.card-relation-list li {
+  padding: 9px 10px;
+  border-left: 2px solid rgba(216, 187, 122, 0.32);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.018);
+}
+
+.card-relation-list li.is-conflict {
+  border-left-color: rgba(217, 125, 125, 0.62);
+}
+
+.card-relation-list strong {
+  color: var(--gold-light);
+  font-size: 9px;
+}
+
+@media (max-width: 560px) {
+  .structural-factor-bands {
+    grid-template-columns: 1fr;
+  }
+}

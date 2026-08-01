@@ -1,6 +1,6 @@
 import { createDeterministicStreams } from "../../core/random/deterministic-streams.js";
 import { loadQuestionProfile } from "../../knowledge/questions/registry.js";
-import { SPREADS } from "../../knowledge/spreads/definitions.js";
+import { LEGACY_SPREADS_V1 as SPREADS } from "../../knowledge/spreads/definitions.js";
 import { executeReadingEngine } from "../runtime/reading-engine.js";
 
 const FORBIDDEN_TEXT = Object.freeze([

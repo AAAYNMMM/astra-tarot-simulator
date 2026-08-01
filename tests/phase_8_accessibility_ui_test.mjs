@@ -10,7 +10,7 @@ import { createStructuredHistorySummary } from "../src/storage/history-summary.j
 import { historyRecordView } from "../src/ui/renderers/history.js";
 import { loadCardProfile } from "../src/knowledge/cards/registry.js";
 import { loadQuestionProfile } from "../src/knowledge/questions/registry.js";
-import { SPREADS } from "../src/knowledge/spreads/definitions.js";
+import { LEGACY_SPREADS_V1 as SPREADS } from "../src/knowledge/spreads/definitions.js";
 import { createDeterministicStreams } from "../src/core/random/deterministic-streams.js";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");

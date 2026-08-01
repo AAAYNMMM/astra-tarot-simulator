@@ -1,12 +1,19 @@
 import { majorCards, minorCards } from "./build.js";
 import { CATEGORIES } from "./questions.js";
 import { SUITS } from "./cards/minor.js";
-import { SPREADS } from "../spreads/definitions.js";
+import { LEGACY_SPREADS_V1 } from "../spreads/definitions.js";
 import { LEGACY_KNOWLEDGE_METADATA } from "./metadata.js";
 
 const deck = Object.freeze([...majorCards, ...minorCards]);
 const categories = Object.freeze(CATEGORIES);
-const spreads = Object.freeze(SPREADS);
+// Keep the byte-for-byte V1 public snapshot free of the newer version marker.
+const spreads = Object.freeze(LEGACY_SPREADS_V1.map((spread) => Object.freeze({
+  id: spread.id,
+  name: spread.name,
+  short: spread.short,
+  description: spread.description,
+  positions: spread.positions,
+})));
 const suits = Object.freeze(SUITS);
 
 if (deck.length !== LEGACY_KNOWLEDGE_METADATA.cardCount) throw new Error("Legacy card catalog count mismatch.");

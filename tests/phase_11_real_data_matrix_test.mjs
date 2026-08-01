@@ -5,7 +5,7 @@ import { executeDecisiveReading } from "../src/engine/decisive/reading.js";
 import { validateConciseInterpretation } from "../src/engine/concise/interpretation.js";
 import { CARD_PROFILE_IDS } from "../src/knowledge/cards/registry.js";
 import { QUESTION_PROFILE_IDS } from "../src/knowledge/questions/registry.js";
-import { SPREADS } from "../src/knowledge/spreads/definitions.js";
+import { LEGACY_SPREADS_V1 as SPREADS } from "../src/knowledge/spreads/definitions.js";
 
 function drawsFor(spread, targetIndex, targetOrientation, questionIndex) {
   const targetSlot = (targetIndex + questionIndex) % spread.positions.length;

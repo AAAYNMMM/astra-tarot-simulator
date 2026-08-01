@@ -147,29 +147,29 @@
   }
 
   .card-table[data-spread-id="celtic"] .drawn-card:nth-child(3) {
-    grid-column: 1;
-    grid-row: 2;
-  }
-
-  .card-table[data-spread-id="celtic"] .drawn-card:nth-child(4) {
-    grid-column: 3;
-    grid-row: 2;
-  }
-
-  .card-table[data-spread-id="celtic"] .drawn-card:nth-child(5) {
     grid-column: 2;
     grid-row: 1;
   }
 
-  .card-table[data-spread-id="celtic"] .drawn-card:nth-child(5) .position-tag {
+  .card-table[data-spread-id="celtic"] .drawn-card:nth-child(4) {
+    grid-column: 2;
+    grid-row: 3;
+  }
+
+  .card-table[data-spread-id="celtic"] .drawn-card:nth-child(5) {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .card-table[data-spread-id="celtic"] .drawn-card:nth-child(3) .position-tag {
     top: 50%;
     left: calc(100% + 5px);
     transform: translateY(-50%);
   }
 
   .card-table[data-spread-id="celtic"] .drawn-card:nth-child(6) {
-    grid-column: 2;
-    grid-row: 3;
+    grid-column: 3;
+    grid-row: 2;
   }
 
   .card-table[data-spread-id="celtic"] .drawn-card:nth-child(7) {
@@ -270,21 +270,21 @@
   }
 
   .card-table[data-spread-id="celtic"] .drawn-card:nth-child(3) {
-    grid-column: 1;
-    grid-row: 2;
-  }
-
-  .card-table[data-spread-id="celtic"] .drawn-card:nth-child(4) {
-    grid-column: 3;
-    grid-row: 2;
-  }
-
-  .card-table[data-spread-id="celtic"] .drawn-card:nth-child(5) {
     grid-column: 2;
     grid-row: 1;
   }
 
-  .card-table[data-spread-id="celtic"] .drawn-card:nth-child(5) .position-tag {
+  .card-table[data-spread-id="celtic"] .drawn-card:nth-child(4) {
+    grid-column: 2;
+    grid-row: 3;
+  }
+
+  .card-table[data-spread-id="celtic"] .drawn-card:nth-child(5) {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .card-table[data-spread-id="celtic"] .drawn-card:nth-child(3) .position-tag {
     top: 50%;
     right: calc(100% + 3px);
     left: auto;
@@ -292,8 +292,8 @@
   }
 
   .card-table[data-spread-id="celtic"] .drawn-card:nth-child(6) {
-    grid-column: 2;
-    grid-row: 3;
+    grid-column: 3;
+    grid-row: 2;
   }
 
   .card-table[data-spread-id="celtic"] .drawn-card:nth-child(7) {

@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { SPREADS } from "../src/knowledge/spreads/definitions.js";
+import { LEGACY_SPREADS_V1 as SPREADS } from "../src/knowledge/spreads/definitions.js";
 import { getSpreadGraph } from "../src/engine/observations/spread-graphs.js";
 import {
   STRUCTURAL_RELATION_TYPE_HINTS,
@@ -8,7 +8,7 @@ import {
 } from "../src/engine/relations/structural-relation-candidates.js";
 
 function observationsFor(spreadId) {
-  return getSpreadGraph(spreadId).nodes.map((node, index) => Object.freeze({
+  return getSpreadGraph(spreadId, "1.0.0").nodes.map((node, index) => Object.freeze({
     schemaVersion: "1.0.0",
     id: `obs-${spreadId}-${node.id}-${index}`,
     spreadId,
@@ -19,12 +19,13 @@ function observationsFor(spreadId) {
 
 let totalCandidates = 0;
 for (const spread of SPREADS) {
-  const graph = getSpreadGraph(spread.id);
+  const graph = getSpreadGraph(spread.id, "1.0.0");
   const observations = observationsFor(spread.id);
-  const batch = createStructuralRelationCandidates({ spreadId: spread.id, observations });
+  const batch = createStructuralRelationCandidates({ spreadId: spread.id, observations, spreadDefinitionVersion: "1.0.0" });
   const repeated = createStructuralRelationCandidates({
     spreadId: spread.id,
     observations: [...observations].reverse(),
+    spreadDefinitionVersion: "1.0.0",
   });
 
   assert.deepEqual(batch, repeated, `${spread.id}: input order must not alter candidates`);
@@ -56,7 +57,7 @@ for (const spread of SPREADS) {
 
 assert.equal(totalCandidates, 21);
 assert.equal(
-  createStructuralRelationCandidates({ spreadId: "single", observations: observationsFor("single") }).candidates.length,
+  createStructuralRelationCandidates({ spreadId: "single", observations: observationsFor("single"), spreadDefinitionVersion: "1.0.0" }).candidates.length,
   0,
 );
 

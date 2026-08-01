@@ -10,8 +10,18 @@ function unique(values) {
   return [...new Set((values || []).filter(Boolean))];
 }
 
-function observationStance(observation) {
-  if (observation.orientation === "reversed") return "cautionary";
+const LIMITING_REVERSAL_MODES = new Set([
+  "blocked", "distorted", "excessive", "misdirected", "avoided",
+  "loss-of-control", "delayed", "deficient",
+]);
+
+function observationStance(observation, profileKind = null) {
+  if (observation.orientation === "reversed") {
+    if (profileKind !== "spread-reading") return "cautionary";
+    if (observation.selectedReversalMode === "released") return "transformative";
+    if (observation.selectedReversalMode === "internalized") return "conditional";
+    if (LIMITING_REVERSAL_MODES.has(observation.selectedReversalMode)) return "cautionary";
+  }
   if (["obstacle", "cause", "risk"].includes(observation.selectedFacet)) return "cautionary";
   if (["action", "resource", "opportunity", "support"].includes(observation.selectedFacet)) return "supportive";
   const dimensions = Object.values(observation.dimensions || {}).filter(Number.isFinite);
@@ -71,7 +81,7 @@ function validateInputs({ relationBatch, observations, question }) {
 
 export function createClaimCandidates({ relationBatch, observations, question }) {
   validateInputs({ relationBatch, observations, question });
-  const graph = getSpreadGraph(relationBatch.spreadId);
+  const graph = getSpreadGraph(relationBatch.spreadId, relationBatch.spreadDefinitionVersion || "2.0.0");
   if (!graph || graph.id !== relationBatch.graphId) throw new Error("Relation graph does not match the frozen spread graph.");
   const observationsByPosition = new Map(observations.map((item) => [item.positionId, item]));
   const observationsById = new Map(observations.map((item) => [item.id, item]));
@@ -81,7 +91,7 @@ export function createClaimCandidates({ relationBatch, observations, question })
   const candidates = [];
   orderedObservations.forEach((observation, index) => {
     const dimension = dimensionForObservation(observation, question);
-    const stance = observationStance(observation);
+    const stance = observationStance(observation, question.profileKind);
     candidates.push({
       schemaVersion: "1.0.0",
       id: `claim-candidate-observation-${observation.id}`,

@@ -2,24 +2,17 @@ export function createEventBinder({
   windowRef, documentRef, state, dom, callbacks, loadHistory,
 }) {
   const {
-    onCategoryClick, onQuestionClick, onSpreadClick, onDeckStyleClick,
-    onExpectationClick, onCriterionClick, onComparisonInput,
+    onQuestionInput = () => {}, onSpreadClick, onDeckStyleClick,
     openDialog, closeDialog, startReading, revealCard, revealAllCards,
     requestNewReading, updateInsightTabs, renderSummary, renderCardInsight,
     showToast, renderHistory, toggleHistoryDetail, deleteHistoryRecord,
-    resolveConfirmation, confirmAction, writeHistory,
+    resolveConfirmation, confirmAction, writeHistory, clearStructuredHistory = null,
   } = callbacks;
 
   return function bindEvents() {
-    dom.categoryGrid.addEventListener("click", onCategoryClick);
-    dom.questionList.addEventListener("click", onQuestionClick);
+    dom.questionInput.addEventListener("input", onQuestionInput);
     dom.spreadList.addEventListener("click", onSpreadClick);
-    dom.expectationList.addEventListener("click", onExpectationClick);
-    dom.criterionList.addEventListener("click", onCriterionClick);
-    dom.comparisonOptionA.addEventListener("input", onComparisonInput);
-    dom.comparisonOptionB.addEventListener("input", onComparisonInput);
     dom.deckStyleList.addEventListener("click", onDeckStyleClick);
-    dom.questionPickerButton.addEventListener("click", () => { if (state.phase === "setup") openDialog(dom.questionDialog); });
     dom.startReading.addEventListener("click", startReading);
     dom.cardTable.addEventListener("click", (event) => {
       const button = event.target.closest(".card-hitbox");
@@ -77,6 +70,7 @@ export function createEventBinder({
       const confirmed = await confirmAction("清空全部记录？", "这会删除保存在此浏览器中的所有占卜记录，且无法恢复。", "全部清空");
       if (!confirmed) return;
       writeHistory([]);
+      if (typeof clearStructuredHistory === "function") await clearStructuredHistory();
       renderHistory();
       showToast("全部占卜记录已清空", "×");
     });

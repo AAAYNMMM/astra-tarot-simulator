@@ -137,10 +137,10 @@ export function createObservation(input) {
   });
 }
 
-export function createSpreadObservations({ draw, question, spreadId }) {
-  const graph = getSpreadGraph(spreadId);
+export function createSpreadObservations({ draw, question, spreadId, spreadDefinitionVersion = "2.0.0" }) {
+  const graph = getSpreadGraph(spreadId, spreadDefinitionVersion);
   if (!graph) throw new Error(`Unknown spread graph: ${spreadId}`);
-  const graphErrors = validateSpreadGraph(graph);
+  const graphErrors = validateSpreadGraph(graph, spreadDefinitionVersion);
   if (graphErrors.length) throw new Error(graphErrors.join("; "));
   const expected = graph.nodes.map((node) => node.id);
   const actual = draw.map((item) => item.positionId);
@@ -150,7 +150,7 @@ export function createSpreadObservations({ draw, question, spreadId }) {
   const observations = draw.map((item) => createObservation({
     card: item.card,
     question,
-    operator: getPositionOperator(spreadId, item.positionId),
+    operator: getPositionOperator(spreadId, item.positionId, spreadDefinitionVersion),
     orientation: item.orientation,
     reversalMode: item.reversalMode ?? null,
   }));

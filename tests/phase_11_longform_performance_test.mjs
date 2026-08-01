@@ -10,7 +10,7 @@ import { executeDecisiveReading, warmDecisiveReadingEngine } from "../src/engine
 import { serializeReadingForWorker } from "../src/app/controllers/engine-synthesis.js";
 import { createReadingEngineWorkerClient, WARM_MESSAGE, WORKER_MESSAGE } from "../src/app/engine-worker-client.js";
 import { CARD_PROFILE_IDS } from "../src/knowledge/cards/registry.js";
-import { SPREADS } from "../src/knowledge/spreads/definitions.js";
+import { LEGACY_SPREADS_V1 as SPREADS } from "../src/knowledge/spreads/definitions.js";
 
 function payload(spreadId, cardIds = CARD_PROFILE_IDS) {
   const spread = SPREADS.find((item) => item.id === spreadId);

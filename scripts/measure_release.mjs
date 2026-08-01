@@ -4,8 +4,8 @@ import path from "node:path";
 import { performance } from "node:perf_hooks";
 import { fileURLToPath } from "node:url";
 
-import { createDeterministicStreams } from "../src/core/random/deterministic-streams.js";
-import { executeReadingEngine } from "../src/engine/runtime/reading-engine.js";
+import { createReadingRandomContextFactory } from "../src/core/random/production-random.js";
+import { executeSpreadReadingRequest } from "../src/engine/decisive/spread-reading.js";
 import { CARD_PROFILE_IDS } from "../src/knowledge/cards/registry.js";
 import { SPREADS } from "../src/knowledge/spreads/definitions.js";
 import { APP_VERSION } from "../src/config/version.js";
@@ -35,23 +35,26 @@ const draws = celtic.positions.map((position, index) => ({
   orientation: index % 3 === 0 ? "reversed" : "upright",
 }));
 
-await executeReadingEngine({
-  questionId: "career-change",
-  spreadId: "celtic",
-  draws,
-  renderingStream: createDeterministicStreams("phase-9-warmup").streams.rendering,
-});
+const createRandomContext = createReadingRandomContextFactory();
+async function executeV3(seed, readingId) {
+  const randomAudit = createRandomContext({ rootSeed: seed }).audit;
+  return executeSpreadReadingRequest({
+    protocolVersion: "3.0.0",
+    readingId,
+    spreadId: "celtic",
+    spreadDefinitionVersion: "2.0.0",
+    draws,
+    randomAudit,
+  });
+}
+
+await executeV3("phase-14-v3-warmup", "phase-14-v3-warmup");
 
 const timings = [];
 let sampleResult = null;
 for (let index = 0; index < 30; index += 1) {
   const started = performance.now();
-  sampleResult = await executeReadingEngine({
-    questionId: "career-change",
-    spreadId: "celtic",
-    draws,
-    renderingStream: createDeterministicStreams(`phase-9-${index}`).streams.rendering,
-  });
+  sampleResult = await executeV3(`phase-14-v3-${index}`, `phase-14-v3-${index}`);
   timings.push(performance.now() - started);
 }
 timings.sort((a, b) => a - b);
@@ -76,7 +79,11 @@ const measurements = {
   deckBytes,
   engineMedianMs: Number(percentile(0.5).toFixed(3)),
   engineP95Ms: Number(percentile(0.95).toFixed(3)),
-  readingRecordBytes: Buffer.byteLength(JSON.stringify(sampleResult), "utf8"),
+  readingRecordBytes: Buffer.byteLength(JSON.stringify({
+    engineResult: sampleResult.engineResult,
+    presentation: sampleResult.presentation,
+    assessment: sampleResult.assessment,
+  }), "utf8"),
   diagnosticsBytes: 128 * 1024,
   targetHistoryRecords: 1000,
 };
@@ -95,13 +102,14 @@ const checks = {
 const report = {
   schemaVersion: "1.0.0",
   release: APP_VERSION,
-  reportId: "phase-9-performance-v1",
+  reportId: "phase-14-v3-performance-v1",
   environment: {
     runtime: process.version,
     platform: process.platform,
     architecture: process.arch,
     cases: 30,
     spread: "celtic",
+    engineProtocol: "3.0.0",
   },
   budgets,
   measurements,

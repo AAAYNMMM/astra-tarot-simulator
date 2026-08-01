@@ -67,10 +67,10 @@ function observationsByPosition({ observations, spreadId, graph }) {
   return byPosition;
 }
 
-export function createStructuralRelationCandidates({ spreadId, observations }) {
-  const graph = getSpreadGraph(spreadId);
+export function createStructuralRelationCandidates({ spreadId, observations, spreadDefinitionVersion = "2.0.0" }) {
+  const graph = getSpreadGraph(spreadId, spreadDefinitionVersion);
   if (!graph) throw new Error(`Unknown spread graph: ${spreadId}`);
-  const graphErrors = validateSpreadGraph(graph);
+  const graphErrors = validateSpreadGraph(graph, spreadDefinitionVersion);
   if (graphErrors.length) throw new Error(graphErrors.join("; "));
 
   const byPosition = observationsByPosition({ observations, spreadId, graph });
@@ -104,12 +104,13 @@ export function createStructuralRelationCandidates({ spreadId, observations }) {
     graphId: graph.id,
     sourceLayer: "spread-structure",
     candidates,
+    ...(spreadDefinitionVersion === "2.0.0" ? {} : { spreadDefinitionVersion }),
   });
 }
 
 export function validateStructuralRelationCandidates(batch) {
   const errors = [];
-  const graph = getSpreadGraph(batch?.spreadId);
+  const graph = getSpreadGraph(batch?.spreadId, batch?.spreadDefinitionVersion || "2.0.0");
   if (!graph) return [`Unknown spread graph: ${batch?.spreadId}`];
   if (batch.graphId !== graph.id) errors.push(`${batch.spreadId}: graphId mismatch`);
   if (batch.sourceLayer !== "spread-structure") errors.push(`${batch.spreadId}: invalid sourceLayer`);

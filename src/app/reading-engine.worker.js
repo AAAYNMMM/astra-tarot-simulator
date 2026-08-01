@@ -1,7 +1,7 @@
 import {
-  executeDecisiveReading,
-  warmDecisiveReadingEngine,
-} from "../engine/decisive/reading.js";
+  executeSpreadReadingRequest,
+  warmSpreadReadingEngine,
+} from "../engine/decisive/spread-reading.js";
 
 const SYNTHESIZE_MESSAGE = "ASTRA_SYNTHESIZE_READING";
 const WARM_MESSAGE = "ASTRA_WARM_READING_ENGINE";
@@ -11,12 +11,12 @@ self.addEventListener("message", async (event) => {
   if (!message.id) return;
   try {
     if (message.type === WARM_MESSAGE) {
-      const value = await warmDecisiveReadingEngine();
+      const value = await warmSpreadReadingEngine();
       self.postMessage({ id: message.id, status: "ready", value });
       return;
     }
     if (message.type !== SYNTHESIZE_MESSAGE) return;
-    const value = await executeDecisiveReading(message.payload);
+    const value = await executeSpreadReadingRequest(message.payload);
     self.postMessage({ id: message.id, status: "completed", value });
   } catch (error) {
     self.postMessage({

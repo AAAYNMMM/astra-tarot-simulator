@@ -1,13 +1,14 @@
 {
   "schemaVersion": "1.0.0",
   "release": "2.1.0",
-  "reportId": "phase-9-performance-v1",
+  "reportId": "phase-14-v3-performance-v1",
   "environment": {
     "runtime": "v24.18.0",
     "platform": "win32",
     "architecture": "x64",
     "cases": 30,
-    "spread": "celtic"
+    "spread": "celtic",
+    "engineProtocol": "3.0.0"
   },
   "budgets": {
     "shellBytes": 2500000,
@@ -20,17 +21,17 @@
     "targetHistoryRecords": 1000
   },
   "measurements": {
-    "shellBytes": 407186,
-    "knowledgeBytes": 802312,
+    "shellBytes": 417409,
+    "knowledgeBytes": 944294,
     "deckBytes": {
       "arnoult": 61475074,
       "piedmont": 6506159,
       "rws": 3511317,
       "swiss": 8498433
     },
-    "engineMedianMs": 2.138,
-    "engineP95Ms": 3.025,
-    "readingRecordBytes": 147518,
+    "engineMedianMs": 3.662,
+    "engineP95Ms": 7.541,
+    "readingRecordBytes": 215201,
     "diagnosticsBytes": 131072,
     "targetHistoryRecords": 1000
   },

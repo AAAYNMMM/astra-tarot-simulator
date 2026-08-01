@@ -60,10 +60,18 @@ while (!['ready', 'failed'].includes(document.documentElement.dataset.astraBoot 
   await sleep(50);
 }
 record('boot-ready', document.documentElement.dataset.astraBoot === 'ready', document.documentElement.dataset.astraBoot);
-record('category-count', document.querySelectorAll('[data-category-id]').length === 6, document.querySelectorAll('[data-category-id]').length);
 record('spread-count', document.querySelectorAll('[data-spread-id]').length === 4, document.querySelectorAll('[data-spread-id]').length);
 record('deck-count', document.querySelectorAll('[data-deck-style-id]').length === 4, document.querySelectorAll('[data-deck-style-id]').length);
-record('question-picker', Boolean(document.querySelector('#selectedQuestionText')?.textContent?.trim()));
+const questionInput = document.querySelector('#questionInput');
+const startButton = document.querySelector('#startReading');
+record('free-question-textarea', questionInput?.tagName === 'TEXTAREA');
+record('question-required', Boolean(startButton?.disabled));
+record('all-spreads-enabled', [...document.querySelectorAll('[data-spread-id]')]
+  .every((button) => !button.disabled && button.getAttribute('aria-disabled') === 'false'));
+record('retired-setup-absent', !document.querySelector([
+  '[data-category-id]', '[data-question-id]', '[data-expectation-id]', '[data-criterion-id]',
+  '#comparisonOptionA', '#comparisonOptionB', '#timeframeInput',
+].join(',')));
 record('no-inline-style', document.querySelectorAll('[style]').length === 0, document.querySelectorAll('[style]').length);
 
 const cspResponse = await fetch(location.href, { cache: 'no-store' });
@@ -92,9 +100,13 @@ await sleep(50);
 
 const flowTimings = {};
 for (const [spreadId, count] of [['single', 1], ['timeline', 3], ['cross', 5], ['celtic', 10]]) {
+  const question = `浏览器隔离标记-${spreadId}-自由问题`;
+  questionInput.value = question;
+  questionInput.dispatchEvent(new Event('input', { bubbles: true }));
+  record(`${spreadId}-question-valid`, !startButton.disabled, document.querySelector('#questionValidationMessage')?.textContent || '');
   document.querySelector(`[data-spread-id="${spreadId}"]`)?.click();
   const started = performance.now();
-  document.querySelector('#startReading')?.click();
+  startButton?.click();
   await sleep(50);
   if (document.querySelector('#confirmDialog')?.open) {
     document.querySelector('#confirmAccept')?.click();
@@ -106,72 +118,53 @@ for (const [spreadId, count] of [['single', 1], ['timeline', 3], ['cross', 5], [
   const dealtMs = performance.now() - started;
   record(`${spreadId}-dealt`, dealt, document.querySelectorAll('#cardTable .drawn-card').length);
   record(`${spreadId}-start-to-dealt-budget`, dealt && dealtMs <= 2000, dealtMs.toFixed(1));
+  record(`${spreadId}-question-title-only`, document.querySelector('#readingTitle')?.textContent === question);
   const revealStarted = performance.now();
   if (count === 1) document.querySelector('#cardTable .card-hitbox')?.click();
   else document.querySelector('#revealAllButton')?.click();
   const completed = await waitFor(() => (
-    Boolean(document.querySelector('.assessment-summary[data-schema-version="1.0.0"]'))
-    || Boolean(document.querySelector('.concise-reading[data-schema-version="4.0.0"]'))
+    Boolean(document.querySelector('.structural-summary[data-schema-version="3.0.0"]'))
     || Boolean(document.querySelector('.recovery-panel'))
   ), 10000);
   const revealMs = performance.now() - revealStarted;
-  const summary = document.querySelector('.assessment-summary[data-schema-version="1.0.0"], .concise-reading[data-schema-version="4.0.0"]');
+  const summary = document.querySelector('.structural-summary[data-schema-version="3.0.0"]');
   record(`${spreadId}-completed`, completed && Boolean(summary) && !document.querySelector('.recovery-panel'));
   record(`${spreadId}-reveal-to-summary-budget`, Boolean(summary) && revealMs <= 2500, revealMs.toFixed(1));
-  const assessmentSummary = summary?.classList.contains('assessment-summary');
-  record(`${spreadId}-summary-contract`, assessmentSummary ? (
-    summary?.dataset.outputContract === 'situation-map'
+  const grade = summary?.querySelector('.assessment-grade strong')?.textContent?.trim() || '';
+  record(`${spreadId}-summary-contract`, (
+    /^(?:SSS|SS|S|A|B|C|D|E)$/.test(grade)
+    && summary?.querySelectorAll('.structural-factor-bands .factor-band').length === 8
     && summary?.querySelectorAll('.assessment-factor-grid').length === 1
     && summary?.querySelectorAll('.card-evidence-item').length === 0
-    && summary?.querySelectorAll('.assessment-grade').length === 0
-  ) : (
-    summary?.querySelectorAll('.concise-evidence-item').length >= 2
-    && summary?.querySelectorAll('.concise-evidence-item').length <= 4
-    && summary?.querySelectorAll('.card-evidence-item').length === count
+  ), grade);
+  record(`${spreadId}-question-isolated-from-summary`, !summary?.textContent?.includes(question));
+  record(`${spreadId}-isolation-notice`, summary?.textContent?.includes(
+    '问题仅用于记录，不参与抽牌、解牌或评分。请根据自己的问题理解牌面提示。'
+  ));
+  document.querySelector('#cardInsightTab')?.click();
+  const detailReady = await waitFor(() => Boolean(document.querySelector('.card-reading')));
+  const cardDetail = document.querySelector('.card-reading');
+  record(`${spreadId}-card-detail-contract`, detailReady && [
+    '当前牌面基础含义', '所在位置的含义', '在整副牌中的作用', '关键关联牌',
+  ].every((label) => cardDetail?.textContent?.includes(label)));
+  record(`${spreadId}-card-detail-notice`, cardDetail?.textContent?.includes(
+    '问题仅用于记录，不参与抽牌、解牌或评分。请根据自己的问题理解牌面提示。'
   ));
   flowTimings[spreadId] = { dealtMs: Number(dealtMs.toFixed(1)), revealMs: Number(revealMs.toFixed(1)) };
   if (spreadId !== 'celtic') {
     document.querySelector('#newReadingButton')?.click();
-    await waitFor(() => !document.querySelector('#startReading')?.disabled);
+    await waitFor(() => !questionInput.disabled && startButton.disabled);
   }
 }
 
-document.querySelector('#newReadingButton')?.click();
-await waitFor(() => document.querySelector('#startReading') && !document.querySelector('#startReading').disabled);
-document.querySelector('[data-category-id="decision"]')?.click();
-document.querySelector('[data-question-id="decision-option"]')?.click();
-const optionA = document.querySelector('#comparisonOptionA');
-const optionB = document.querySelector('#comparisonOptionB');
-if (optionA && optionB) {
-  optionA.value = '继续现有路径';
-  optionA.dispatchEvent(new Event('input', { bubbles: true }));
-  optionB.value = '测试替代路径';
-  optionB.dispatchEvent(new Event('input', { bubbles: true }));
-}
-document.querySelector('[data-criterion-id="stability"]')?.click();
-record('comparison-setup-valid', !document.querySelector('#startReading')?.disabled);
-document.querySelector('#startReading')?.click();
-const comparisonDealt = await waitFor(() => (
-  document.querySelectorAll('#cardTable .drawn-card').length === 6
-  && [...document.querySelectorAll('#cardTable .card-hitbox')].every((button) => !button.disabled)
-));
-record('comparison-independent-dealt', comparisonDealt, document.querySelectorAll('#cardTable .drawn-card').length);
-document.querySelector('#revealAllButton')?.click();
-const comparisonCompleted = await waitFor(() => Boolean(
-  document.querySelector('.assessment-summary[data-output-contract="comparison-support"]')
-  || document.querySelector('.recovery-panel')
-), 10000);
-const comparisonSummary = document.querySelector('.assessment-summary[data-output-contract="comparison-support"]');
-record('comparison-completed', comparisonCompleted && Boolean(comparisonSummary) && !document.querySelector('.recovery-panel'));
-record('comparison-no-grade-or-card-list', (
-  comparisonSummary?.querySelectorAll('.assessment-grade').length === 0
-  && comparisonSummary?.querySelectorAll('.card-evidence-item').length === 0
-  && /不会自动选出赢家|没有[^。]*自动赢家/.test(comparisonSummary?.textContent || '')
-));
-
 document.querySelector('#historyButton')?.click();
-await sleep(80);
-record('history-headline', /积极|平稳|变化|困难|受阻|调整|推进|等待|停止|转向|牌阵已完成/.test(historyList?.textContent || ''));
+await waitFor(() => document.querySelectorAll('#historyList [data-history-id]').length >= 5);
+const newestHistory = document.querySelector('#historyList [data-history-id]');
+newestHistory?.querySelector('[data-history-action="view"]')?.click();
+record('history-v3-grade', newestHistory?.textContent?.includes('综合顺势等级'));
+record('history-v3-isolation-notice', newestHistory?.textContent?.includes(
+  '问题仅用于记录，不参与抽牌、解牌或评分。请根据自己的问题理解牌面提示。'
+));
 record('history-hides-raw-code', ![...historyList?.querySelectorAll('.history-summary') || []]
   .some((item) => /conditional|分数\s*0\./.test(item.textContent || '')));
 

@@ -27,6 +27,7 @@ function drawCards({ deck, spread, drawStream, orientationStream, branch = null,
       reversed: orientationStream.nextUnit() < 0.33,
       position,
       index: startIndex + index,
+      reversalMode: null,
     };
     if (branch) {
       result.enginePosition = basePosition;
@@ -52,6 +53,69 @@ function comparisonRandomAudit(audit, streams) {
   });
 }
 
+function createLegacyReading({ selectors, deck, randomContext, evaluationSelection, questionText, createdAt }) {
+  const category = selectors.currentCategory();
+  const question = selectors.currentQuestion();
+  const spread = selectors.currentSpread();
+  const isComparison = evaluationSelection?.outputContract === "comparison-support";
+  let draws;
+  let comparison = null;
+  let randomAudit = randomContext.audit;
+  if (isComparison) {
+    if (spread.id !== "timeline" || typeof randomContext.derive !== "function") {
+      throw new Error("Comparison readings require timeline and named deterministic substreams.");
+    }
+    const options = evaluationSelection.comparisonOptions || [];
+    if (options.length !== 2) throw new Error("Comparison readings require two named options.");
+    const streams = [];
+    draws = options.flatMap((option, branchIndex) => {
+      const drawStream = randomContext.derive(`comparison:${option.id}:draw`);
+      const orientationStream = randomContext.derive(`comparison:${option.id}:orientation`);
+      streams.push(drawStream, orientationStream);
+      return drawCards({
+        deck,
+        spread,
+        drawStream,
+        orientationStream,
+        branch: option,
+        startIndex: branchIndex * spread.positions.length,
+      });
+    });
+    comparison = Object.freeze({
+      schemaVersion: "1.0.0",
+      criterionId: evaluationSelection.criterionId,
+      options: Object.freeze(options.map((option) => Object.freeze({ ...option }))),
+    });
+    randomAudit = comparisonRandomAudit(randomContext.audit, streams);
+  } else {
+    draws = drawCards({
+      deck,
+      spread,
+      drawStream: randomContext.draw,
+      orientationStream: randomContext.orientation,
+    });
+  }
+  const reading = {
+    id: `reading-${createdAt.getTime()}-${randomContext.draw.nextInt(100000)}`,
+    createdAt: createdAt.toISOString(),
+    category,
+    question: questionText ? Object.freeze({ ...question, text: String(questionText) }) : question,
+    spread,
+    deckStyle: selectors.currentDeckStyle(),
+    randomAudit,
+    evaluationSelection,
+    comparison,
+    draws,
+    synthesis: null,
+  };
+  Object.defineProperty(reading, "renderingRandom", {
+    value: randomContext.rendering,
+    enumerable: false,
+    writable: false,
+  });
+  return reading;
+}
+
 export function createReadingFactory({
   deck,
   selectors,
@@ -60,75 +124,39 @@ export function createReadingFactory({
   randomUnit = null,
   now = () => new Date(),
 }) {
-  const { currentCategory, currentQuestion, currentSpread, currentDeckStyle } = selectors;
+  if (!Array.isArray(deck) || !deck.length || !selectors?.currentSpread || !selectors?.currentDeckStyle) {
+    throw new TypeError("Reading factory requires a deck and current spread/deck selectors.");
+  }
+  const legacyMode = typeof selectors.currentCategory === "function" && typeof selectors.currentQuestion === "function";
   return function createReading({ evaluationSelection = null, questionText = null } = {}) {
-    const category = currentCategory();
-    const question = currentQuestion();
-    const spread = currentSpread();
+    const spread = selectors.currentSpread();
     const randomContext = createRandomContext
       ? createRandomContext()
       : legacyRandomContext({ secureShuffle, randomUnit });
-    const isComparison = evaluationSelection?.outputContract === "comparison-support";
-    let draws;
-    let comparison = null;
-    let randomAudit = randomContext.audit;
-    if (isComparison) {
-      if (spread.id !== "timeline" || typeof randomContext.derive !== "function") {
-        throw new Error("Comparison readings require timeline and named deterministic substreams.");
-      }
-      const options = evaluationSelection.comparisonOptions || [];
-      if (options.length !== 2) throw new Error("Comparison readings require two named options.");
-      const streams = [];
-      const branchDraws = options.map((option, branchIndex) => {
-        const drawStream = randomContext.derive(`comparison:${option.id}:draw`);
-        const orientationStream = randomContext.derive(`comparison:${option.id}:orientation`);
-        streams.push(drawStream, orientationStream);
-        return drawCards({
-          deck,
-          spread,
-          drawStream,
-          orientationStream,
-          branch: option,
-          startIndex: branchIndex * spread.positions.length,
-        });
-      });
-      draws = branchDraws.flat();
-      comparison = Object.freeze({
-        schemaVersion: "1.0.0",
-        criterionId: evaluationSelection.criterionId,
-        options: Object.freeze(options.map((option) => Object.freeze({ ...option }))),
-      });
-      randomAudit = comparisonRandomAudit(randomContext.audit, streams);
-    } else {
-      draws = drawCards({
-        deck,
-        spread,
-        drawStream: randomContext.draw,
-        orientationStream: randomContext.orientation,
-      });
-    }
     const createdAt = now();
-    const readingQuestion = questionText
-      ? Object.freeze({ ...question, text: String(questionText) })
-      : question;
-    const reading = {
+    if (legacyMode) {
+      return createLegacyReading({ selectors, deck, randomContext, evaluationSelection, questionText, createdAt });
+    }
+    const normalizedQuestion = typeof questionText === "string" ? questionText : "";
+    if (!normalizedQuestion) throw new TypeError("A normalized history-only question is required.");
+    const draws = drawCards({
+      deck,
+      spread,
+      drawStream: randomContext.draw,
+      orientationStream: randomContext.orientation,
+    });
+    return {
+      schemaVersion: "3.0.0",
       id: `reading-${createdAt.getTime()}-${randomContext.draw.nextInt(100000)}`,
       createdAt: createdAt.toISOString(),
-      category,
-      question: readingQuestion,
+      question: Object.freeze({ text: normalizedQuestion, purpose: "history-only" }),
       spread,
-      deckStyle: currentDeckStyle(),
-      randomAudit,
-      evaluationSelection,
-      comparison,
+      deckStyle: selectors.currentDeckStyle(),
+      randomAudit: randomContext.audit,
       draws,
+      engineResult: null,
+      presentation: null,
       synthesis: null,
     };
-    Object.defineProperty(reading, "renderingRandom", {
-      value: randomContext.rendering,
-      enumerable: false,
-      writable: false,
-    });
-    return reading;
   };
 }

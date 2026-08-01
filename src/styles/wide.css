@@ -340,23 +340,23 @@
   }
 
   .spread-option[data-spread-id="celtic"] .spread-glyph i:nth-child(3) {
-    top: 11px;
-    left: 5px;
-  }
-
-  .spread-option[data-spread-id="celtic"] .spread-glyph i:nth-child(4) {
-    top: 11px;
-    left: 19px;
-  }
-
-  .spread-option[data-spread-id="celtic"] .spread-glyph i:nth-child(5) {
     top: 3px;
     left: 12px;
   }
 
-  .spread-option[data-spread-id="celtic"] .spread-glyph i:nth-child(6) {
+  .spread-option[data-spread-id="celtic"] .spread-glyph i:nth-child(4) {
     bottom: 3px;
     left: 12px;
+  }
+
+  .spread-option[data-spread-id="celtic"] .spread-glyph i:nth-child(5) {
+    top: 11px;
+    left: 5px;
+  }
+
+  .spread-option[data-spread-id="celtic"] .spread-glyph i:nth-child(6) {
+    top: 11px;
+    left: 19px;
   }
 
   .spread-option[data-spread-id="celtic"] .spread-glyph i:nth-child(7) {

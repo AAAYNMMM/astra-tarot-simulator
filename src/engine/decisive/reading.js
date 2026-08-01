@@ -6,6 +6,7 @@ import { AssessmentError, createAssessmentSignal } from "../assessment/assessmen
 import { evaluateAssessment } from "../assessment/alignment-assessor.js";
 import { createAssessmentPresentation } from "../assessment/assessment-presentation.js";
 import { getQuestionEvaluationPolicy } from "../../knowledge/evaluation/question-evaluation-policies.js";
+import { executeSpreadReadingRequest } from "./spread-reading.js";
 
 let warmPromise = null;
 let warmRuns = 0;
@@ -228,7 +229,7 @@ export function warmDecisiveReadingEngine() {
   return warmPromise;
 }
 
-export async function executeDecisiveReading({
+export async function executeLegacyDecisiveReading({
   protocolVersion = null,
   questionId,
   questionText,
@@ -319,4 +320,15 @@ export async function executeDecisiveReading({
       warmRuns,
     },
   });
+}
+
+export function executeDecisiveReading(input = {}) {
+  if (input?.protocolVersion === "3.0.0") return executeSpreadReadingRequest(input);
+  if (input?.protocolVersion === null || input?.protocolVersion === undefined || input?.protocolVersion === "2.0.0") {
+    return executeLegacyDecisiveReading(input);
+  }
+  return Promise.reject(new AssessmentError(
+    "ASSESSMENT_REQUEST_PROTOCOL_UNSUPPORTED",
+    `Unsupported reading request protocol: ${input.protocolVersion}.`,
+  ));
 }

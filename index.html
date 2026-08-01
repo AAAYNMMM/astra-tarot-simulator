@@ -69,71 +69,39 @@
           <div class="panel-heading">
             <span class="eyebrow">YOUR READING</span>
             <h1>把注意力放回此刻</h1>
-            <p>选择一个最贴近你当下状态的问题。</p>
+            <p>写下你此刻真正想梳理的问题。</p>
           </div>
 
           <div class="setup-scroll">
-            <section class="setup-section" aria-labelledby="categoryHeading">
+            <section class="setup-section" aria-labelledby="questionHeading">
               <div class="section-title">
                 <span class="section-number">01</span>
                 <div>
-                  <h2 id="categoryHeading">占卜主题</h2>
-                  <p>先选择想要探索的领域</p>
+                  <h2 id="questionHeading">写下你的问题</h2>
+                  <p>仅用于本机历史记录，不参与牌面解读</p>
                 </div>
               </div>
-              <div class="category-grid" id="categoryGrid"></div>
-            </section>
-
-            <section class="setup-section" aria-labelledby="questionHeading">
-              <div class="section-title">
-                <span class="section-number">02</span>
-                <div>
-                  <h2 id="questionHeading">选择问题</h2>
-                  <p id="categoryTagline">让问题保持具体、开放</p>
+              <div class="question-input-field">
+                <label for="questionInput">自由问题</label>
+                <textarea
+                  id="questionInput"
+                  name="question"
+                  rows="4"
+                  autocomplete="off"
+                  aria-describedby="questionValidationMessage questionCharacterCount"
+                  aria-invalid="true"
+                  placeholder="例如：我现在最需要看清什么？"
+                ></textarea>
+                <div class="question-input-meta">
+                  <p id="questionValidationMessage" role="status" aria-live="polite">请至少输入 2 个字符。</p>
+                  <output id="questionCharacterCount" for="questionInput">0 / 200</output>
                 </div>
               </div>
-              <button
-                class="question-picker"
-                id="questionPickerButton"
-                type="button"
-                aria-haspopup="dialog"
-                aria-controls="questionDialog"
-              >
-                <span class="question-picker-orb" aria-hidden="true">✦</span>
-                <span class="question-picker-copy">
-                  <small id="selectedQuestionLabel">今日能量</small>
-                  <strong id="selectedQuestionText">今天的核心能量是什么？</strong>
-                </span>
-                <span class="question-picker-action">更换 <b aria-hidden="true">→</b></span>
-              </button>
-            </section>
-
-            <section class="setup-section evaluation-setup" id="evaluationSetupSection" aria-labelledby="evaluationSetupHeading">
-              <div class="section-title">
-                <span class="section-number">03</span>
-                <div>
-                  <h2 id="evaluationSetupHeading">解读方式</h2>
-                  <p id="evaluationSetupHint">先明确本次想观察的方向</p>
-                </div>
-              </div>
-              <div class="evaluation-choice-list" id="expectationList"></div>
-              <div class="evaluation-choice-list" id="criterionList"></div>
-              <div class="comparison-path-fields" id="comparisonPathFields" hidden>
-                <label>
-                  <span>路径 A</span>
-                  <input id="comparisonOptionA" type="text" maxlength="40" autocomplete="off" placeholder="例如：继续当前方向" />
-                </label>
-                <label>
-                  <span>路径 B</span>
-                  <input id="comparisonOptionB" type="text" maxlength="40" autocomplete="off" placeholder="例如：尝试替代方向" />
-                </label>
-              </div>
-              <p class="evaluation-validation" id="evaluationValidationMessage" role="status" aria-live="polite"></p>
             </section>
 
             <section class="setup-section" aria-labelledby="spreadHeading">
               <div class="section-title">
-                <span class="section-number">04</span>
+                <span class="section-number">02</span>
                 <div>
                   <h2 id="spreadHeading">选择牌阵</h2>
                   <p>不同牌阵会照亮不同角度</p>
@@ -144,7 +112,7 @@
 
             <section class="setup-section" aria-labelledby="deckStyleHeading">
               <div class="section-title">
-                <span class="section-number">05</span>
+                <span class="section-number">03</span>
                 <div>
                   <h2 id="deckStyleHeading">选择牌面</h2>
                   <p>四套真实牌组 · 正面与牌背一一对应</p>
@@ -209,7 +177,7 @@
               <div class="idle-copy">
                 <span class="idle-divider"><i></i> ✦ <i></i></span>
                 <h3>答案不在未来，而在你如何看见现在</h3>
-                <p>从左侧选择主题、问题与牌阵，然后开始你的占卜。</p>
+                <p>从左侧写下问题、选择牌阵与牌面，然后开始你的占卜。</p>
               </div>
             </div>
 
@@ -219,7 +187,7 @@
               <div class="shuffle-copy">
                 <span id="shufflePhase">正在净化牌面能量</span>
                 <div class="shuffle-progress"><i id="shuffleProgress"></i></div>
-                <small>请在心中默念你所选择的问题</small>
+                <small>请静心等待牌面落定；问题不会进入抽牌或解读</small>
               </div>
             </div>
 
@@ -284,24 +252,6 @@
       </footer>
     </div>
 
-    <dialog class="app-dialog" id="questionDialog">
-      <div class="dialog-shell question-dialog-shell">
-        <header class="dialog-header">
-          <div>
-            <span class="eyebrow">CHOOSE A QUESTION</span>
-            <h2>选择此刻最想问的问题</h2>
-            <p id="questionDialogHint">从当前主题的七个问题中选择一项。</p>
-          </div>
-          <button class="dialog-close" type="button" data-close-dialog aria-label="关闭">×</button>
-        </header>
-        <div class="question-list dialog-question-list" id="questionList"></div>
-        <footer class="dialog-footer">
-          <span class="dialog-tip">问题越具体，越容易看见可行动的提示。</span>
-          <button class="secondary-button" type="button" data-close-dialog>完成</button>
-        </footer>
-      </div>
-    </dialog>
-
     <dialog class="app-dialog" id="historyDialog">
       <div class="dialog-shell dialog-wide">
         <header class="dialog-header">
@@ -335,7 +285,7 @@
             <span>01</span>
             <div>
               <h3>选择真正关心的问题</h3>
-              <p>从六类主题的预设问题中选择一项。开放式问题通常比简单的“是或否”更有启发。</p>
+              <p>写下 2–200 个字符的自由问题。问题仅保存在本机历史中，不会参与牌面解读。</p>
             </div>
           </section>
           <section>

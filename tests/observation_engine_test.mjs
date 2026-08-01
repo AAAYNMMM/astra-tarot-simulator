@@ -4,8 +4,8 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { loadCardProfile } from "../src/knowledge/cards/registry.js";
 import { loadQuestionProfile } from "../src/knowledge/questions/registry.js";
-import { SPREADS } from "../src/knowledge/spreads/definitions.js";
-import { getPositionOperator } from "../src/knowledge/spreads/operators/index.js";
+import { LEGACY_SPREADS_V1 as SPREADS } from "../src/knowledge/spreads/definitions.js";
+import { getLegacyPositionOperator as getPositionOperator } from "../src/knowledge/spreads/operators/index.js";
 import { createMinimalObservation } from "../src/engine/observations/minimal-consumer.js";
 import { createObservation, createSpreadObservations } from "../src/engine/observations/observation-engine.js";
 
@@ -52,7 +52,7 @@ for (const spread of SPREADS) {
       reversalMode: reversed ? card.reversal.supportedModes[0] : null,
     });
   }
-  const result = createSpreadObservations({ draw, question, spreadId: spread.id });
+  const result = createSpreadObservations({ draw, question, spreadId: spread.id, spreadDefinitionVersion: "1.0.0" });
   assert.equal(result.observations.length, spread.positions.length);
   assert.deepEqual(result.observations.map((item) => item.positionId), spread.positions.map((item) => item.id));
 }

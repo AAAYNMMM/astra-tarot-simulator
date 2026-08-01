@@ -26,10 +26,13 @@ function semanticStrength(reference) {
   return 0.8;
 }
 
-export function rankSemanticCandidates({ card, question, operator, orientation, reversalMode = null }) {
-  const responsibilities = responsibilitiesFor(question, operator.spreadId, operator.positionId);
-  const facetPriority = facetPriorityFor(question, operator);
-  const domainRefs = new Set(card.domains?.[question.domain]?.facetRefs || []);
+export function rankSemanticCandidates({ card, question = null, readingProfile = null, operator, orientation, reversalMode = null }) {
+  const semanticProfile = readingProfile || question;
+  const spreadProfileMode = Boolean(readingProfile) || question?.profileKind === "spread-reading";
+  if (!semanticProfile) throw new TypeError("A semantic profile is required.");
+  const responsibilities = responsibilitiesFor(semanticProfile, operator.spreadId, operator.positionId);
+  const facetPriority = facetPriorityFor(semanticProfile, operator);
+  const domainRefs = new Set(spreadProfileMode ? [] : card.domains?.[question?.domain]?.facetRefs || []);
   const reversalRefs = new Set(
     orientation === "reversed" ? card.reversal?.modeFacetRefs?.[reversalMode] || [] : [],
   );
@@ -46,13 +49,13 @@ export function rankSemanticCandidates({ card, question, operator, orientation, 
       const domainMatched = domainRefs.has(unit.id);
       const reversalMatched = reversalRefs.has(unit.id);
       const roleMatched = (unit.allowedRoles || []).includes(facet);
-      const positionAffinity = (stableHash(`${operator.positionId}:${unit.id}`) % 997) / 1_000_000;
+      const positionAffinity = spreadProfileMode ? 0 : (stableHash(`${operator.positionId}:${unit.id}`) % 997) / 1_000_000;
       const semanticUnitStrength = semanticStrength(unit.id);
       const selectionScore = Number((
         Math.max(0.2, 1 - Math.max(0, facetIndex) * 0.08)
         + directMatches.length * 0.18
         + (matchMode === "position-mediated" ? 0.04 : 0)
-        + (domainMatched ? 0.12 : 0)
+        + (spreadProfileMode ? 0 : (domainMatched ? 0.12 : 0))
         + (reversalMatched ? 0.16 : 0)
         + (roleMatched ? 0.08 : 0)
         + semanticUnitStrength * 0.15

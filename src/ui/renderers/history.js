@@ -79,7 +79,7 @@ export function historyRecordView(record, formatDate) {
   });
 }
 
-export function createHistoryRenderer({ documentRef, dom, loadHistory, writeHistory, showToast, formatDate }) {
+export function createHistoryRenderer({ documentRef, dom, loadHistory, writeHistory, deleteStructuredReading = null, showToast, formatDate }) {
   function renderHistory() {
     const records = loadHistory();
     dom.clearHistoryButton.hidden = records.length === 0;
@@ -152,19 +152,25 @@ export function createHistoryRenderer({ documentRef, dom, loadHistory, writeHist
     });
     if (structured.assessment) {
       const assessmentLabel = structured.assessment.grade
-        ? `好运评级：${structured.assessment.grade} · ${structured.assessment.gradeLabel}`
+        ? `${structured.schemaVersion === "3.0.0" ? "综合顺势等级" : "好运评级"}：${structured.assessment.grade} · ${structured.assessment.gradeLabel}`
         : `走势：${structured.assessment.trendLabel || "观察模式"}`;
       audit.append(
         createElement(documentRef, "strong", { text: assessmentLabel }),
         createElement(documentRef, "p", { text: structured.assessment.summary || structured.assessment.reason }),
       );
     }
+    if (structured.schemaVersion === "3.0.0") {
+      audit.append(createElement(documentRef, "p", {
+        className: "history-audit-note",
+        text: "问题仅用于记录，不参与抽牌、解牌或评分。请根据自己的问题理解牌面提示。",
+      }));
+    }
     const verdictLabel = structured.verdictLabel
       || CONCLUSION_LABELS[structured.verdictCode]
       || CONCLUSION_LABELS[structured.conclusionType]
       || "牌阵已完成";
     audit.append(
-      createElement(documentRef, "strong", { text: `结论：${verdictLabel}` }),
+      createElement(documentRef, "strong", { text: `${structured.schemaVersion === "3.0.0" ? "结构走势" : "结论"}：${verdictLabel}` }),
       createElement(documentRef, "p", {
         text: structured.takeaway || "这条记录保留了结构化证据，可以继续查看牌面。",
       }),
@@ -224,6 +230,7 @@ export function createHistoryRenderer({ documentRef, dom, loadHistory, writeHist
 
   function deleteHistoryRecord(id) {
     writeHistory(loadHistory().filter((record) => record.id !== id));
+    if (typeof deleteStructuredReading === "function") void deleteStructuredReading(id);
     renderHistory();
     showToast("该条记录已删除", "×");
   }

@@ -1,4 +1,4 @@
-import { READING_RECORD_SCHEMA_VERSION } from "./reading-record.js";
+import { LEGACY_READING_RECORD_SCHEMA_VERSION } from "./reading-record.js";
 import { unavailableArtifactFingerprint } from "./artifact-fingerprint.js";
 
 export const LEGACY_MIGRATION_KEY = "legacy-localstorage-v1-to-indexeddb-v2";
@@ -19,7 +19,7 @@ function migratedDraw(card, index) {
 export function convertLegacyRecord(record, migratedAt = new Date().toISOString()) {
   const id = typeof record?.id === "string" && record.id ? record.id : `legacy-${migratedAt}`;
   return {
-    schemaVersion: READING_RECORD_SCHEMA_VERSION,
+    schemaVersion: LEGACY_READING_RECORD_SCHEMA_VERSION,
     id,
     createdAt: record?.createdAt || migratedAt,
     savedAt: migratedAt,

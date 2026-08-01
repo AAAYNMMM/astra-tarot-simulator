@@ -1,10 +1,6 @@
 const REQUIRED_IDS = Object.freeze([
-  "brandHome", "categoryGrid", "categoryTagline", "questionPickerButton",
-  "selectedQuestionLabel", "selectedQuestionText", "questionList", "questionDialog",
-  "questionDialogHint", "spreadList", "deckStyleList", "startReading", "readingKicker",
-  "evaluationSetupSection", "evaluationSetupHeading", "evaluationSetupHint", "expectationList",
-  "criterionList", "comparisonPathFields", "comparisonOptionA", "comparisonOptionB",
-  "evaluationValidationMessage",
+  "brandHome", "questionInput", "questionValidationMessage", "questionCharacterCount",
+  "spreadList", "deckStyleList", "startReading", "readingKicker",
   "readingTitle", "readingMeta", "metaCategory", "metaSpread", "readingStage", "idleState",
   "idleDeckImage", "shuffleScene", "shuffleDeck", "shufflePhase", "shuffleProgress",
   "cardTable", "stageGuidance", "guidanceText", "statusText", "insightTabs",

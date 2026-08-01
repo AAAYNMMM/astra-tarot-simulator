@@ -1,6 +1,6 @@
 import { validateJsonSchema } from "./schema-validator.js";
 import { TAXONOMY } from "../../knowledge/vocabularies/taxonomy.js";
-import { SPREADS } from "../../knowledge/spreads/definitions.js";
+import { LEGACY_SPREADS_V1 as SPREADS } from "../../knowledge/spreads/definitions.js";
 
 const sets = Object.freeze({
   domains: new Set(TAXONOMY.questionDomains),

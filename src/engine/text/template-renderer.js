@@ -125,7 +125,7 @@ export function renderReadingText({
   const paragraphs = sections.flatMap((section) => section.paragraphs);
   const rendered = {
     schemaVersion: "1.0.0",
-    questionId: claim.questionId,
+    ...(claim.questionId ? { questionId: claim.questionId } : {}),
     spreadId: claim.spreadId,
     conclusionType: claim.conclusionType,
     sections,

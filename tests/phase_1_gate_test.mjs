@@ -5,7 +5,10 @@ import { fileURLToPath } from "node:url";
 import { GOLDEN_CARD_IDS, loadGoldenCardProfile } from "../src/knowledge/cards/registry.js";
 import { PHASE_1_QUESTION_CLASSIFICATIONS as QUESTION_CLASSIFICATIONS } from "../src/knowledge/questions/classification.js";
 import { QUESTION_PROFILE_IDS, loadQuestionProfile } from "../src/knowledge/questions/registry.js";
-import { POSITION_OPERATOR_GROUPS, getPositionOperator } from "../src/knowledge/spreads/operators/index.js";
+import {
+  LEGACY_POSITION_OPERATOR_GROUPS as POSITION_OPERATOR_GROUPS,
+  getLegacyPositionOperator as getPositionOperator,
+} from "../src/knowledge/spreads/operators/index.js";
 import { createMinimalObservation } from "../src/engine/observations/minimal-consumer.js";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");

@@ -4,7 +4,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { loadGoldenCardProfile } from "../src/knowledge/cards/registry.js";
 import { loadQuestionProfile } from "../src/knowledge/questions/registry.js";
-import { getPositionOperator } from "../src/knowledge/spreads/operators/index.js";
+import { getLegacyPositionOperator as getPositionOperator } from "../src/knowledge/spreads/operators/index.js";
 import { createMinimalObservation } from "../src/engine/observations/minimal-consumer.js";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");

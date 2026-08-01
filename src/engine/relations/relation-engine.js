@@ -89,6 +89,7 @@ export function createRelationGraph({ structuralBatch, observations, question, c
     questionId: question.id,
     spreadId: structuralBatch.spreadId,
     graphId: structuralBatch.graphId,
+    ...(structuralBatch.spreadDefinitionVersion ? { spreadDefinitionVersion: structuralBatch.spreadDefinitionVersion } : {}),
     relationCount: relations.length,
     relations,
   });

@@ -9,8 +9,8 @@ import { DECK_STYLES, LEGACY_DECK_IDS, resolveDeckStyle } from "../config/decks.
 import { escapeHtml } from "../core/html.js";
 import { createRuntimeServices } from "./runtime-services.js";
 import { createPhase8Runtime } from "./controllers/phase-8-runtime.js";
-import { TarotData } from "../knowledge/legacy/index.js";
-import { assertKnowledgeCatalog } from "../generated/knowledge-registry.js";
+import { majorCards, minorCards } from "../knowledge/legacy/build.js";
+import { SPREADS } from "../knowledge/spreads/definitions.js";
 import { cardBackPath, cardImagePath } from "../platform/assets.js";
 import { createReadingAnimation } from "../ui/animations/reading.js";
 import { createDialogController, formatDate } from "../ui/components/dialogs.js";
@@ -20,9 +20,7 @@ import { installImageFallbacks } from "../ui/image-fallback.js";
 import { bindDom } from "../ui/dom.js";
 import { createHistoryRenderer } from "../ui/renderers/history.js";
 import { createInsightRenderer } from "../ui/renderers/insight.js";
-import { createSetupRenderer } from "../ui/renderers/setup.js";
-import { createEvaluationSetupRenderer } from "../ui/renderers/evaluation-setup.js";
-import { getQuestionEvaluationPolicy } from "../knowledge/evaluation/question-evaluation-policies.js";
+import { createSetupRenderer, normalizeQuestionInput } from "../ui/renderers/setup.js";
 
 export function startApplication({ windowRef = globalThis.window, documentRef = globalThis.document } = {}) {
   if (!windowRef || !documentRef) {
@@ -30,13 +28,13 @@ export function startApplication({ windowRef = globalThis.window, documentRef = 
   }
   const window = windowRef;
   const document = documentRef;
-  assertKnowledgeCatalog(TarotData);
-  const { deck, categories, spreads } = TarotData;
+  const deck = Object.freeze([...majorCards, ...minorCards]);
+  const spreads = SPREADS;
   const {
     createReadingRandomContext, registerServiceWorker, registerLocalLifecycle,
     loadSettings, saveSettings, loadHistory,
     writeHistory: writeHistoryToStorage, readingRecord, offlineStatus,
-    initializeStructuredHistory, saveStructuredReading,
+    initializeStructuredHistory, saveStructuredReading, deleteStructuredReading, clearStructuredHistory,
   } = createRuntimeServices(window);
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
   const storedSettings = loadSettings();
@@ -48,19 +46,17 @@ export function startApplication({ windowRef = globalThis.window, documentRef = 
   installImageFallbacks(document);
   const dom = bindDom(document);
     const emptyInsightMarkup = dom.insightContent.innerHTML;
-    const state = createReadingState({ categories, initialDeckStyle });
-    const selectors = createSelectionSelectors({ categories, spreads, deckStyles: DECK_STYLES, state });
-    const { currentCategory, currentQuestion, currentSpread, currentDeckStyle } = selectors;
+    const state = createReadingState({ initialDeckStyle });
+    const selectors = createSelectionSelectors({ spreads, deckStyles: DECK_STYLES, state });
+    const { currentSpread, currentDeckStyle } = selectors;
     const {
-      renderCategories,
-      renderQuestions,
+      renderQuestionInput,
       renderDeckStyles,
       renderSpreads,
       setSetupLocked,
       setJourneyStep,
     } = createSetupRenderer({
       documentRef: document,
-      categories,
       spreads,
       deckStyles: DECK_STYLES,
       state,
@@ -68,15 +64,7 @@ export function startApplication({ windowRef = globalThis.window, documentRef = 
       selectors,
       cardImagePath,
       cardBackPath,
-      getQuestionEvaluationPolicy,
     });
-    const currentPolicy = () => getQuestionEvaluationPolicy(state.questionId);
-    const {
-      renderEvaluationSetup,
-      isEvaluationSelectionValid,
-      readSelectionFromInputs,
-      setLocked: setEvaluationSetupLocked,
-    } = createEvaluationSetupRenderer({ documentRef: document, state, dom, currentPolicy });
     const { delay, runShuffleAnimation } = createReadingAnimation({
       windowRef: window,
       documentRef: document,
@@ -112,13 +100,8 @@ export function startApplication({ windowRef = globalThis.window, documentRef = 
 
     function resetReadingView() {
       resetReadingState(state);
-
-      const policy = currentPolicy();
-      if (policy && !policy.allowedSpreads.includes(state.spreadId)) state.spreadId = policy.allowedSpreads[0];
-
       setSetupLocked(false);
-      setEvaluationSetupLocked(false);
-      renderEvaluationSetup();
+      renderQuestionInput();
       renderSpreads();
       setJourneyStep(1);
       dom.readingKicker.textContent = "THE VEIL IS QUIET";
@@ -129,9 +112,7 @@ export function startApplication({ windowRef = globalThis.window, documentRef = 
       dom.cardTable.hidden = true;
       dom.cardTable.innerHTML = "";
       delete dom.cardTable.dataset.spreadId;
-      delete dom.cardTable.dataset.comparison;
       delete dom.readingPanel.dataset.spreadId;
-      delete dom.readingPanel.dataset.comparison;
       dom.stageGuidance.hidden = true;
       dom.statusText.textContent = "牌面正在静候你的选择";
       dom.insightTabs.hidden = true;
@@ -143,53 +124,49 @@ export function startApplication({ windowRef = globalThis.window, documentRef = 
 
     async function startReading() {
       if (state.phase !== "setup") return;
-      if (!isEvaluationSelectionValid()) {
-        renderEvaluationSetup();
-        showToast("请先完成本次期待或判断重点的选择", "!");
+      const questionInput = normalizeQuestionInput(state.questionText);
+      if (!questionInput.valid) {
+        renderQuestionInput();
+        showToast(questionInput.error, "!");
+        dom.questionInput.focus();
         return;
       }
-      const policy = currentPolicy();
-      const evaluationSelection = readSelectionFromInputs();
+      state.questionText = questionInput.value;
+      renderQuestionInput();
+      const spread = currentSpread();
       const recent = loadHistory().find((record) => (
-        record.questionId === state.questionId
-        && (record.evaluationSelection?.expectationId || null) === evaluationSelection.expectationId
-        && (record.evaluationSelection?.criterionId || null) === evaluationSelection.criterionId
+        normalizeQuestionInput(typeof record.question === "string" ? record.question : record.question?.text).value === questionInput.value
+        && (record.spreadId === spread.id || record.spread?.id === spread.id || record.spreadName === spread.name)
         && Date.now() - new Date(record.createdAt).getTime() < 24 * 60 * 60 * 1000
       ));
       if (recent) {
         const confirmed = await confirmAction(
           "近期已有相同设问",
-          `上次记录：${recent.headline || "牌阵已完成"} 建议先核对现实是否出现新变化；如果只是想重抽更高等级，可以先保留上次结果。`,
+          `上次记录：${recent.headline || "牌阵已完成"}。如果现实条件尚未变化，可以先保留上次牌面作为参考。`,
           "仍然继续",
         );
         if (!confirmed) return;
       }
-      state.reading = createReading({
-        evaluationSelection,
-        questionText: policy?.displayQuestion || currentQuestion().text,
-      });
+      state.reading = createReading({ questionText: questionInput.value });
       state.phase = "shuffling";
       state.revealed = new Set();
       state.selectedIndex = null;
       state.completing = false;
       setSetupLocked(true);
-      setEvaluationSetupLocked(true);
       setJourneyStep(2);
 
-      const { category, question, spread } = state.reading;
+      const { question, spread: selectedSpread } = state.reading;
       dom.readingKicker.textContent = "YOUR QUESTION";
       dom.readingTitle.textContent = question.text;
       dom.readingMeta.hidden = false;
-      dom.metaCategory.textContent = category.name;
-      dom.metaCategory.dataset.accentToken = accentToken(category.accent);
-      dom.metaSpread.textContent = spread.name;
-      dom.readingPanel.dataset.spreadId = spread.id;
-      if (state.reading.comparison) dom.readingPanel.dataset.comparison = "true";
+      dom.metaCategory.textContent = "问题仅作记录";
+      delete dom.metaCategory.dataset.accentToken;
+      dom.metaSpread.textContent = selectedSpread.name;
+      dom.readingPanel.dataset.spreadId = selectedSpread.id;
       dom.idleState.hidden = true;
       dom.cardTable.hidden = true;
       dom.cardTable.innerHTML = "";
       delete dom.cardTable.dataset.spreadId;
-      delete dom.cardTable.dataset.comparison;
       dom.stageGuidance.hidden = true;
       dom.newReadingButton.hidden = true;
       dom.revealAllButton.hidden = true;
@@ -198,7 +175,7 @@ export function startApplication({ windowRef = globalThis.window, documentRef = 
         <div class="insight-empty">
           <div class="empty-symbol" aria-hidden="true"><span>✦</span><i></i></div>
           <h3>正在为你洗牌</h3>
-          <p>让呼吸慢下来，在心中轻轻重复你的问题，不必努力预想答案。</p>
+          <p>问题只保存在历史记录中；抽牌、解牌与评分只依据本次牌面。</p>
         </div>
       `;
       dom.statusText.textContent = "正在洗牌，请保持片刻专注";
@@ -247,7 +224,6 @@ export function startApplication({ windowRef = globalThis.window, documentRef = 
       const { draws } = state.reading;
       dom.cardTable.dataset.count = String(draws.length);
       dom.cardTable.dataset.spreadId = state.reading.spread.id;
-      if (state.reading.comparison) dom.cardTable.dataset.comparison = "true";
       dom.cardTable.innerHTML = draws.map(cardMarkup).join("");
       dom.cardTable.hidden = false;
 
@@ -448,12 +424,13 @@ export function startApplication({ windowRef = globalThis.window, documentRef = 
       dom,
       loadHistory,
       writeHistory,
+      deleteStructuredReading,
       showToast,
       formatDate,
     });
-  async function requestNewReading() {
+    async function requestNewReading() {
       if (state.phase === "setup") {
-        dom.startReading.focus();
+        dom.questionInput.focus();
         return;
       }
       if (state.phase !== "complete") {
@@ -465,42 +442,13 @@ export function startApplication({ windowRef = globalThis.window, documentRef = 
         if (!confirmed) return;
       }
       resetReadingView();
-      dom.startReading.focus();
+      dom.questionInput.focus();
     }
 
-    function onCategoryClick(event) {
-      const button = event.target.closest("[data-category-id]");
-      if (!button || state.phase !== "setup") return;
-      state.categoryId = button.dataset.categoryId;
-      const category = currentCategory();
-      state.questionId = category.questions[0].id;
-      state.expectationId = null;
-      state.criterionId = null;
-      state.comparisonOptionA = "";
-      state.comparisonOptionB = "";
-      const policy = currentPolicy();
-      if (policy && !policy.allowedSpreads.includes(state.spreadId)) state.spreadId = policy.allowedSpreads[0];
-      renderCategories();
-      renderQuestions();
-      renderSpreads();
-      renderEvaluationSetup();
-    }
-
-    function onQuestionClick(event) {
-      const button = event.target.closest("[data-question-id]");
-      if (!button || state.phase !== "setup") return;
-      state.questionId = button.dataset.questionId;
-      state.expectationId = null;
-      state.criterionId = null;
-      state.comparisonOptionA = "";
-      state.comparisonOptionB = "";
-      const policy = currentPolicy();
-      if (policy && !policy.allowedSpreads.includes(state.spreadId)) state.spreadId = policy.allowedSpreads[0];
-      renderQuestions();
-      renderSpreads();
-      renderEvaluationSetup();
-      closeDialog(dom.questionDialog);
-      dom.questionPickerButton.focus();
+    function onQuestionInput(event) {
+      if (state.phase !== "setup" || event.target !== dom.questionInput) return;
+      state.questionText = event.target.value;
+      renderQuestionInput();
     }
 
     function onSpreadClick(event) {
@@ -508,27 +456,6 @@ export function startApplication({ windowRef = globalThis.window, documentRef = 
       if (!button || button.disabled || state.phase !== "setup") return;
       state.spreadId = button.dataset.spreadId;
       renderSpreads();
-    }
-
-    function onExpectationClick(event) {
-      const button = event.target.closest("[data-expectation-id]");
-      if (!button || button.disabled || state.phase !== "setup") return;
-      state.expectationId = button.dataset.expectationId;
-      renderEvaluationSetup();
-    }
-
-    function onCriterionClick(event) {
-      const button = event.target.closest("[data-criterion-id]");
-      if (!button || button.disabled || state.phase !== "setup") return;
-      state.criterionId = button.dataset.criterionId;
-      renderEvaluationSetup();
-    }
-
-    function onComparisonInput(event) {
-      if (state.phase !== "setup") return;
-      if (event.target === dom.comparisonOptionA) state.comparisonOptionA = event.target.value;
-      if (event.target === dom.comparisonOptionB) state.comparisonOptionB = event.target.value;
-      setEvaluationSetupLocked(false);
     }
 
     function onDeckStyleClick(event) {
@@ -548,12 +475,8 @@ export function startApplication({ windowRef = globalThis.window, documentRef = 
       dom,
       loadHistory,
       callbacks: {
-        onCategoryClick,
-        onQuestionClick,
+        onQuestionInput,
         onSpreadClick,
-        onExpectationClick,
-        onCriterionClick,
-        onComparisonInput,
         onDeckStyleClick,
         openDialog,
         closeDialog,
@@ -571,6 +494,7 @@ export function startApplication({ windowRef = globalThis.window, documentRef = 
         resolveConfirmation,
         confirmAction,
         writeHistory,
+        clearStructuredHistory,
       },
     });
 
@@ -578,8 +502,7 @@ export function startApplication({ windowRef = globalThis.window, documentRef = 
       if (deck.length !== 78) {
         console.warn(`塔罗牌数据数量异常：预期 78，实际 ${deck.length}`);
       }
-      renderCategories();
-      renderQuestions();
+      renderQuestionInput();
       renderSpreads();
       renderDeckStyles();
       bindEvents();

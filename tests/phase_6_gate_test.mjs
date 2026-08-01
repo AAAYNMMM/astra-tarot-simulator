@@ -3,7 +3,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { QUESTION_PROFILE_IDS, loadQuestionProfile, SPREADS, cards, cardsById } from "./phase_6_test_support.mjs";
-import { getPositionOperator } from "../src/knowledge/spreads/operators/index.js";
+import { getLegacyPositionOperator as getPositionOperator } from "../src/knowledge/spreads/operators/index.js";
 import { createObservation } from "../src/engine/observations/observation-engine.js";
 import { createStructuralRelationCandidates } from "../src/engine/relations/structural-relation-candidates.js";
 import { createRelationGraph } from "../src/engine/relations/relation-engine.js";
@@ -32,7 +32,7 @@ for (let questionIndex = 0; questionIndex < QUESTION_PROFILE_IDS.length; questio
           reversalMode: orientation === "reversed" ? card.reversal.supportedModes[0] : null,
         });
       });
-      const structuralBatch = createStructuralRelationCandidates({ spreadId: spread.id, observations });
+      const structuralBatch = createStructuralRelationCandidates({ spreadId: spread.id, observations, spreadDefinitionVersion: "1.0.0" });
       const relationBatch = createRelationGraph({ structuralBatch, observations, question, cards: cardsById });
       const pipeline = createValidatedClaim({ relationBatch, observations, question });
       const repeated = createValidatedClaim({

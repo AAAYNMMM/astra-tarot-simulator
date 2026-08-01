@@ -1,0 +1,73 @@
+{
+  "$id": "https://astra.local/schemas/spread-reading-profile/2.0.0",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Astra Tarot SpreadReadingProfile",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "spreadId",
+    "positionResponsibilities",
+    "answerDimensions",
+    "relationLines",
+    "scoringGroups",
+    "outputWorkflow"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "2.0.0" },
+    "spreadId": { "enum": ["single", "timeline", "cross", "celtic"] },
+    "positionResponsibilities": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "array",
+        "minItems": 1,
+        "uniqueItems": true,
+        "items": { "type": "string", "pattern": "^[a-z][a-zA-Z0-9-]*$" }
+      }
+    },
+    "answerDimensions": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string", "pattern": "^[a-z][a-zA-Z0-9-]*$" }
+    },
+    "relationLines": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "positionIds", "responsibility"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+          "positionIds": { "type": "array", "minItems": 2, "uniqueItems": true, "items": { "type": "string" } },
+          "responsibility": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "scoringGroups": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "array",
+        "minItems": 1,
+        "uniqueItems": true,
+        "items": { "type": "string" }
+      }
+    },
+    "outputWorkflow": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "positionIds", "responsibility"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+          "positionIds": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string" } },
+          "responsibility": { "type": "string", "minLength": 1 }
+        }
+      }
+    }
+  }
+}

@@ -4,7 +4,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { loadCardProfile } from "../src/knowledge/cards/registry.js";
 import { loadQuestionProfile } from "../src/knowledge/questions/registry.js";
-import { getPositionOperator } from "../src/knowledge/spreads/operators/index.js";
+import { getLegacyPositionOperator as getPositionOperator } from "../src/knowledge/spreads/operators/index.js";
 import { createObservation } from "../src/engine/observations/observation-engine.js";
 import { validateObservation } from "../src/engine/validation/observation-validator.js";
 

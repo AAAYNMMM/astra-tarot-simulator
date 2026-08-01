@@ -60,8 +60,11 @@ const report = {
   },
   guarantees: {
     runtimeAI: false,
-    fixedQuestions: true,
+    fixedQuestions: false,
+    historyOnlyQuestions: true,
+    questionEngineIsolation: true,
     fixedSpreads: 4,
+    readingRecordSchema: "3.0.0",
     deterministicRules: true,
     localHistory: true,
     blindSourceInRepository: false,

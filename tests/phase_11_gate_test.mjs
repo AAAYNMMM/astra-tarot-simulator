@@ -11,7 +11,7 @@ const worker = read("src/app/reading-engine.worker.js");
 const client = read("src/app/engine-worker-client.js");
 const validate = read("automation/validate.py");
 
-assert.match(progress, /当前阶段 \| Phase 12：稳定性、精简解读与2\.1\.0/);
+assert.match(progress, /## Phase 12实施现场/);
 assert.match(progress, /Phase 12状态 \| `PARENT-IN-PROGRESS`|Phase 12状态 \| `PARENT-DONE`/);
 assert.match(contracts, /### Phase 12：稳定性、精简解读与2\.1\.0/);
 assert.match(phase, /解读Schema为`4\.0\.0`/);

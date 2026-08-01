@@ -8,64 +8,48 @@
 
 ## 2. 目标
 
-在不使用AI大模型、不改变四种固定牌阵、只允许预设问题的前提下，建立一套可复现、可审计、可测试、可解释并能进行多牌综合的确定性引擎。
+在不使用 AI 大模型、保留现有 78 张牌与四种牌阵的前提下，建立一套可复现、可审计、可测试、可解释并能进行多牌综合的确定性引擎。新建 V3 占卜允许自由问题，但问题只属于历史外壳，完全不进入解牌引擎。
 
 | 能力 | 目标 |
 |---|---:|
 | 单牌资料质量 | ≥9.0/10 |
 | 多牌综合能力 | ≥9.0/10 |
-| 预设问题贴合度 | ≥9.0/10 |
+| 问题与引擎隔离率 | 100% |
 | 核心结论可追溯率 | 100% |
 | 同输入、版本、artifact和根种子复现率 | 100% |
 
 ## 3. 总体流水线
 
 ```text
-固定问题选择
-    ↓
-QuestionProfile加载
-    ↓
-固定牌阵定义、关系图和问题适配加载
-    ↓
-高质量根种子
-    ├── draw随机流
-    ├── orientation随机流
-    └── rendering随机流
-    ↓
+ReadingEnvelopeV3
+    ├── question { text, purpose: "history-only" } ──→ 标题与历史
+    └── EngineReadingRequestV3（不含任何问题字段）
+             ↓
+Web Crypto 根种子
+    ├── draw 随机流
+    ├── orientation 随机流
+    └── rendering 随机流
+             ↓
 确定性洗牌、抽牌和正逆位
-    ↓
-按抽牌结果加载CardSemanticProfile
-    ↓
-卡牌语义 + 逆位机制 + QuestionProfile + Position Operator
-    ↓
-Observation生成
-    ↓
-固定牌阵结构边
-    ↓
-问题维度与牌位职责关系
-    ↓
-主题、状态、行动和逆位语义关系
-    ↓
-元素、数字、宫廷和阶段辅助关系
-    ↓
-ClaimCandidate生成
-    ↓
-证据评分、反证和冲突消解
-    ↓
-有限结论分类
-    ↓
-结构化Claim校验
-    ↓
-确定性模板渲染
-    ↓
-渲染后文本校验
-    ↓
-历史和审计数据保存
+             ↓
+SpreadReadingProfile + Position Operator + CardSemanticProfile
+             ↓
+牌位相关逆位机制 → Observation → Spread Graph → Relation → Claim
+             ↓
+按 spreadId 分派四个独立工作流
+             ↓
+八项结构评分与等级上限
+             ↓
+ReadingPresentationV3 + CardDetailV3
+             ↓
+ReadingRecord 3.0.0 与随机审计
 ```
 
-抽牌阶段和解释阶段严格分离。问题、资料加载、模板或期望结果不得影响牌序和正逆位。
+抽牌、解释和问题记录三者严格隔离。Worker 只接受协议、reading ID、牌阵定义版本、抽牌和随机审计；旧`QuestionProfile`、`QuestionEvaluationPolicy`与比较流程只供 V1/V2 历史兼容和旧测试使用。
 
-## 4. 最小消费者契约
+## 4. V1/V2 历史兼容消费者契约
+
+本节及其后出现的`QuestionProfile`字段描述旧引擎资料合同，不是 V3 新建流程的输入。V3 对应的生产事实源是`SpreadReadingProfile 2.0.0`。
 
 批量编写78张牌前，黄金样本必须通过最小消费者契约。
 

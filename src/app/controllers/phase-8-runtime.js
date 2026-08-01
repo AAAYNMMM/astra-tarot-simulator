@@ -55,6 +55,14 @@ export function createPhase8Runtime({
       enumerable: false,
       configurable: true,
     });
+    reading.presentation = result.value.presentation || result.value.assessment?.presentation || null;
+    for (const draw of reading.draws || []) {
+      const positionId = draw.enginePosition?.id || draw.position?.id;
+      const observation = result.value.engineResult?.observations?.find((item) => (
+        item.cardId === draw.card?.id && item.positionId === positionId
+      ));
+      if (observation) draw.reversalMode = observation.selectedReversalMode ?? null;
+    }
     return result.value.synthesis;
   }
 

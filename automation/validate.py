@@ -284,6 +284,13 @@ def baseline_steps(node: str) -> list[tuple[str, list[str]]]:
         ("node-phase-13-policy-catalog", [node, "tests/question_evaluation_policy_catalog_test.mjs"]),
         ("node-phase-13-comparison", [node, "tests/comparison_assessment_test.mjs"]),
         ("node-phase-13-integration", [node, "tests/phase_13_integration_test.mjs"]),
+        ("node-v3-free-question-setup", [node, "tests/free_question_setup_test.mjs"]),
+        ("node-v3-spread-reading", [node, "tests/spread_reading_v3_test.mjs"]),
+        ("node-v3-question-isolation", [node, "tests/reading_v3_isolation_test.mjs"]),
+        ("node-v3-end-to-end", [node, "tests/reading_v3_end_to_end_test.mjs"]),
+        ("node-v3-random-replay", [node, "tests/random_replay_v3_test.mjs"]),
+        ("node-v3-record-compatibility", [node, "tests/reading_record_v3_compat_test.mjs"]),
+        ("node-v3-history-integration", [node, "tests/reading_v3_history_integration_test.mjs"]),
         (
             "node-module-contract",
             [node, "tests/module_contract_test.mjs"],

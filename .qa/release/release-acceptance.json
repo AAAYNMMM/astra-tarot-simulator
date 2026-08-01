@@ -55,6 +55,7 @@
       "https://astra.local/schemas/position-operator/1.0.0",
       "https://astra.local/schemas/question-evaluation-policy/1.0.0",
       "https://astra.local/schemas/question-profile/1.0.0",
+      "https://astra.local/schemas/spread-reading-profile/2.0.0",
       "https://json-schema.org/draft/2020-12/schema"
     ],
     "questionOrHistoryUpload": false

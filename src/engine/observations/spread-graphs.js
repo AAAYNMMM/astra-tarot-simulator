@@ -1,5 +1,8 @@
-import { SPREADS } from "../../knowledge/spreads/definitions.js";
-import { POSITION_OPERATOR_GROUPS } from "../../knowledge/spreads/operators/index.js";
+import { LEGACY_SPREADS_V1, SPREADS } from "../../knowledge/spreads/definitions.js";
+import {
+  LEGACY_POSITION_OPERATOR_GROUPS,
+  POSITION_OPERATOR_GROUPS,
+} from "../../knowledge/spreads/operators/index.js";
 
 function deepFreeze(value) {
   if (!value || typeof value !== "object" || Object.isFrozen(value)) return value;
@@ -33,6 +36,63 @@ const GRAPH_DEFINITIONS = {
       { id: "influence", role: "external-influence", lane: "context" },
       { id: "action", role: "corrective-action", lane: "guidance" },
     ],
+    edges: [
+      { id: "cross-root-core", source: "root", target: "core", role: "causal-input" },
+      { id: "cross-influence-core", source: "influence", target: "core", role: "context-input" },
+      { id: "cross-core-trend", source: "core", target: "trend", role: "trend-projection" },
+      { id: "cross-core-action", source: "core", target: "action", role: "corrective-input" },
+      { id: "cross-action-trend", source: "action", target: "trend", role: "corrective-input" },
+      { id: "cross-influence-action", source: "influence", target: "action", role: "context-conditions-action" },
+    ],
+    mainLines: [
+      { id: "cross-causal", positions: ["root", "core", "trend"] },
+      { id: "cross-context-action", positions: ["influence", "core", "action"] },
+      { id: "cross-direct-action", positions: ["influence", "action"] },
+      { id: "cross-action-trend", positions: ["action", "trend"] },
+    ],
+  },
+  celtic: {
+    nodes: [
+      { id: "present", role: "central-state", lane: "core" },
+      { id: "challenge", role: "central-challenge", lane: "core" },
+      { id: "above", role: "conscious-direction", lane: "inner" },
+      { id: "below", role: "underlying-driver", lane: "inner" },
+      { id: "past", role: "recent-origin", lane: "temporal" },
+      { id: "future", role: "near-future", lane: "temporal" },
+      { id: "self", role: "self-position", lane: "self" },
+      { id: "external", role: "external-context", lane: "context" },
+      { id: "hopes", role: "expectation-and-fear", lane: "inner" },
+      { id: "outcome", role: "conditional-outcome", lane: "future" },
+    ],
+    edges: [
+      { id: "celtic-below-present", source: "below", target: "present", role: "underlying-input" },
+      { id: "celtic-challenge-present", source: "challenge", target: "present", role: "active-tension" },
+      { id: "celtic-past-present", source: "past", target: "present", role: "temporal-continuation" },
+      { id: "celtic-present-future", source: "present", target: "future", role: "conditional-projection" },
+      { id: "celtic-above-future", source: "above", target: "future", role: "intent-conditions-trend" },
+      { id: "celtic-self-future", source: "self", target: "future", role: "intent-conditions-trend" },
+      { id: "celtic-external-present", source: "external", target: "present", role: "context-input" },
+      { id: "celtic-external-challenge", source: "external", target: "challenge", role: "contextual-pressure" },
+      { id: "celtic-hopes-self", source: "hopes", target: "self", role: "expectation-conditions-guidance" },
+      { id: "celtic-future-outcome", source: "future", target: "outcome", role: "trend-continuation" },
+      { id: "celtic-self-outcome", source: "self", target: "outcome", role: "guidance-conditions-outcome" },
+      { id: "celtic-external-outcome", source: "external", target: "outcome", role: "context-conditions-outcome" },
+      { id: "celtic-present-outcome", source: "present", target: "outcome", role: "long-arc-projection" },
+    ],
+    mainLines: [
+      { id: "celtic-core", positions: ["below", "present", "future", "outcome"] },
+      { id: "celtic-pressure", positions: ["challenge", "present", "future"] },
+      { id: "celtic-agency", positions: ["above", "self", "outcome"] },
+      { id: "celtic-context", positions: ["external", "present", "outcome"] },
+    ],
+  },
+};
+
+const LEGACY_GRAPH_DEFINITIONS = {
+  single: GRAPH_DEFINITIONS.single,
+  timeline: GRAPH_DEFINITIONS.timeline,
+  cross: {
+    nodes: GRAPH_DEFINITIONS.cross.nodes,
     edges: [
       { id: "cross-root-core", source: "root", target: "core", role: "causal-input" },
       { id: "cross-influence-core", source: "influence", target: "core", role: "context-input" },
@@ -84,29 +144,35 @@ const GRAPH_DEFINITIONS = {
   },
 };
 
-export const SPREAD_GRAPHS = deepFreeze(Object.fromEntries(
-  SPREADS.map((spread) => [spread.id, {
+function buildGraphs(spreads, definitions) {
+  return deepFreeze(Object.fromEntries(spreads.map((spread) => [spread.id, {
     schemaVersion: "1.0.0",
     id: `spread-graph-${spread.id}`,
     spreadId: spread.id,
-    nodes: GRAPH_DEFINITIONS[spread.id].nodes,
-    edges: GRAPH_DEFINITIONS[spread.id].edges,
-    mainLines: GRAPH_DEFINITIONS[spread.id].mainLines,
-  }]),
-));
-
-export function getSpreadGraph(spreadId) {
-  return SPREAD_GRAPHS[spreadId] || null;
+    nodes: definitions[spread.id].nodes,
+    edges: definitions[spread.id].edges,
+    mainLines: definitions[spread.id].mainLines,
+  }])));
 }
 
-export function validateSpreadGraph(graph) {
+export const SPREAD_GRAPHS = buildGraphs(SPREADS, GRAPH_DEFINITIONS);
+export const LEGACY_SPREAD_GRAPHS_V1 = buildGraphs(LEGACY_SPREADS_V1, LEGACY_GRAPH_DEFINITIONS);
+
+export function getSpreadGraph(spreadId, definitionVersion = "2.0.0") {
+  const graphs = definitionVersion === "1.0.0" ? LEGACY_SPREAD_GRAPHS_V1 : SPREAD_GRAPHS;
+  return graphs[spreadId] || null;
+}
+
+export function validateSpreadGraph(graph, definitionVersion = "2.0.0") {
   const errors = [];
-  const spread = SPREADS.find((item) => item.id === graph?.spreadId);
+  const spreads = definitionVersion === "1.0.0" ? LEGACY_SPREADS_V1 : SPREADS;
+  const operatorGroups = definitionVersion === "1.0.0" ? LEGACY_POSITION_OPERATOR_GROUPS : POSITION_OPERATOR_GROUPS;
+  const spread = spreads.find((item) => item.id === graph?.spreadId);
   if (!spread) return [`Unknown spread graph: ${graph?.spreadId}`];
   const expected = spread.positions.map((item) => item.id);
   const nodeIds = (graph.nodes || []).map((item) => item.id);
   if (JSON.stringify(nodeIds) !== JSON.stringify(expected)) errors.push(`${spread.id}: node order differs from spread`);
-  if ((POSITION_OPERATOR_GROUPS[spread.id] || []).length !== nodeIds.length) errors.push(`${spread.id}: operator count mismatch`);
+  if ((operatorGroups[spread.id] || []).length !== nodeIds.length) errors.push(`${spread.id}: operator count mismatch`);
   const nodeSet = new Set(nodeIds);
   const edgeIds = new Set();
   for (const edge of graph.edges || []) {

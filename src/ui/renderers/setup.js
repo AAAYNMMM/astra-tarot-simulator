@@ -1,5 +1,20 @@
-import { accentToken } from "../../config/accent-tokens.js";
 import { createElement, replaceChildren, safeIdentifier, setText } from "../safe-dom.js";
+
+export const QUESTION_MIN_LENGTH = 2;
+export const QUESTION_MAX_LENGTH = 200;
+
+const CONTROL_CHARACTERS = /[\u0000-\u001f\u007f-\u009f]/u;
+
+export function normalizeQuestionInput(input) {
+  const source = typeof input === "string" ? input : "";
+  const normalized = source.normalize("NFKC").trim().replace(/\s+/gu, " ");
+  const length = [...normalized].length;
+  let error = "";
+  if (CONTROL_CHARACTERS.test(source)) error = "问题不能包含控制字符。";
+  else if (length < QUESTION_MIN_LENGTH) error = `请至少输入 ${QUESTION_MIN_LENGTH} 个字符。`;
+  else if (length > QUESTION_MAX_LENGTH) error = `问题不能超过 ${QUESTION_MAX_LENGTH} 个字符。`;
+  return Object.freeze({ value: normalized, length, valid: error === "", error });
+}
 
 function selectedClass(base, selected) {
   return selected ? `${base} is-selected` : base;
@@ -7,7 +22,6 @@ function selectedClass(base, selected) {
 
 export function createSetupRenderer({
   documentRef,
-  categories,
   spreads,
   deckStyles,
   state,
@@ -15,56 +29,21 @@ export function createSetupRenderer({
   selectors,
   cardImagePath,
   cardBackPath,
-  getQuestionEvaluationPolicy = () => null,
+  onQuestionValidityChange = () => {},
 }) {
-  const { currentCategory, currentQuestion, currentDeckStyle } = selectors;
+  const { currentDeckStyle } = selectors;
+  let locked = false;
 
-  function renderCategories() {
-    const nodes = categories.map((category) => {
-      const button = createElement(documentRef, "button", {
-        className: selectedClass("category-option", category.id === state.categoryId),
-        attributes: { type: "button", "aria-pressed": category.id === state.categoryId },
-      });
-      button.dataset.categoryId = safeIdentifier(category.id);
-      button.dataset.accentToken = accentToken(category.accent);
-      button.append(
-        createElement(documentRef, "span", { className: "category-icon", text: category.icon, attributes: { "aria-hidden": "true" } }),
-        createElement(documentRef, "span", { className: "category-name", text: category.name }),
-      );
-      return button;
-    });
-    replaceChildren(dom.categoryGrid, nodes);
-  }
-
-  function renderQuestions() {
-    const category = currentCategory();
-    const question = currentQuestion();
-    setText(dom.categoryTagline, category.tagline);
-    setText(dom.questionDialogHint, `${category.name} · 从以下 ${category.questions.length} 个问题中选择一项`);
-    setText(dom.selectedQuestionLabel, question.label);
-    setText(dom.selectedQuestionText, getQuestionEvaluationPolicy(question.id)?.displayQuestion || question.text);
-    const accent = accentToken(category.accent);
-    dom.questionPickerButton.dataset.accentToken = accent;
-    dom.questionList.dataset.accentToken = accent;
-    const nodes = category.questions.map((item) => {
-      const policy = getQuestionEvaluationPolicy(item.id);
-      const button = createElement(documentRef, "button", {
-        className: selectedClass("question-option", item.id === state.questionId),
-        attributes: { type: "button", "aria-pressed": item.id === state.questionId },
-      });
-      button.dataset.questionId = safeIdentifier(item.id);
-      button.append(
-        createElement(documentRef, "span", { className: "radio-mark", attributes: { "aria-hidden": "true" } }),
-      );
-      const copy = createElement(documentRef, "span", { className: "question-copy" });
-      copy.append(
-        createElement(documentRef, "strong", { text: policy?.displayQuestion || item.text }),
-        createElement(documentRef, "small", { text: item.label }),
-      );
-      button.append(copy);
-      return button;
-    });
-    replaceChildren(dom.questionList, nodes);
+  function renderQuestionInput() {
+    const result = normalizeQuestionInput(state.questionText);
+    if (dom.questionInput.value !== state.questionText) dom.questionInput.value = state.questionText;
+    dom.questionInput.disabled = locked;
+    dom.questionInput.setAttribute("aria-invalid", String(!result.valid));
+    setText(dom.questionValidationMessage, result.error);
+    setText(dom.questionCharacterCount, `${result.length} / ${QUESTION_MAX_LENGTH}`);
+    dom.startReading.disabled = locked || !result.valid;
+    onQuestionValidityChange(result.valid, result);
+    return result;
   }
 
   function renderDeckStyles() {
@@ -74,15 +53,17 @@ export function createSetupRenderer({
         className: selectedClass(`deck-style-option deck-style-${id}`, style.id === state.deckStyleId),
         attributes: {
           type: "button",
-          "aria-pressed": style.id === state.deckStyleId,
+          "aria-pressed": String(style.id === state.deckStyleId),
           "aria-label": `选择${style.name}牌面`,
+          disabled: locked ? true : null,
         },
       });
       button.dataset.deckStyleId = id;
       const preview = createElement(documentRef, "span", { className: "deck-style-preview", attributes: { "aria-hidden": "true" } });
-      const face = createElement(documentRef, "img", { className: "deck-style-face", attributes: { src: cardImagePath(style.previewCard, style), alt: "" } });
-      const back = createElement(documentRef, "img", { className: "deck-style-back", attributes: { src: cardBackPath(style), alt: "" } });
-      preview.append(face, back);
+      preview.append(
+        createElement(documentRef, "img", { className: "deck-style-face", attributes: { src: cardImagePath(style.previewCard, style), alt: "" } }),
+        createElement(documentRef, "img", { className: "deck-style-back", attributes: { src: cardBackPath(style), alt: "" } }),
+      );
       const copy = createElement(documentRef, "span", { className: "deck-style-copy" });
       copy.append(createElement(documentRef, "strong", { text: style.name }), createElement(documentRef, "small", { text: style.description }));
       button.append(preview, copy, createElement(documentRef, "span", { className: "deck-style-check", text: "✓", attributes: { "aria-hidden": "true" } }));
@@ -96,16 +77,15 @@ export function createSetupRenderer({
   }
 
   function renderSpreads() {
-    const policy = getQuestionEvaluationPolicy(currentQuestion().id);
     const nodes = spreads.map((spread) => {
-      const allowed = !policy || policy.allowedSpreads.includes(spread.id);
+      const selected = spread.id === state.spreadId;
       const button = createElement(documentRef, "button", {
-        className: selectedClass("spread-option", allowed && spread.id === state.spreadId),
+        className: selectedClass("spread-option", selected),
         attributes: {
           type: "button",
-          "aria-pressed": allowed && spread.id === state.spreadId,
-          disabled: allowed ? null : true,
-          "aria-disabled": String(!allowed),
+          "aria-pressed": String(selected),
+          "aria-disabled": "false",
+          disabled: locked ? true : null,
         },
       });
       button.dataset.spreadId = safeIdentifier(spread.id);
@@ -113,25 +93,22 @@ export function createSetupRenderer({
       glyph.dataset.cards = String(spread.positions.length);
       for (let index = 0; index < spread.positions.length; index += 1) glyph.append(createElement(documentRef, "i", { attributes: { "aria-hidden": "true" } }));
       const copy = createElement(documentRef, "span", { className: "spread-copy" });
-      copy.append(
-        createElement(documentRef, "strong", { text: spread.name }),
-        createElement(documentRef, "small", { text: allowed ? spread.description : "当前问题不使用这个牌阵" }),
-      );
+      copy.append(createElement(documentRef, "strong", { text: spread.name }), createElement(documentRef, "small", { text: spread.description }));
       button.append(glyph, copy, createElement(documentRef, "span", { className: "spread-count", text: spread.short }));
       return button;
     });
     replaceChildren(dom.spreadList, nodes);
   }
 
-  function setSetupLocked(locked) {
-    const panel = dom.categoryGrid.closest(".setup-panel");
+  function setSetupLocked(nextLocked) {
+    locked = Boolean(nextLocked);
+    const panel = dom.questionInput.closest(".setup-panel");
     panel?.classList.toggle("is-locked", locked);
     panel?.setAttribute("aria-busy", String(locked));
-    for (const container of [dom.categoryGrid, dom.questionList, dom.spreadList, dom.deckStyleList]) {
+    for (const container of [dom.spreadList, dom.deckStyleList]) {
       container.querySelectorAll("button").forEach((button) => { button.disabled = locked; });
     }
-    dom.questionPickerButton.disabled = locked;
-    dom.startReading.disabled = locked;
+    renderQuestionInput();
   }
 
   function setJourneyStep(activeStep) {
@@ -143,5 +120,8 @@ export function createSetupRenderer({
     });
   }
 
-  return Object.freeze({ renderCategories, renderQuestions, renderDeckStyles, renderSpreads, setSetupLocked, setJourneyStep });
+  // Transitional aliases keep the old application import shape intact during integration.
+  const renderCategories = () => {};
+  const renderQuestions = renderQuestionInput;
+  return Object.freeze({ renderQuestionInput, renderCategories, renderQuestions, renderDeckStyles, renderSpreads, setSetupLocked, setJourneyStep });
 }

@@ -1,10 +1,10 @@
 import { createHistoryRepository } from "../src/storage/history-repository.js";
 import { unavailableArtifactFingerprint } from "../src/storage/artifact-fingerprint.js";
-import { READING_RECORD_SCHEMA_VERSION } from "../src/storage/reading-record.js";
+import { LEGACY_READING_RECORD_SCHEMA_VERSION } from "../src/storage/reading-record.js";
 
 export function sampleRecord(id = "reading-1", createdAt = "2026-08-01T00:00:00.000Z") {
   return {
-    schemaVersion: READING_RECORD_SCHEMA_VERSION,
+    schemaVersion: LEGACY_READING_RECORD_SCHEMA_VERSION,
     id,
     createdAt,
     savedAt: createdAt,

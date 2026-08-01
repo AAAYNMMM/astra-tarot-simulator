@@ -19,7 +19,8 @@ const release = readJson(".qa/release/release-2.1.0.json");
 
 assert.equal(validateCompatibilityMatrix(matrix), true);
 assert.equal(matrix.release, "2.1.0");
-assert.equal(historyCompatibility({ schemaVersion: "2.0.0" }, matrix), "read-write");
+assert.equal(historyCompatibility({ schemaVersion: "3.0.0" }, matrix), "read-write");
+assert.equal(historyCompatibility({ schemaVersion: "2.0.0" }, matrix), "read-only");
 assert.equal(historyCompatibility({ schemaVersion: "1.0.0" }, matrix), "read-only");
 assert.equal(detectMixedRelease({
   matrix,
@@ -38,6 +39,9 @@ assert.equal(acceptance.status, "PASS");
 assert.equal(Object.values(acceptance.checks).every(Boolean), true);
 assert.equal(release.status, "RELEASED");
 assert.equal(release.release, "2.1.0");
+assert.equal(release.guarantees.fixedQuestions, false);
+assert.equal(release.guarantees.questionEngineIsolation, true);
+assert.equal(release.guarantees.readingRecordSchema, "3.0.0");
 assert.match(release.releaseId, /^2\.1\.0-/);
 assert.equal(read("src/config/version.js").includes('APP_VERSION = "2.1.0"'), true);
 for (const relative of [

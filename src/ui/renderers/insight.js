@@ -28,6 +28,21 @@ function paragraph(documentRef, text, className = "") {
   return createElement(documentRef, "p", className, text);
 }
 
+const HISTORY_ONLY_NOTICE = "问题仅用于记录，不参与抽牌、解牌或评分。请根据自己的问题理解牌面提示。";
+const PENALTY_FACTORS = new Set(["resistance", "cost", "interCardConflict"]);
+
+function historyOnlyNotice(documentRef) {
+  const notice = paragraph(documentRef, HISTORY_ONLY_NOTICE, "history-only-reading-notice");
+  notice.setAttribute("role", "note");
+  return notice;
+}
+
+function textList(documentRef, items, className = "concise-evidence-list") {
+  const list = createElement(documentRef, "ul", className);
+  for (const item of items || []) list.append(createElement(documentRef, "li", "", item.text));
+  return list;
+}
+
 function decisionCard(documentRef, label, item, tone) {
   const card = createElement(documentRef, "article", `concise-decision-card is-${tone}`);
   card.append(
@@ -89,6 +104,9 @@ export function createInsightRenderer({
     const deckStyle = resolveDeckStyle(state.reading.deckStyle || currentDeckStyle());
     const orientation = reversed ? "逆位" : "正位";
     const evidence = evidenceForPosition(state.reading.synthesis, position.id);
+    const detail = state.reading.engineResult?.cardDetails?.find((item) => (
+      item.cardId === card.id && item.positionId === (draw.enginePosition?.id || position.id)
+    ));
 
     const article = createElement(documentRef, "article", "card-reading");
     const header = createElement(documentRef, "header", "selected-card-heading");
@@ -107,19 +125,44 @@ export function createInsightRenderer({
     );
     header.append(miniCard, copy);
 
-    const meaning = section(documentRef, evidence ? "本牌位依据" : "等待综合", "position-detail-block");
-    meaning.append(paragraph(
-      documentRef,
-      evidence?.text || "完整牌阵翻开后，会根据问题、牌位和结构化牌义生成这张牌的具体依据。",
-    ));
+    article.append(historyOnlyNotice(documentRef));
+    const meaning = section(documentRef, detail ? "当前牌面基础含义" : evidence ? "本牌位依据" : "等待综合", "position-detail-block");
+    meaning.append(paragraph(documentRef, detail?.baseMeaning || evidence?.text || "完整牌阵翻开后，会依据当前方向、牌位与牌阵结构生成本牌详情。"));
+    if (detail?.reversalMode) {
+      const reversal = section(documentRef, "逆位机制", "position-detail-block");
+      reversal.append(paragraph(documentRef, `${detail.reversalModeLabel || detail.reversalMode}（${detail.reversalMode}）`));
+      article.append(meaning, reversal);
+    } else {
+      article.append(meaning);
+    }
+    const positionMeaning = section(documentRef, "所在位置的含义", "position-detail-block");
+    positionMeaning.append(paragraph(documentRef, detail?.positionMeaning || position.prompt));
     const context = section(documentRef, "在整副牌中的作用");
     const contextBody = createElement(documentRef, "div", "position-context");
     contextBody.append(
-      createElement(documentRef, "strong", "", evidence?.role || "待综合"),
-      paragraph(documentRef, position.prompt),
+      createElement(documentRef, "strong", "", detail ? position.name : evidence?.role || "待综合"),
+      paragraph(documentRef, detail?.spreadRole || "牌阵完整后再形成结构作用判断。"),
     );
     context.append(contextBody);
-    article.append(header, meaning, context);
+    const relations = section(documentRef, "关键关联牌");
+    if (detail?.relations?.length) {
+      const relationList = createElement(documentRef, "ul", "card-relation-list");
+      for (const relation of detail.relations) {
+        const item = createElement(documentRef, "li", `is-${relation.kind}`);
+        item.append(
+          createElement(documentRef, "strong", "", `${relation.relatedCardName} · ${relation.label}`),
+          paragraph(documentRef, relation.text),
+        );
+        relationList.append(item);
+      }
+      relations.append(relationList);
+    } else {
+      relations.append(paragraph(documentRef, state.reading.spread.id === "single"
+        ? "单张牌阵不适用牌间关系判断。"
+        : "当前没有达到展示置信度的直接结构关系。"));
+    }
+    article.prepend(header);
+    article.append(positionMeaning, context, relations);
     return article;
   }
 
@@ -130,8 +173,75 @@ export function createInsightRenderer({
       cache = new Map();
       cardCache.set(state.reading, cache);
     }
-    if (!cache.has(index)) cache.set(index, buildCardInsight(index));
+    if (!cache.has(index) || state.reading.engineResult) cache.set(index, buildCardInsight(index));
     commit(cache.get(index));
+  }
+
+  function buildV3Summary(presentation) {
+    const article = createElement(documentRef, "article", "summary-reading assessment-summary structural-summary");
+    article.dataset.schemaVersion = presentation.schemaVersion;
+    article.dataset.spreadId = presentation.spreadId;
+    article.append(historyOnlyNotice(documentRef));
+
+    const hero = createElement(documentRef, "header", "summary-hero concise-hero");
+    hero.append(createElement(documentRef, "span", "summary-overline", "综合顺势等级"));
+    if (presentation.grade) {
+      const grade = createElement(documentRef, "div", "assessment-grade");
+      grade.append(
+        createElement(documentRef, "strong", "", presentation.grade.level),
+        createElement(documentRef, "span", "", presentation.grade.label),
+      );
+      hero.append(grade);
+    } else {
+      hero.append(createElement(documentRef, "h3", "", "结构证据不足"));
+    }
+    hero.append(paragraph(documentRef, presentation.structuralTendency?.text || "当前牌阵不足以形成完整结构判断。", "judgment-copy"));
+    article.append(hero);
+
+    const bands = section(documentRef, "评分依据", "concise-evidence-section");
+    const bandList = createElement(documentRef, "dl", "structural-factor-bands");
+    for (const factor of presentation.factorBands || []) {
+      const penaltyClass = PENALTY_FACTORS.has(factor.factor) ? " is-penalty" : "";
+      const row = createElement(documentRef, "div", `factor-band is-${factor.band}${penaltyClass}`);
+      row.append(
+        createElement(documentRef, "dt", "", factor.label),
+        createElement(documentRef, "dd", "", factor.text),
+      );
+      bandList.append(row);
+    }
+    bands.append(bandList);
+    article.append(bands);
+
+    const analysis = section(documentRef, "牌阵结构解读", "concise-evidence-section");
+    analysis.append(textList(documentRef, presentation.basis || []));
+    article.append(analysis);
+
+    const factors = section(documentRef, "主要有利因素与限制", "concise-decision-section");
+    const factorGrid = createElement(documentRef, "div", "assessment-factor-grid");
+    factorGrid.append(
+      assessmentFactorCard(documentRef, "主要有利因素", presentation.favorableFactors || [], "success"),
+      assessmentFactorCard(documentRef, "主要限制", presentation.limitingFactors || [], "failure"),
+    );
+    factors.append(factorGrid);
+    article.append(factors);
+
+    const conditions = section(documentRef, "成立条件、停止信号与转折", "concise-decision-section");
+    const conditionGrid = createElement(documentRef, "div", "concise-decision-grid");
+    const success = presentation.conditions?.success?.[0];
+    const stop = presentation.conditions?.stopSignals?.[0];
+    conditionGrid.append(
+      decisionCard(documentRef, "成立条件", success || { text: "证据不足，暂不形成成立条件。" }, "success"),
+      decisionCard(documentRef, "停止信号", stop || { text: "证据不足，暂不形成停止信号。" }, "failure"),
+    );
+    const turning = presentation.conditions?.turningPoints?.[0];
+    if (turning) conditionGrid.append(decisionCard(documentRef, "转折信号", turning, "turning"));
+    conditions.append(conditionGrid);
+    article.append(conditions);
+
+    const reality = section(documentRef, "现实参考", "concise-decision-section");
+    reality.append(paragraph(documentRef, presentation.realityReference?.text || "证据不足，暂不形成现实参考。"));
+    article.append(reality);
+    return article;
   }
 
   function buildAssessmentSummary(presentation) {
@@ -246,6 +356,7 @@ export function createInsightRenderer({
 
   function buildSummary() {
     const presentation = state.reading?.assessment?.presentation;
+    if (presentation?.schemaVersion === "3.0.0") return buildV3Summary(presentation);
     return presentation ? buildAssessmentSummary(presentation) : buildLegacySummary();
   }
 

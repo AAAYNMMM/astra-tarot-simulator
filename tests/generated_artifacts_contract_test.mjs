@@ -35,7 +35,7 @@ assert.equal(Object.keys(artifact.modules.cards).length, 78);
 assert.equal(Object.keys(artifact.modules.questions).length, questionCount);
 assert.ok(Object.keys(artifact.modules.vocabularies).length >= 5);
 assert.ok(Object.keys(artifact.modules.schemas).length >= 4);
-assert.equal(Object.keys(artifact.modules.positionOperators).length, 5);
+assert.equal(Object.keys(artifact.modules.positionOperators).length, 6);
 assert.equal((await CARD_REGISTRY["major-7"]()).schemaVersion, "1.0.0");
 assert.equal((await QUESTION_REGISTRY["career-change"]()).spreadProfiles.cross.outputDepth, "standard");
 

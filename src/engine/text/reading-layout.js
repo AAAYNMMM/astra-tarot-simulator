@@ -27,8 +27,18 @@ const LAYOUTS = Object.freeze({
   ]),
 });
 
+const CELTIC_V2_LAYOUT = Object.freeze([
+  Object.freeze({ id: "present", title: "当前与挑战", positionIds: Object.freeze(["present", "challenge"]) }),
+  Object.freeze({ id: "foundation", title: "过去与深层根基", positionIds: Object.freeze(["past", "below"]) }),
+  Object.freeze({ id: "trajectory", title: "发展与意识方向", positionIds: Object.freeze(["future", "above"]) }),
+  Object.freeze({ id: "self-environment", title: "当事人状态与外部环境", positionIds: Object.freeze(["self", "external"]) }),
+  Object.freeze({ id: "horizon", title: "希望、恐惧与最终结果", positionIds: Object.freeze(["hopes", "outcome"]) }),
+]);
+
 export function createReadingLayout({ spreadId, observations, candidateBatch }) {
-  const definition = LAYOUTS[spreadId];
+  const definition = spreadId === "celtic" && observations.some((item) => item.positionId === "self")
+    ? CELTIC_V2_LAYOUT
+    : LAYOUTS[spreadId];
   if (!definition) throw new Error(`Unknown reading layout: ${spreadId}`);
   const observationsByPosition = new Map(observations.map((item) => [item.positionId, item]));
   const sections = definition.map((section) => {
@@ -51,4 +61,4 @@ export function createReadingLayout({ spreadId, observations, candidateBatch }) 
   });
 }
 
-export { LAYOUTS };
+export { CELTIC_V2_LAYOUT, LAYOUTS };

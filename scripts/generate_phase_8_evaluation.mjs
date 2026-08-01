@@ -6,7 +6,7 @@ import { fileURLToPath } from "node:url";
 import { createDeterministicStreams } from "../src/core/random/deterministic-streams.js";
 import { CARD_PROFILE_IDS } from "../src/knowledge/cards/registry.js";
 import { QUESTION_PROFILE_IDS } from "../src/knowledge/questions/registry.js";
-import { SPREADS } from "../src/knowledge/spreads/definitions.js";
+import { LEGACY_SPREADS_V1 as SPREADS } from "../src/knowledge/spreads/definitions.js";
 import { runEvaluationSuite } from "../src/engine/evaluation/evaluation-runner.js";
 import { executeReadingEngine } from "../src/engine/runtime/reading-engine.js";
 

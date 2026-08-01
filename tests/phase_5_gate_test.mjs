@@ -2,10 +2,10 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { SPREADS } from "../src/knowledge/spreads/definitions.js";
+import { LEGACY_SPREADS_V1 as SPREADS } from "../src/knowledge/spreads/definitions.js";
 import { CARD_PROFILE_IDS, loadCardProfile } from "../src/knowledge/cards/registry.js";
 import { QUESTION_PROFILE_IDS, loadQuestionProfile } from "../src/knowledge/questions/registry.js";
-import { getPositionOperator } from "../src/knowledge/spreads/operators/index.js";
+import { getLegacyPositionOperator as getPositionOperator } from "../src/knowledge/spreads/operators/index.js";
 import { getSpreadGraph } from "../src/engine/observations/spread-graphs.js";
 import { createObservation } from "../src/engine/observations/observation-engine.js";
 import { createStructuralRelationCandidates } from "../src/engine/relations/structural-relation-candidates.js";
@@ -34,13 +34,13 @@ function observationsFor(question, spread, orientation, offset) {
 for (let questionIndex = 0; questionIndex < QUESTION_PROFILE_IDS.length; questionIndex += 1) {
   const question = await loadQuestionProfile(QUESTION_PROFILE_IDS[questionIndex]);
   for (const spread of SPREADS) {
-    const graph = getSpreadGraph(spread.id);
+    const graph = getSpreadGraph(spread.id, "1.0.0");
     for (const orientation of ["upright", "reversed"]) {
       const observations = observationsFor(question, spread, orientation, questionIndex + totalBatches);
-      const structuralBatch = createStructuralRelationCandidates({ spreadId: spread.id, observations });
+      const structuralBatch = createStructuralRelationCandidates({ spreadId: spread.id, observations, spreadDefinitionVersion: "1.0.0" });
       const relationBatch = createRelationGraph({ structuralBatch, observations, question, cards: cardsById });
       const repeated = createRelationGraph({
-        structuralBatch: createStructuralRelationCandidates({ spreadId: spread.id, observations: [...observations].reverse() }),
+        structuralBatch: createStructuralRelationCandidates({ spreadId: spread.id, observations: [...observations].reverse(), spreadDefinitionVersion: "1.0.0" }),
         observations: [...observations].reverse(),
         question,
         cards: [...cards].reverse(),

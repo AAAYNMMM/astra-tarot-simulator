@@ -58,7 +58,7 @@ assert.equal(applicationSource.includes("window.AstraRuntime"), false);
 const styleIndex = read("src/styles/index.css");
 const cssImports = [...styleIndex.matchAll(/@import url\("\.\/(.+?)"\);/g)].map((match) => `src/styles/${match[1]}`);
 const originalCss = cssImports.filter((item) => !item.endsWith("accent-tokens.css") && !item.endsWith("phase-8.css") && !item.endsWith("platform-status.css") && !item.endsWith("phase-10.css") && !item.endsWith("phase-11.css") && !item.endsWith("phase-13.css")).map(read).join("");
-assert.equal(crypto.createHash("sha256").update(originalCss).digest("hex"), "ccc3f69d84fc95a20ddd6a119f87cf48343d5dff508088a1b45f57ff7c8f62d3");
+assert.equal(crypto.createHash("sha256").update(originalCss).digest("hex"), "72dfa073795a21ff6b07b2009cd1664beb37cbb6a3e79d10e36f1e93131d19f7");
 const sw = read("sw.js");
 assert.match(sw, /^importScripts\("\.\/src\/generated\/precache-manifest\.js"\);/);
 assert.equal(sw.includes("clients.claim"), false);

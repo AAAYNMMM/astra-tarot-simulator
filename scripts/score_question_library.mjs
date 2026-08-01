@@ -6,7 +6,7 @@ import { fileURLToPath } from "node:url";
 import { QUESTION_CLASSIFICATIONS, PHASE_1_QUESTION_CLASSIFICATIONS } from "../src/knowledge/questions/classification.js";
 import { QUESTION_PROFILE_IDS, loadQuestionProfile } from "../src/knowledge/questions/registry.js";
 import { validateQuestionProfile } from "../src/engine/validation/question-profile-validator.js";
-import { POSITION_OPERATOR_GROUPS } from "../src/knowledge/spreads/operators/index.js";
+import { LEGACY_POSITION_OPERATOR_GROUPS as POSITION_OPERATOR_GROUPS } from "../src/knowledge/spreads/operators/index.js";
 import { loadCardProfile } from "../src/knowledge/cards/registry.js";
 import { createMinimalObservation } from "../src/engine/observations/minimal-consumer.js";
 

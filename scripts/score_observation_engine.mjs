@@ -4,8 +4,8 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { CARD_PROFILE_IDS, loadCardProfile } from "../src/knowledge/cards/registry.js";
 import { QUESTION_PROFILE_IDS, loadQuestionProfile } from "../src/knowledge/questions/registry.js";
-import { POSITION_OPERATOR_GROUPS } from "../src/knowledge/spreads/operators/index.js";
-import { SPREAD_GRAPHS, validateSpreadGraph } from "../src/engine/observations/spread-graphs.js";
+import { LEGACY_POSITION_OPERATOR_GROUPS as POSITION_OPERATOR_GROUPS } from "../src/knowledge/spreads/operators/index.js";
+import { LEGACY_SPREAD_GRAPHS_V1 as SPREAD_GRAPHS, validateSpreadGraph } from "../src/engine/observations/spread-graphs.js";
 import { createObservation } from "../src/engine/observations/observation-engine.js";
 import { validateObservation } from "../src/engine/validation/observation-validator.js";
 
@@ -43,7 +43,7 @@ const differentiationFailures = [];
 const reversalModes = new Set();
 
 for (const graph of Object.values(SPREAD_GRAPHS)) {
-  graphFailures.push(...validateSpreadGraph(graph));
+  graphFailures.push(...validateSpreadGraph(graph, "1.0.0"));
 }
 
 function execute(card, question, operator, orientation, modeKey) {

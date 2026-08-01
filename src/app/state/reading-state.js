@@ -1,18 +1,8 @@
-export function createReadingState({ categories, initialDeckStyle }) {
-  const firstCategory = categories?.[0];
-  const firstQuestion = firstCategory?.questions?.[0];
-  if (!firstCategory || !firstQuestion) {
-    throw new Error("Reading state requires at least one category and question.");
-  }
+export function createReadingState({ initialDeckStyle } = {}) {
   return {
-    categoryId: firstCategory.id,
-    questionId: firstQuestion.id,
+    questionText: "",
     spreadId: "timeline",
     deckStyleId: initialDeckStyle,
-    expectationId: null,
-    criterionId: null,
-    comparisonOptionA: "",
-    comparisonOptionB: "",
     phase: "setup",
     reading: null,
     revealed: new Set(),
@@ -25,14 +15,11 @@ export function createReadingState({ categories, initialDeckStyle }) {
 }
 
 export function resetReadingState(state) {
+  state.questionText = "";
   state.phase = "setup";
   state.reading = null;
   state.revealed = new Set();
   state.selectedIndex = null;
   state.activeTab = "card";
   state.completing = false;
-  state.expectationId = null;
-  state.criterionId = null;
-  state.comparisonOptionA = "";
-  state.comparisonOptionB = "";
 }

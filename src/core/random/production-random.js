@@ -1,6 +1,7 @@
 import { createDeterministicStreams, STREAM_NAMES } from "./deterministic-streams.js";
 
 export const PRODUCTION_RANDOM_VERSION = "astra-prng-v1";
+export const PRODUCTION_RANDOM_ALGORITHM = "fnv1a-mulberry32";
 
 function validateUnit(value) {
   const numeric = Number(value);
@@ -85,6 +86,12 @@ export function createReadingRandomContextFactory({
 export function replayReadingRandomContext(audit) {
   if (!audit || typeof audit.rootSeed !== "string" || typeof audit.version !== "string") {
     throw new TypeError("A valid random audit record is required.");
+  }
+  if (audit.algorithm !== PRODUCTION_RANDOM_ALGORITHM) {
+    throw new RangeError(`Unsupported random algorithm: ${audit.algorithm || "missing"}.`);
+  }
+  if (audit.version !== PRODUCTION_RANDOM_VERSION) {
+    throw new RangeError(`Unsupported random protocol version: ${audit.version}.`);
   }
   return createReadingRandomContextFactory({ version: audit.version })({ rootSeed: audit.rootSeed });
 }

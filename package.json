@@ -65,6 +65,7 @@
     "test:pwa": "node tests/pwa_contract_test.mjs",
     "test:questions": "node tests/question_profile_contract_test.mjs",
     "test:smoke": "node tests/smoke_test.js",
+    "test:v3": "node tests/free_question_setup_test.mjs && node tests/spread_reading_v3_test.mjs && node tests/reading_v3_isolation_test.mjs && node tests/reading_v3_end_to_end_test.mjs && node tests/random_replay_v3_test.mjs && node tests/reading_record_v3_compat_test.mjs && node tests/reading_v3_history_integration_test.mjs",
     "test:vocabulary": "node tests/vocabulary_contract_test.mjs",
     "validate:card": "node scripts/validate_card_profiles.mjs"
   },

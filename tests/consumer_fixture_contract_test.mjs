@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 import { validateJsonSchema } from "../src/engine/validation/schema-validator.js";
 import { GOLDEN_CARD_IDS } from "../src/knowledge/cards/registry.js";
 import { QUESTION_PROFILE_IDS } from "../src/knowledge/questions/registry.js";
-import { getPositionOperator } from "../src/knowledge/spreads/operators/index.js";
+import { getLegacyPositionOperator as getPositionOperator } from "../src/knowledge/spreads/operators/index.js";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const readJson = (relative) => JSON.parse(fs.readFileSync(path.join(root, relative), "utf8"));

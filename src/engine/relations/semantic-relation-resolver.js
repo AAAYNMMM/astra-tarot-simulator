@@ -60,7 +60,7 @@ function scoreType(type, context) {
   const {
     sourceObservation,
     targetObservation,
-    questionFit,
+    positionFit,
     alignment,
     themeOverlap,
     supportMatches,
@@ -79,15 +79,15 @@ function scoreType(type, context) {
     if (["state", "obstacle", "trend", "outcome"].includes(targetFacet)) score += 0.16;
     if (["causal-input", "underlying-input"].includes(edgeRole)) score += 0.24;
   } else if (type === "conditions") {
-    score += questionFit.sharedResponsibilities.length * 0.07;
-    score += questionFit.handoffDimensions.length * 0.09;
+    score += positionFit.sharedResponsibilities.length * 0.07;
+    score += positionFit.handoffDimensions.length * 0.09;
     if (targetObservation.positionRole?.conditionality !== "direct") score += 0.18;
     if (edgeRole.includes("condition") || edgeRole.includes("context")) score += 0.2;
   } else if (type === "supports") {
     score += supportMatches.length * 0.12;
     score += themeOverlap.length * 0.06;
     if (alignment.score > 0.2) score += alignment.score * 0.18;
-    if (questionFit.coverage.combined >= 0.5) score += 0.12;
+    if (positionFit.coverage.combined >= 0.5) score += 0.12;
   } else if (type === "reinforces") {
     score += themeOverlap.length * 0.1;
     if (supportMatches.length >= 2) score += 0.22;
@@ -119,7 +119,7 @@ function scoreType(type, context) {
     if (!mixedOrientation) score += 0.1;
     if (["temporal-continuation", "trend-continuation", "long-arc-projection"].includes(edgeRole)) score += 0.28;
   }
-  score += questionFit.evidenceWeight * 0.08;
+  score += positionFit.evidenceWeight * 0.08;
   return round(score);
 }
 
@@ -141,10 +141,13 @@ export function resolveSemanticRelation({
   targetObservation,
   sourceCard,
   targetCard,
-  questionFit,
+  questionFit = null,
+  responsibilityFit = null,
 }) {
-  if (!candidate || !sourceObservation || !targetObservation || !sourceCard || !targetCard || !questionFit) {
-    throw new TypeError("Semantic Relation resolution requires candidate, observations, cards, and questionFit.");
+  const positionFit = responsibilityFit || questionFit;
+  const spreadProfileMode = Boolean(responsibilityFit);
+  if (!candidate || !sourceObservation || !targetObservation || !sourceCard || !targetCard || !positionFit) {
+    throw new TypeError("Semantic Relation resolution requires candidate, observations, cards, and position fit.");
   }
   const allowedTypes = unique(candidate.candidateTypes);
   if (!allowedTypes.length || allowedTypes.some((type) => !RELATION_TYPES.includes(type))) {
@@ -172,7 +175,7 @@ export function resolveSemanticRelation({
   const context = {
     sourceObservation,
     targetObservation,
-    questionFit,
+    positionFit,
     alignment,
     themeOverlap,
     supportMatches,
@@ -185,7 +188,7 @@ export function resolveSemanticRelation({
   const selected = scores[0];
   const runnerUp = scores[1]?.score ?? 0;
   const margin = selected.score - runnerUp;
-  const strength = round(clamp(0.38 + selected.score * 0.42 + questionFit.coverage.combined * 0.12));
+  const strength = round(clamp(0.38 + selected.score * 0.42 + positionFit.coverage.combined * 0.12));
   const confidence = margin >= 0.22 && strength >= 0.7 ? "high" : margin >= 0.08 ? "medium" : "low";
 
   return deepFreeze({
@@ -207,14 +210,18 @@ export function resolveSemanticRelation({
         sourceMode: sourceObservation.selectedReversalMode || null,
         targetMode: targetObservation.selectedReversalMode || null,
       },
-      questionCoverage: questionFit.coverage,
-      handoffDimensions: [...questionFit.handoffDimensions],
+      ...(spreadProfileMode
+        ? { responsibilityCoverage: positionFit.coverage }
+        : { questionCoverage: positionFit.coverage }),
+      handoffDimensions: [...positionFit.handoffDimensions],
     },
     explanationKeys: unique([
       candidate.explanationKey,
       `relation-type:${selected.type}`,
       `relation-polarity:${typePolarity(selected.type)}`,
-      ...(questionFit.priorityDimension ? [`question-dimension:${questionFit.priorityDimension}`] : []),
+      ...(positionFit.priorityDimension
+        ? [`${spreadProfileMode ? "responsibility" : "question-dimension"}:${positionFit.priorityDimension}`]
+        : []),
     ]),
   });
 }

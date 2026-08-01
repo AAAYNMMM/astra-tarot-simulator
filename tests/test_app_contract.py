@@ -44,8 +44,10 @@ class TarotAppContractTests(unittest.TestCase):
 
     def test_html_has_primary_interaction_contract(self) -> None:
         html = (ROOT / "index.html").read_text(encoding="utf-8")
-        for element_id in ("categoryGrid", "questionPickerButton", "questionDialog", "questionList", "spreadList", "deckStyleList", "startReading", "cardTable", "insightContent", "historyDialog"):
+        for element_id in ("questionInput", "questionValidationMessage", "questionCharacterCount", "spreadList", "deckStyleList", "startReading", "cardTable", "insightContent", "historyDialog"):
             self.assertIn(f'id="{element_id}"', html)
+        for retired_id in ("categoryGrid", "questionPickerButton", "questionDialog", "questionList", "expectationList", "criterionList"):
+            self.assertNotIn(f'id="{retired_id}"', html)
         self.assertIn('type="module" src="src/app/bootstrap.js"', html)
         self.assertNotIn('src="app.js"', html)
         self.assertNotIn('src="data.js"', html)

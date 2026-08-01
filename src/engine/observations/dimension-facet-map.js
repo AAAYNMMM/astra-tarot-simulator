@@ -27,8 +27,10 @@ export function facetsForDimension(dimension) {
   return Object.freeze(unique(matched.length ? matched : ["state", "reflection", "action", "boundary"]));
 }
 
-export function responsibilitiesFor(question, spreadId, positionId) {
-  const responsibilities = question?.spreadProfiles?.[spreadId]?.positionResponsibilities?.[positionId];
+export function responsibilitiesFor(profile, spreadId, positionId) {
+  const responsibilities = profile?.spreadId === spreadId && profile?.positionResponsibilities
+    ? profile.positionResponsibilities[positionId]
+    : profile?.spreadProfiles?.[spreadId]?.positionResponsibilities?.[positionId];
   return Object.freeze([...(responsibilities || [])]);
 }
 
@@ -44,8 +46,8 @@ export function mediatedResponsibility(responsibilities, operator) {
   return responsibilities.at(-1);
 }
 
-export function facetPriorityFor(question, operator) {
-  const responsibilities = responsibilitiesFor(question, operator.spreadId, operator.positionId);
+export function facetPriorityFor(profile, operator) {
+  const responsibilities = responsibilitiesFor(profile, operator.spreadId, operator.positionId);
   const preferred = responsibilities.flatMap((dimension) => facetsForDimension(dimension));
   const legal = new Set(operator.selectableFacets);
   return Object.freeze(unique([...preferred, ...operator.selectableFacets, ...FACET_ORDER])
