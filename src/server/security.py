@@ -21,7 +21,16 @@ CSP_POLICY = (
     "form-action 'none'"
 )
 
-ROOT_FILES = frozenset({"index.html", "sw.js", "icon.svg", "manifest.webmanifest"})
+ROOT_FILES = frozenset({
+    "index.html",
+    "sw.js",
+    "icon.svg",
+    "icon-192.png",
+    "icon-512.png",
+    "icon-maskable-192.png",
+    "icon-maskable-512.png",
+    "manifest.webmanifest",
+})
 ALLOWED_PREFIXES = ("assets/", "src/")
 ALLOWED_SUFFIXES = frozenset({
     ".html", ".js", ".mjs", ".css", ".json", ".webmanifest",

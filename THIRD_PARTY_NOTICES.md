@@ -1,6 +1,6 @@
 # Third-Party Notices
 
-This file covers third-party material distributed with 星纱塔罗 2.0.0. The project code is licensed under the MIT License. Card artwork keeps its own source and license status.
+This file covers third-party material distributed with 星纱塔罗 2.1.0. The project code is licensed under the MIT License. Card artwork keeps its own source and license status.
 
 ## Rider–Waite–Smith deck
 

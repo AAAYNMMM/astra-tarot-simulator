@@ -1,9 +1,9 @@
 {
   "schemaVersion": "1.0.0",
-  "release": "2.0.0",
+  "release": "2.1.0",
   "application": {
-    "current": "2.0.0",
-    "previousCompleteRelease": "2.0.0-dev",
+    "current": "2.1.0",
+    "previousCompleteRelease": "2.0.0",
     "minimumReadable": "1.0.0"
   },
   "pwaProtocol": "1.0.0",

@@ -1,13 +1,30 @@
-const HEDGE_PATTERNS = Object.freeze([
-  /可能/g,
-  /也许/g,
-  /或许/g,
-  /倾向于?/g,
+const FORBIDDEN_CERTAINTY_PATTERNS = Object.freeze([
+  /(?:百分之百|绝对|必然|注定|保证)(?:会|能|可以|发生|实现|成功|失败)/g,
+  /(?:肯定|一定)(?:会|能|可以|发生|实现|成功|失败)/g,
+]);
+
+const MECHANICAL_PHRASE_PATTERNS = Object.freeze([
   /值得留意(?:的是)?/g,
   /继续观察/g,
   /不宜作确定判断/g,
   /在保留不确定性的前提下/g,
 ]);
+
+const NEGATED_CERTAINTY_CONTEXT = /(?:不(?:得|会|能|是|可)?|未|无|非|避免|禁止|拒绝|不可)/;
+
+function findUnboundedCertainty(value) {
+  const text = String(value || "");
+  for (const pattern of FORBIDDEN_CERTAINTY_PATTERNS) {
+    pattern.lastIndex = 0;
+    let match = pattern.exec(text);
+    while (match) {
+      const prefix = text.slice(Math.max(0, match.index - 10), match.index);
+      if (!NEGATED_CERTAINTY_CONTEXT.test(prefix)) return match[0];
+      match = pattern.exec(text);
+    }
+  }
+  return null;
+}
 
 const VERDICTS = Object.freeze({
   advance: Object.freeze({
@@ -65,7 +82,7 @@ function normalizeText(value) {
 
 function directText(value) {
   let text = String(value || "").replace(/\s+/g, " ").trim();
-  for (const pattern of HEDGE_PATTERNS) text = text.replace(pattern, "");
+  for (const pattern of MECHANICAL_PHRASE_PATTERNS) text = text.replace(pattern, "");
   return text
     .replace(/需要结合[^。；]+共同理解/g, "")
     .replace(/现有证据(?:指向|提示)/g, "")
@@ -250,10 +267,8 @@ export function validateDecisiveInterpretation(result) {
     result?.changeCondition,
     ...(result?.decisiveFactors || []).map((item) => item.text),
   ].join("\n");
-  for (const pattern of HEDGE_PATTERNS) {
-    pattern.lastIndex = 0;
-    if (pattern.test(visible)) errors.push(`Hedge phrase leaked: ${pattern}`);
-  }
+  const certainty = findUnboundedCertainty(visible);
+  if (certainty) errors.push(`Unbounded certainty phrase leaked: ${certainty}`);
   const factorKeys = (result?.decisiveFactors || []).map((item) => normalizeText(item.text));
   if (new Set(factorKeys).size !== factorKeys.length) errors.push("Decisive factors contain duplicate text.");
   if ((result?.decisiveFactors || []).length > 3) errors.push("Too many decisive factors.");
@@ -301,4 +316,11 @@ export function createDecisiveInterpretation({
   return deepFreeze(result);
 }
 
-export { HEDGE_PATTERNS, VERDICTS };
+const HEDGE_PATTERNS = FORBIDDEN_CERTAINTY_PATTERNS;
+
+export {
+  FORBIDDEN_CERTAINTY_PATTERNS,
+  findUnboundedCertainty,
+  HEDGE_PATTERNS,
+  VERDICTS,
+};

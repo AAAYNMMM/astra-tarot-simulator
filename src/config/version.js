@@ -1,4 +1,4 @@
-export const APP_VERSION = "2.0.0";
+export const APP_VERSION = "2.1.0";
 export const ARTIFACT_GENERATOR_VERSION = "1.1.0";
 export const CARD_SCHEMA_VERSION = "1.0.0";
 export const VOCABULARY_VERSION = "1.0.0";

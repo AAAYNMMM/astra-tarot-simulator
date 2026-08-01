@@ -43,6 +43,7 @@ export function convertLegacyRecord(record, migratedAt = new Date().toISOString(
       claims: [],
       rendered: null,
     },
+    interpretation: null,
     legacySynthesis: { headline: record?.headline || "" },
     artifactFingerprint: unavailableArtifactFingerprint("legacy-record"),
     source: "legacy-localstorage",

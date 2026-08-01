@@ -2,7 +2,7 @@ import { createElement, replaceChildren } from "../safe-dom.js";
 
 export function createReadingAnimation({ windowRef, documentRef, reducedMotion, state, dom, cardBackPath }) {
   function delay(milliseconds) {
-    const duration = reducedMotion.matches ? Math.min(milliseconds, 35) : milliseconds;
+    const duration = reducedMotion.matches ? 0 : milliseconds;
     return new Promise((resolve) => windowRef.setTimeout(resolve, duration));
   }
 
@@ -17,11 +17,11 @@ export function createReadingAnimation({ windowRef, documentRef, reducedMotion, 
     replaceChildren(dom.shuffleDeck, cards);
     const phases = [
       { at: 0, text: "正在净化牌面能量" },
-      { at: 34, text: "正在回应你的问题" },
-      { at: 68, text: "正在寻找回应问题的牌" },
-      { at: 92, text: "牌阵即将显现" },
+      { at: 38, text: "正在回应你的问题" },
+      { at: 75, text: "正在寻找回应问题的牌" },
+      { at: 94, text: "牌阵即将显现" },
     ];
-    const totalDuration = reducedMotion.matches ? 90 : 2350;
+    const totalDuration = reducedMotion.matches ? 1 : 900;
     const progressAnimation = dom.shuffleProgress.animate?.(
       [{ transform: "scaleX(0)" }, { transform: "scaleX(1)" }],
       { duration: totalDuration, easing: "linear", fill: "forwards" },
@@ -43,7 +43,7 @@ export function createReadingAnimation({ windowRef, documentRef, reducedMotion, 
       };
       windowRef.requestAnimationFrame(tick);
     });
-    await delay(180);
+    await delay(60);
     progressAnimation?.cancel();
     dom.shuffleScene.hidden = true;
   }

@@ -1,11 +1,36 @@
 import { accentToken } from "../../config/accent-tokens.js";
 import { createElement, replaceChildren, safeColor, setText } from "../safe-dom.js";
 
+const CONCLUSION_LABELS = Object.freeze({
+  "act-now": "可以行动",
+  "act-with-conditions": "有条件推进",
+  conditional: "有条件推进",
+  favorable: "进展有利",
+  stabilizing: "趋于稳定",
+  growing: "正在增长",
+  slowing: "放慢节奏",
+  conflicted: "存在冲突",
+  restructuring: "需要重整",
+  "ending-or-redefining": "结束或重新定义",
+  indeterminate: "信息不足",
+});
+
+const CONFIDENCE_LABELS = Object.freeze({
+  low: "较低",
+  medium: "中等",
+  "medium-high": "中高",
+  high: "较高",
+});
+
 export function historyRecordView(record, formatDate) {
   const structured = record?.structured && typeof record.structured === "object"
     ? {
         schemaVersion: String(record.structured.schemaVersion || "1.0.0"),
         status: String(record.structured.status || "available"),
+        interpretationSchemaVersion: String(record.structured.interpretationSchemaVersion || ""),
+        verdictCode: String(record.structured.verdictCode || ""),
+        verdictLabel: String(record.structured.verdictLabel || ""),
+        takeaway: String(record.structured.takeaway || ""),
         conclusionType: String(record.structured.conclusionType || ""),
         confidence: String(record.structured.confidence || ""),
         score: Number.isFinite(record.structured.score) ? record.structured.score : null,
@@ -14,17 +39,37 @@ export function historyRecordView(record, formatDate) {
         conflictCount: Number(record.structured.conflictCount || 0),
         conditionCount: Number(record.structured.conditionCount || 0),
         coverageGapCount: Number(record.structured.coverageGapCount || 0),
+        assessment: record.structured.assessment && typeof record.structured.assessment === "object"
+          ? {
+              outputContract: String(record.structured.assessment.outputContract || ""),
+              mode: String(record.structured.assessment.mode || ""),
+              grade: record.structured.assessment.grade ? String(record.structured.assessment.grade) : null,
+              gradeLabel: String(record.structured.assessment.gradeLabel || ""),
+              trendLabel: String(record.structured.assessment.trend?.label || ""),
+              summary: String(record.structured.assessment.summary || ""),
+              reason: String(record.structured.assessment.reason || ""),
+            }
+          : null,
       }
     : null;
+  const headline = String(record?.headline || structured?.takeaway || "这次牌阵已完成。");
+  const verdictLabel = (structured?.assessment?.grade
+    ? `${structured.assessment.grade} · ${structured.assessment.gradeLabel}`
+    : structured?.assessment?.trendLabel)
+    || structured?.verdictLabel
+    || CONCLUSION_LABELS[structured?.verdictCode]
+    || CONCLUSION_LABELS[structured?.conclusionType]
+    || "牌阵已完成";
   return Object.freeze({
     id: String(record?.id ?? ""),
     accent: safeColor(record?.categoryAccent),
     icon: String(record?.categoryIcon || "✦"),
     question: String(record?.question || ""),
-    meta: `${String(record?.categoryName || "")} · ${String(record?.spreadName || "")} · ${String(record?.headline || "牌阵已完成")}`,
+    meta: `${String(record?.categoryName || "")} · ${String(record?.spreadName || "")} · ${verdictLabel}`,
     createdAt: String(formatDate(record?.createdAt)),
     deckName: String(record?.deckName || "经典韦特"),
-    headline: String(record?.headline || "这次牌阵已完成。"),
+    headline,
+    verdictLabel,
     cards: Array.isArray(record?.cards) ? record.cards.map((card) => ({
       position: String(card?.position || ""),
       name: String(card?.name || ""),
@@ -105,10 +150,33 @@ export function createHistoryRenderer({ documentRef, dom, loadHistory, writeHist
       className: "history-audit",
       attributes: { "aria-label": "结构化解读摘要" },
     });
+    if (structured.assessment) {
+      const assessmentLabel = structured.assessment.grade
+        ? `好运评级：${structured.assessment.grade} · ${structured.assessment.gradeLabel}`
+        : `走势：${structured.assessment.trendLabel || "观察模式"}`;
+      audit.append(
+        createElement(documentRef, "strong", { text: assessmentLabel }),
+        createElement(documentRef, "p", { text: structured.assessment.summary || structured.assessment.reason }),
+      );
+    }
+    const verdictLabel = structured.verdictLabel
+      || CONCLUSION_LABELS[structured.verdictCode]
+      || CONCLUSION_LABELS[structured.conclusionType]
+      || "牌阵已完成";
     audit.append(
-      createElement(documentRef, "strong", { text: `结论类型：${structured.conclusionType}` }),
+      createElement(documentRef, "strong", { text: `结论：${verdictLabel}` }),
+      createElement(documentRef, "p", {
+        text: structured.takeaway || "这条记录保留了结构化证据，可以继续查看牌面。",
+      }),
+    );
+    const technical = createElement(documentRef, "details", { className: "history-technical" });
+    technical.append(
+      createElement(documentRef, "summary", { text: "技术详情" }),
       createElement(documentRef, "span", {
-        text: `置信度 ${structured.confidence || "未标注"}${structured.score === null ? "" : ` · 分数 ${structured.score}`}`,
+        text: `置信度 ${CONFIDENCE_LABELS[structured.confidence] || structured.confidence || "未标注"}${structured.score === null ? "" : ` · 原始分数 ${structured.score}`}`,
+      }),
+      createElement(documentRef, "span", {
+        text: `内部结论码 ${structured.conclusionType || structured.verdictCode || "未标注"}`,
       }),
       createElement(documentRef, "span", {
         text: `证据 ${structured.evidenceCount} · 关系 ${structured.relationCount} · 条件 ${structured.conditionCount}`,
@@ -117,6 +185,7 @@ export function createHistoryRenderer({ documentRef, dom, loadHistory, writeHist
         text: `冲突 ${structured.conflictCount} · 覆盖缺口 ${structured.coverageGapCount}`,
       }),
     );
+    audit.append(technical);
     detail.append(audit);
   }
 

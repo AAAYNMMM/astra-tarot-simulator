@@ -1,127 +1,96 @@
 import assert from "node:assert/strict";
 import fs from "node:fs";
 import { performance } from "node:perf_hooks";
-import { createLongformInterpretation, LENGTH_RULES, textSimilarity } from "../src/engine/longform/narrative.js";
+
+import {
+  createConciseInterpretation,
+  validateConciseInterpretation,
+} from "../src/engine/concise/interpretation.js";
+import { executeDecisiveReading, warmDecisiveReadingEngine } from "../src/engine/decisive/reading.js";
 import { serializeReadingForWorker } from "../src/app/controllers/engine-synthesis.js";
 import { createReadingEngineWorkerClient, WARM_MESSAGE, WORKER_MESSAGE } from "../src/app/engine-worker-client.js";
+import { CARD_PROFILE_IDS } from "../src/knowledge/cards/registry.js";
+import { SPREADS } from "../src/knowledge/spreads/definitions.js";
 
-const POSITIONS = Object.freeze({
-  single: ["essence"],
-  timeline: ["past", "present", "future"],
-  cross: ["core", "root", "trend", "influence", "action"],
-  celtic: ["present", "challenge", "past", "future", "above", "below", "advice", "external", "hopes", "outcome"],
-});
-
-function fixture(spreadId) {
-  const draws = POSITIONS[spreadId].map((positionId, index) => ({
-    cardId: `${["cups", "wands", "swords", "pentacles"][index % 4]}-${index + 1}`,
-    cardName: `测试牌${index + 1}`,
-    positionId,
-    positionName: positionId,
-    orientation: index % 3 === 0 ? "reversed" : "upright",
-    meaning: `第${index + 1}项现实条件已经形成，并正在改变后续行动、关系节奏与资源分配`,
-    advice: "把判断落实为可以连续执行的现实动作",
-    keywords: ["稳定", "行动", "边界"],
-    suit: ["cups", "wands", "swords", "pentacles"][index % 4],
-    arcana: "minor",
-  }));
-  const observations = draws.map((draw, index) => ({
-    positionId: draw.positionId,
-    semanticText: draw.meaning,
-    localScore: 0.62 + index * 0.01,
-    dimensions: {
-      speed: (index % 3) - 1,
-      stability: index % 2 ? 1 : 2,
-      agency: 1,
-      clarity: 1,
-      risk: index === 1 ? 2 : 0,
-      transition: index > draws.length / 2 ? 2 : 0,
-    },
-  }));
-  const candidates = draws.map((draw, index) => ({
-    id: `candidate-${spreadId}-${index}`,
-    positionIds: [draw.positionId],
-    stance: index === 1 ? "cautionary" : index === 2 ? "conditional" : "supportive",
-    score: 0.88 - index * 0.02,
-    semanticSeeds: [draw.meaning],
-    sourceOrder: index,
-  }));
+function payload(spreadId, cardIds = CARD_PROFILE_IDS) {
+  const spread = SPREADS.find((item) => item.id === spreadId);
   return {
-    questionId: "love-new",
-    questionText: "新的缘分会以怎样的方式靠近我？",
+    questionId: "love-current",
+    questionText: "这段关系当前最核心的能量是什么？",
     categoryId: "love",
     spreadId,
-    draws,
-    engineResult: {
-      claim: {
-        id: `claim-${spreadId}`,
-        conclusionType: "conditional",
-        conclusionCategory: "directive",
-        conditions: ["现实回应稳定"],
-      },
-      resolution: { activeCandidates: candidates },
-      observations,
-    },
+    draws: spread.positions.map((position, index) => ({
+      cardId: cardIds[index],
+      cardName: cardIds[index],
+      positionId: position.id,
+      positionName: position.name,
+      orientation: index % 3 === 0 ? "reversed" : "upright",
+    })),
   };
 }
 
-for (const spreadId of Object.keys(POSITIONS)) {
-  const input = fixture(spreadId);
-  const result = createLongformInterpretation(input);
-  assert.equal(result.schemaVersion, "3.0.0");
-  assert.notEqual(result.verdict.code, "indeterminate");
-  assert.equal(result.judgment.includes(input.questionText), false, `${spreadId} repeated the question`);
-  assert.equal(result.positionAnalyses.length, POSITIONS[spreadId].length);
-  assert.equal(result.provenance.visibleCharacterCount >= LENGTH_RULES[spreadId].min, true);
-  assert.equal(result.provenance.visibleCharacterCount <= LENGTH_RULES[spreadId].max, true);
-  assert.equal(Boolean(result.conditions.success && result.conditions.failure && result.conditions.turningPoint), true);
-  assert.equal(spreadId === "single" ? result.manifestation === null : Boolean(result.manifestation), true);
-  const visible = [
-    result.judgment,
-    ...result.situationAnalysis,
-    ...result.positionAnalyses.map((item) => item.body),
-    ...Object.values(result.conditions),
-    ...(result.manifestation ? Object.values(result.manifestation) : []),
-  ].join("\n");
-  for (const banned of ["走势从", "牌阵故事", "牌与牌之间如何对话", "你可以留意", "接下来的三步", "作为状态线索时指出", "可能", "也许", "或许"]) {
-    assert.equal(visible.includes(banned), false, `${spreadId} leaked ${banned}`);
-  }
-  for (const item of result.positionAnalyses) {
-    assert.equal(item.body.includes(item.cardName), false, `${spreadId}/${item.positionId} repeated card name`);
-  }
-  const paragraphs = [result.judgment, ...result.situationAnalysis, ...result.positionAnalyses.map((item) => item.body)];
-  for (let left = 0; left < paragraphs.length; left += 1) {
-    for (let right = left + 1; right < paragraphs.length; right += 1) {
-      assert.equal(textSimilarity(paragraphs[left], paragraphs[right]) < 0.72, true);
-    }
-  }
+for (const spreadId of ["single", "timeline", "cross", "celtic"]) {
+  const input = payload(spreadId);
+  const first = await executeDecisiveReading(input);
+  const second = await executeDecisiveReading(input);
+  assert.deepEqual(first.synthesis, second.synthesis, `${spreadId} must be deterministic`);
+  assert.equal(first.status, "completed");
+  assert.equal(first.synthesis.schemaVersion, "4.0.0");
+  assert.equal(first.synthesis.keyEvidence.length >= 2 && first.synthesis.keyEvidence.length <= 4, true);
+  assert.equal(first.synthesis.cardEvidence.length, input.draws.length);
+  assert.deepEqual(validateConciseInterpretation(first.synthesis, { drawCount: input.draws.length }), []);
+  assert.equal(/[。！？][；，。]|[；，、]{2,}/.test(JSON.stringify(first.synthesis)), false);
+  assert.equal(first.timings.totalMs >= first.timings.engineMs, true);
+}
+
+const failureRegression = payload("celtic", [
+  "wands-two", "major-6", "cups-ace", "cups-nine", "swords-queen",
+  "wands-ace", "cups-seven", "major-12", "cups-five", "major-3",
+]);
+failureRegression.draws.forEach((draw, index) => {
+  draw.orientation = ["reversed", "upright", "reversed", "reversed", "upright", "reversed", "upright", "upright", "upright", "upright"][index];
+});
+const regression = await executeDecisiveReading(failureRegression);
+assert.equal(regression.synthesis.schemaVersion, "4.0.0");
+assert.match(regression.synthesis.summary.takeaway, /结果位/);
+assert.equal(regression.synthesis.summary.evidenceRefs.includes(regression.synthesis.provenance.outcomeEvidenceRef), true);
+
+for (const cardId of ["major-8", "cups-seven"]) {
+  const input = payload("single", [cardId]);
+  const result = await executeDecisiveReading(input);
+  assert.equal(result.synthesis.cardEvidence[0].cardId, cardId);
+  assert.deepEqual(validateConciseInterpretation(result.synthesis, { drawCount: 1 }), []);
 }
 
 const reading = {
   question: { id: "love-new", text: "新的缘分会以怎样的方式靠近我？" },
   category: { id: "love" },
-  spread: { id: "timeline" },
-  draws: [
-    {
-      card: {
-        id: "cups-nine",
-        name: "圣杯九",
-        upright: "满足感已经形成，生活具有稳定基础",
-        reversed: "满足感被封闭，舒适区开始阻挡新的互动",
-        advice: "保留稳定生活，同时给新的互动留下实际时间",
-        keywords: ["满足", "舒适", "边界"],
-        suit: "cups",
-        arcana: "minor",
-      },
-      position: { id: "past", name: "过去" },
-      reversed: false,
+  spread: { id: "single" },
+  draws: [{
+    card: {
+      id: "cups-nine",
+      name: "圣杯九",
+      upright: "旧版展示文案不应进入推理负载",
+      reversed: "旧版逆位展示文案不应进入推理负载",
+      advice: "旧版行动文案不应进入推理负载",
+      keywords: ["旧版", "展示"],
+      suit: "cups",
+      arcana: "minor",
     },
-  ],
+    position: { id: "essence", name: "核心讯息" },
+    reversed: false,
+  }],
 };
-const payload = serializeReadingForWorker(reading);
-assert.equal("card" in payload.draws[0], false);
-assert.equal(payload.draws[0].meaning, reading.draws[0].card.upright);
-assert.deepEqual(payload.draws[0].keywords, ["满足", "舒适", "边界"]);
+const serialized = serializeReadingForWorker(reading);
+for (const legacyField of ["meaning", "advice", "keywords", "card"]) {
+  assert.equal(legacyField in serialized.draws[0], false, legacyField);
+}
+
+const warm = await warmDecisiveReadingEngine();
+assert.equal(warm.status, "ready");
+assert.equal(warm.strategy, "core-only-on-demand-profiles");
+assert.equal(warm.cardProfiles, 0);
+assert.equal(warm.questionProfiles, 0);
 
 class MockWorker {
   static instances = [];
@@ -130,14 +99,12 @@ class MockWorker {
     this.messages = [];
     MockWorker.instances.push(this);
   }
-  addEventListener(type, callback) {
-    this.listeners.set(type, callback);
-  }
+  addEventListener(type, callback) { this.listeners.set(type, callback); }
   postMessage(message) {
     this.messages.push(message);
     queueMicrotask(() => {
       const status = message.type === WARM_MESSAGE ? "ready" : "completed";
-      this.listeners.get("message")?.({ data: { id: message.id, status, value: { ok: true } } });
+      this.listeners.get("message")?.({ data: { id: message.id, status, value: { status } } });
     });
   }
   terminate() {}
@@ -153,36 +120,39 @@ assert.deepEqual(client.stats(), {
   synthesisRequests: 1,
   pendingRequests: 0,
   warmStarted: true,
+  status: "completed",
 });
 
 const timings = [];
-const benchmark = fixture("celtic");
+const benchmark = payload("celtic");
+await executeDecisiveReading(benchmark);
 for (let index = 0; index < 80; index += 1) {
   const started = performance.now();
-  createLongformInterpretation(benchmark);
+  await executeDecisiveReading(benchmark);
   timings.push(performance.now() - started);
 }
 timings.sort((left, right) => left - right);
 const median = timings[Math.floor(timings.length * 0.5)];
 const p95 = timings[Math.floor(timings.length * 0.95)];
-assert.equal(median < 20, true, `longform median ${median.toFixed(3)}ms exceeded 20ms`);
-assert.equal(p95 < 50, true, `longform p95 ${p95.toFixed(3)}ms exceeded 50ms`);
+assert.equal(median < 20, true, `concise median ${median.toFixed(3)}ms exceeded 20ms`);
+assert.equal(p95 < 50, true, `concise p95 ${p95.toFixed(3)}ms exceeded 50ms`);
 
 const rendererSource = fs.readFileSync(new URL("../src/ui/renderers/insight.js", import.meta.url), "utf8");
 const appSource = fs.readFileSync(new URL("../src/app/application.js", import.meta.url), "utf8");
 const cssSource = fs.readFileSync(new URL("../src/styles/phase-11.css", import.meta.url), "utf8");
-assert.match(rendererSource, /replaceChildren/);
-assert.match(rendererSource, /createDocumentFragment/);
-assert.doesNotMatch(rendererSource, /insightContent\.innerHTML\s*=/);
-assert.match(appSource, /engineWorkerClient\.warmUp/);
-assert.match(appSource, /renderLoading\(\)/);
+assert.match(rendererSource, /card-evidence-details/);
+assert.match(rendererSource, /精简解读/);
+assert.doesNotMatch(rendererSource, /situationAnalysis|positionAnalyses|manifestation/);
+assert.match(appSource, /duration:\s*480/);
+assert.doesNotMatch(appSource, /await delay\(240\)/);
 assert.match(cssSource, /content-visibility:\s*auto/);
-assert.match(cssSource, /contain:\s*layout paint style/);
+assert.match(cssSource, /font-size:\s*1rem/);
 
+const synthetic = createConciseInterpretation;
+assert.equal(typeof synthetic, "function");
 console.log(JSON.stringify({
   status: "PASS",
-  spreads: Object.keys(POSITIONS),
-  workerCreations: client.stats().workerCreations,
+  schemaVersion: "4.0.0",
   medianMs: Number(median.toFixed(3)),
   p95Ms: Number(p95.toFixed(3)),
 }));

@@ -1,4 +1,4 @@
-# 星纱塔罗 2.0.0 回滚手册
+# 星纱塔罗 2.1.0 回滚手册
 
 ## 适用范围
 
@@ -32,7 +32,7 @@ python automation/validate.py --scope full
 
 - `.qa/release/release-acceptance.json` 状态为 `PASS`；
 - `.qa/release/performance-report.json` 全部预算通过；
-- `.qa/release/release-2.0.0.json` 状态为 `RELEASED`；
+- `.qa/release/release-2.1.0.json` 状态为 `RELEASED`，且上一完整release为2.0.0；
 - `tests/phase_9_pwa_atomic_update_test.mjs`、`tests/phase_9_release_test.mjs` 和终态门禁通过；
 - Git 工作区干净，最终提交与 CWapi exact-commit RESULT 一致。
 

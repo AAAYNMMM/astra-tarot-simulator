@@ -53,12 +53,13 @@
       "https://astra.local/schemas/observation.schema.json",
       "https://astra.local/schemas/phase-8-evaluation-case/1.0.0",
       "https://astra.local/schemas/position-operator/1.0.0",
+      "https://astra.local/schemas/question-evaluation-policy/1.0.0",
       "https://astra.local/schemas/question-profile/1.0.0",
       "https://json-schema.org/draft/2020-12/schema"
     ],
     "questionOrHistoryUpload": false
   },
-  "release": "2.0.0",
+  "release": "2.1.0",
   "reportId": "phase-9-release-acceptance-v1",
   "schemaVersion": "1.0.0",
   "status": "PASS"

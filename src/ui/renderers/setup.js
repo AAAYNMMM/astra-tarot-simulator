@@ -15,6 +15,7 @@ export function createSetupRenderer({
   selectors,
   cardImagePath,
   cardBackPath,
+  getQuestionEvaluationPolicy = () => null,
 }) {
   const { currentCategory, currentQuestion, currentDeckStyle } = selectors;
 
@@ -41,11 +42,12 @@ export function createSetupRenderer({
     setText(dom.categoryTagline, category.tagline);
     setText(dom.questionDialogHint, `${category.name} · 从以下 ${category.questions.length} 个问题中选择一项`);
     setText(dom.selectedQuestionLabel, question.label);
-    setText(dom.selectedQuestionText, question.text);
+    setText(dom.selectedQuestionText, getQuestionEvaluationPolicy(question.id)?.displayQuestion || question.text);
     const accent = accentToken(category.accent);
     dom.questionPickerButton.dataset.accentToken = accent;
     dom.questionList.dataset.accentToken = accent;
     const nodes = category.questions.map((item) => {
+      const policy = getQuestionEvaluationPolicy(item.id);
       const button = createElement(documentRef, "button", {
         className: selectedClass("question-option", item.id === state.questionId),
         attributes: { type: "button", "aria-pressed": item.id === state.questionId },
@@ -56,7 +58,7 @@ export function createSetupRenderer({
       );
       const copy = createElement(documentRef, "span", { className: "question-copy" });
       copy.append(
-        createElement(documentRef, "strong", { text: item.text }),
+        createElement(documentRef, "strong", { text: policy?.displayQuestion || item.text }),
         createElement(documentRef, "small", { text: item.label }),
       );
       button.append(copy);
@@ -94,17 +96,27 @@ export function createSetupRenderer({
   }
 
   function renderSpreads() {
+    const policy = getQuestionEvaluationPolicy(currentQuestion().id);
     const nodes = spreads.map((spread) => {
+      const allowed = !policy || policy.allowedSpreads.includes(spread.id);
       const button = createElement(documentRef, "button", {
-        className: selectedClass("spread-option", spread.id === state.spreadId),
-        attributes: { type: "button", "aria-pressed": spread.id === state.spreadId },
+        className: selectedClass("spread-option", allowed && spread.id === state.spreadId),
+        attributes: {
+          type: "button",
+          "aria-pressed": allowed && spread.id === state.spreadId,
+          disabled: allowed ? null : true,
+          "aria-disabled": String(!allowed),
+        },
       });
       button.dataset.spreadId = safeIdentifier(spread.id);
       const glyph = createElement(documentRef, "span", { className: "spread-glyph", attributes: { "aria-hidden": "true" } });
       glyph.dataset.cards = String(spread.positions.length);
       for (let index = 0; index < spread.positions.length; index += 1) glyph.append(createElement(documentRef, "i", { attributes: { "aria-hidden": "true" } }));
       const copy = createElement(documentRef, "span", { className: "spread-copy" });
-      copy.append(createElement(documentRef, "strong", { text: spread.name }), createElement(documentRef, "small", { text: spread.description }));
+      copy.append(
+        createElement(documentRef, "strong", { text: spread.name }),
+        createElement(documentRef, "small", { text: allowed ? spread.description : "当前问题不使用这个牌阵" }),
+      );
       button.append(glyph, copy, createElement(documentRef, "span", { className: "spread-count", text: spread.short }));
       return button;
     });
@@ -112,6 +124,9 @@ export function createSetupRenderer({
   }
 
   function setSetupLocked(locked) {
+    const panel = dom.categoryGrid.closest(".setup-panel");
+    panel?.classList.toggle("is-locked", locked);
+    panel?.setAttribute("aria-busy", String(locked));
     for (const container of [dom.categoryGrid, dom.questionList, dom.spreadList, dom.deckStyleList]) {
       container.querySelectorAll("button").forEach((button) => { button.disabled = locked; });
     }

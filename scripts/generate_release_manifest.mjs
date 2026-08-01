@@ -3,10 +3,11 @@ import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
 import { fileURLToPath } from "node:url";
+import { APP_VERSION } from "../src/config/version.js";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const check = process.argv.includes("--check");
-const outputPath = path.join(root, ".qa/release/release-2.0.0.json");
+const outputPath = path.join(root, `.qa/release/release-${APP_VERSION}.json`);
 
 function hash(relative) {
   return crypto.createHash("sha256").update(fs.readFileSync(path.join(root, relative))).digest("hex");
@@ -44,7 +45,7 @@ if (!releaseId) throw new Error("Generated releaseId is missing.");
 
 const report = {
   schemaVersion: "1.0.0",
-  release: "2.0.0",
+  release: APP_VERSION,
   releaseId,
   status: performance.status === "PASS" && acceptance.status === "PASS" ? "RELEASED" : "BLOCKED",
   artifactManifestHash: hash("src/generated/artifact-manifest.json"),
@@ -69,7 +70,7 @@ const report = {
 const serialized = `${JSON.stringify(report, null, 2)}\n`;
 if (check) {
   if (!fs.existsSync(outputPath) || fs.readFileSync(outputPath, "utf8") !== serialized) {
-    console.error("Release 2.0.0 manifest is missing or stale.");
+    console.error(`Release ${APP_VERSION} manifest is missing or stale.`);
     process.exit(1);
   }
 } else {

@@ -1,0 +1,72 @@
+{
+  "$id": "https://astra.local/schemas/question-evaluation-policy/1.0.0",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Astra Tarot Question Evaluation Policy",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "policyVersion", "questionId", "outputContract", "displayQuestion", "timeframeLabel", "allowedSpreads", "observableSignals", "requiredEvidenceDimensions", "expectations", "criterionMode", "criteria"],
+  "properties": {
+    "schemaVersion": { "const": "1.0.0" },
+    "policyVersion": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+    "questionId": { "$ref": "#/$defs/id" },
+    "outputContract": { "enum": ["alignment-grade", "situation-map", "action-prompt", "comparison-support"] },
+    "displayQuestion": { "type": "string", "minLength": 4, "maxLength": 160 },
+    "timeframeLabel": { "type": "string", "minLength": 2, "maxLength": 40 },
+    "allowedSpreads": {
+      "type": "array", "minItems": 1, "uniqueItems": true,
+      "items": { "enum": ["single", "timeline", "cross", "celtic"] }
+    },
+    "observableSignals": {
+      "type": "array", "minItems": 1, "uniqueItems": true,
+      "items": { "$ref": "#/$defs/labeledId" }
+    },
+    "requiredEvidenceDimensions": {
+      "type": "array", "minItems": 1, "uniqueItems": true,
+      "items": { "$ref": "#/$defs/id" }
+    },
+    "expectations": {
+      "type": "array", "uniqueItems": true,
+      "items": { "$ref": "#/$defs/expectation" }
+    },
+    "criterionMode": { "enum": ["none", "optional", "required"] },
+    "criteria": {
+      "type": "array", "uniqueItems": true,
+      "items": { "$ref": "#/$defs/criterion" }
+    }
+  },
+  "$defs": {
+    "id": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+    "labeledId": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "label"],
+      "properties": { "id": { "$ref": "#/$defs/id" }, "label": { "type": "string", "minLength": 2, "maxLength": 80 } }
+    },
+    "construct": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "priority", "supportTags", "counterTags"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "priority": { "enum": ["core", "supporting"] },
+        "supportTags": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "#/$defs/id" } },
+        "counterTags": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "#/$defs/id" } }
+      }
+    },
+    "expectation": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "label", "resultMode", "constructs"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" }, "label": { "type": "string", "minLength": 2, "maxLength": 80 },
+        "resultMode": { "enum": ["alignment-grade", "situation-map"] },
+        "constructs": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "#/$defs/construct" } }
+      }
+    },
+    "criterion": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "label", "focusDimensions"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" }, "label": { "type": "string", "minLength": 2, "maxLength": 80 },
+        "focusDimensions": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "#/$defs/id" } }
+      }
+    }
+  }
+}

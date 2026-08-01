@@ -1,7 +1,7 @@
 import { resolveDeckStyle } from "../config/decks.js";
 
 export function createLegacyReadingRecord(reading) {
-  return {
+  const record = {
     id: reading.id,
     createdAt: reading.createdAt,
     categoryId: reading.category.id,
@@ -16,6 +16,19 @@ export function createLegacyReadingRecord(reading) {
       orientation: draw.reversed ? "逆位" : "正位",
       position: draw.position.name,
     })),
-    headline: reading.synthesis?.headline || "",
+    headline: reading.synthesis?.summary?.takeaway
+      || reading.synthesis?.judgment
+      || reading.synthesis?.headline
+      || "",
   };
+  if (reading.question?.id) record.questionId = reading.question.id;
+  if (reading.evaluationSelection) {
+    record.evaluationSelection = {
+      outputContract: reading.evaluationSelection.outputContract || null,
+      expectationId: reading.evaluationSelection.expectationId || null,
+      criterionId: reading.evaluationSelection.criterionId || null,
+      comparisonOptions: (reading.evaluationSelection.comparisonOptions || []).map((item) => ({ id: item.id, label: item.label })),
+    };
+  }
+  return record;
 }

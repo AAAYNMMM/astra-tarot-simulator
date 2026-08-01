@@ -3,6 +3,7 @@ export function createEventBinder({
 }) {
   const {
     onCategoryClick, onQuestionClick, onSpreadClick, onDeckStyleClick,
+    onExpectationClick, onCriterionClick, onComparisonInput,
     openDialog, closeDialog, startReading, revealCard, revealAllCards,
     requestNewReading, updateInsightTabs, renderSummary, renderCardInsight,
     showToast, renderHistory, toggleHistoryDetail, deleteHistoryRecord,
@@ -13,6 +14,10 @@ export function createEventBinder({
     dom.categoryGrid.addEventListener("click", onCategoryClick);
     dom.questionList.addEventListener("click", onQuestionClick);
     dom.spreadList.addEventListener("click", onSpreadClick);
+    dom.expectationList.addEventListener("click", onExpectationClick);
+    dom.criterionList.addEventListener("click", onCriterionClick);
+    dom.comparisonOptionA.addEventListener("input", onComparisonInput);
+    dom.comparisonOptionB.addEventListener("input", onComparisonInput);
     dom.deckStyleList.addEventListener("click", onDeckStyleClick);
     dom.questionPickerButton.addEventListener("click", () => { if (state.phase === "setup") openDialog(dom.questionDialog); });
     dom.startReading.addEventListener("click", startReading);
@@ -45,9 +50,17 @@ export function createEventBinder({
       const dialog = button.closest("dialog");
       if (dialog) closeDialog(dialog);
     }));
-    documentRef.querySelectorAll(".app-dialog").forEach((dialog) => dialog.addEventListener("click", (event) => {
-      if (event.target === dialog) closeDialog(dialog);
-    }));
+    documentRef.querySelectorAll(".app-dialog").forEach((dialog) => {
+      dialog.addEventListener("click", (event) => {
+        if (event.target === dialog) closeDialog(dialog);
+      });
+      if (dialog !== dom.confirmDialog) {
+        dialog.addEventListener("cancel", (event) => {
+          event.preventDefault();
+          closeDialog(dialog);
+        });
+      }
+    });
     documentRef.querySelectorAll("[data-confirm-cancel]").forEach((button) => button.addEventListener("click", () => resolveConfirmation(false)));
     dom.confirmAccept.addEventListener("click", () => resolveConfirmation(true));
     dom.confirmDialog.addEventListener("cancel", (event) => { event.preventDefault(); resolveConfirmation(false); });

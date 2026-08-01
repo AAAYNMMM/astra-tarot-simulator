@@ -7,10 +7,8 @@ function scrollTop(dom) {
   });
 }
 
-function factorForPosition(synthesis, positionId) {
-  return synthesis?.positionAnalyses?.find((factor) => factor.positionId === positionId)
-    || synthesis?.decisiveFactors?.find((factor) => factor.positionIds.includes(positionId))
-    || null;
+function evidenceForPosition(synthesis, positionId) {
+  return synthesis?.cardEvidence?.find((item) => item.positionId === positionId) || null;
 }
 
 function createElement(documentRef, tag, className = "", text = "") {
@@ -21,7 +19,7 @@ function createElement(documentRef, tag, className = "", text = "") {
 }
 
 function section(documentRef, label, className = "") {
-  const element = createElement(documentRef, "section", `reading-block longform-block ${className}`.trim());
+  const element = createElement(documentRef, "section", `reading-block concise-block ${className}`.trim());
   element.append(createElement(documentRef, "div", "reading-block-label", label));
   return element;
 }
@@ -30,13 +28,26 @@ function paragraph(documentRef, text, className = "") {
   return createElement(documentRef, "p", className, text);
 }
 
-function conditionCard(documentRef, label, text, tone) {
-  const item = createElement(documentRef, "article", `condition-card is-${tone}`);
-  item.append(
+function decisionCard(documentRef, label, item, tone) {
+  const card = createElement(documentRef, "article", `concise-decision-card is-${tone}`);
+  card.append(
     createElement(documentRef, "span", "condition-label", label),
-    paragraph(documentRef, text),
+    paragraph(documentRef, item.text),
   );
-  return item;
+  return card;
+}
+
+function assessmentFactorCard(documentRef, label, factors, tone) {
+  const card = createElement(documentRef, "article", `concise-decision-card assessment-factors is-${tone}`);
+  card.append(createElement(documentRef, "span", "condition-label", label));
+  if (!factors.length) {
+    card.append(paragraph(documentRef, tone === "success" ? "当前没有额外的明显加分项。" : "当前没有额外的明显限制项。"));
+    return card;
+  }
+  const list = createElement(documentRef, "ul", "assessment-factor-list");
+  for (const item of factors) list.append(createElement(documentRef, "li", "", item.text));
+  card.append(list);
+  return card;
 }
 
 export function createInsightRenderer({
@@ -63,7 +74,7 @@ export function createInsightRenderer({
     container.setAttribute("role", "status");
     container.setAttribute("aria-live", "polite");
     container.append(
-      createElement(documentRef, "span", "loading-kicker", "正在整理完整判词"),
+      createElement(documentRef, "span", "loading-kicker", "正在生成精简解读"),
       createElement(documentRef, "div", "loading-line is-wide"),
       createElement(documentRef, "div", "loading-line"),
       createElement(documentRef, "div", "loading-line is-short"),
@@ -77,9 +88,7 @@ export function createInsightRenderer({
     const { card, reversed, position } = draw;
     const deckStyle = resolveDeckStyle(state.reading.deckStyle || currentDeckStyle());
     const orientation = reversed ? "逆位" : "正位";
-    const factor = factorForPosition(state.reading.synthesis, position.id);
-    const directMeaning = factor?.body || (reversed ? card.reversed : card.upright);
-    const role = factor?.role || (reversed ? "阻力" : "推动");
+    const evidence = evidenceForPosition(state.reading.synthesis, position.id);
 
     const article = createElement(documentRef, "article", "card-reading");
     const header = createElement(documentRef, "header", "selected-card-heading");
@@ -98,16 +107,19 @@ export function createInsightRenderer({
     );
     header.append(miniCard, copy);
 
-    const verdict = section(documentRef, "牌位详解", "position-detail-block");
-    verdict.append(paragraph(documentRef, directMeaning));
+    const meaning = section(documentRef, evidence ? "本牌位依据" : "等待综合", "position-detail-block");
+    meaning.append(paragraph(
+      documentRef,
+      evidence?.text || "完整牌阵翻开后，会根据问题、牌位和结构化牌义生成这张牌的具体依据。",
+    ));
     const context = section(documentRef, "在整副牌中的作用");
     const contextBody = createElement(documentRef, "div", "position-context");
     contextBody.append(
-      createElement(documentRef, "strong", "", role),
+      createElement(documentRef, "strong", "", evidence?.role || "待综合"),
       paragraph(documentRef, position.prompt),
     );
     context.append(contextBody);
-    article.append(header, verdict, context);
+    article.append(header, meaning, context);
     return article;
   }
 
@@ -122,69 +134,119 @@ export function createInsightRenderer({
     commit(cache.get(index));
   }
 
-  function buildSummary() {
-    const { synthesis, category } = state.reading;
-    const article = createElement(documentRef, "article", "summary-reading longform-reading");
+  function buildAssessmentSummary(presentation) {
+    const { category } = state.reading;
+    const article = createElement(documentRef, "article", "summary-reading assessment-summary");
     article.dataset.accentToken = accentToken(category.accent);
+    article.dataset.schemaVersion = presentation.schemaVersion;
+    article.dataset.outputContract = presentation.outputContract;
 
-    const hero = createElement(documentRef, "header", "summary-hero longform-hero");
+    const hero = createElement(documentRef, "header", "summary-hero concise-hero");
+    hero.append(createElement(documentRef, "span", "summary-overline", presentation.heading));
+    if (presentation.grade) {
+      const grade = createElement(documentRef, "div", "assessment-grade");
+      grade.append(
+        createElement(documentRef, "strong", "", presentation.grade),
+        createElement(documentRef, "span", "", presentation.gradeLabel || "期待契合"),
+      );
+      hero.append(grade);
+    } else {
+      hero.append(createElement(documentRef, "h3", "", presentation.trend.label));
+    }
+    hero.append(paragraph(documentRef, presentation.summary, "judgment-copy"));
+    article.append(hero);
+
+    const reason = section(documentRef, presentation.grade ? "为什么是这个等级" : "整体走势", "concise-evidence-section");
+    reason.append(paragraph(documentRef, presentation.reason));
+    article.append(reason);
+
+    const factors = section(documentRef, "有利因素与主要限制", "concise-decision-section");
+    const factorGrid = createElement(documentRef, "div", "assessment-factor-grid");
+    factorGrid.append(
+      assessmentFactorCard(documentRef, "主要有利因素", presentation.favorableFactors || [], "success"),
+      assessmentFactorCard(documentRef, "主要限制因素", presentation.limitingFactors || [], "failure"),
+    );
+    factors.append(factorGrid);
+    article.append(factors);
+
+    const guidance = section(documentRef, "现实指引", "concise-decision-section");
+    const action = createElement(documentRef, "article", "concise-action-card");
+    action.append(createElement(documentRef, "span", "condition-label", "下一步"), paragraph(documentRef, presentation.guidance));
+    if (presentation.observableSignals?.length) {
+      const signalText = presentation.observableSignals.map((item) => item.label).join("；");
+      action.append(createElement(documentRef, "small", "", `现实核验：${signalText}`));
+    }
+    guidance.append(action);
+    article.append(guidance);
+    return article;
+  }
+
+  function buildLegacySummary() {
+    const { synthesis, category } = state.reading;
+    const article = createElement(documentRef, "article", "summary-reading concise-reading");
+    article.dataset.accentToken = accentToken(category.accent);
+    article.dataset.schemaVersion = synthesis.schemaVersion;
+    article.dataset.verdictCode = synthesis.summary.verdictCode;
+
+    const hero = createElement(documentRef, "header", "summary-hero concise-hero");
     hero.append(
-      createElement(documentRef, "span", "summary-overline", "FINAL JUDGMENT · 最终判断"),
-      createElement(documentRef, "h3", "", synthesis.verdict.label),
-      paragraph(documentRef, synthesis.judgment, "judgment-copy"),
+      createElement(documentRef, "span", "summary-overline", "READING · 精简解读"),
+      createElement(documentRef, "h3", "", synthesis.summary.verdictLabel),
+      paragraph(documentRef, synthesis.summary.takeaway, "judgment-copy"),
     );
     article.append(hero);
 
-    const situation = section(documentRef, "局势总解", "situation-analysis");
-    for (const text of synthesis.situationAnalysis) {
-      situation.append(paragraph(documentRef, text));
-    }
-    article.append(situation);
-
-    const positions = section(documentRef, "关键牌位详解", "position-analysis-section");
-    const list = createElement(documentRef, "ol", "position-analysis-list");
-    for (const item of synthesis.positionAnalyses) {
-      const row = createElement(documentRef, "li", "position-analysis-card");
-      const heading = createElement(documentRef, "header", "position-analysis-heading");
-      heading.append(
-        createElement(documentRef, "span", "position-index", String(synthesis.positionAnalyses.indexOf(item) + 1).padStart(2, "0")),
-        createElement(documentRef, "strong", "", `${item.positionName}｜${item.cardName} ${item.orientation}`),
-        createElement(documentRef, "em", "", item.role),
+    const evidenceSection = section(documentRef, "关键依据", "concise-evidence-section");
+    const evidenceList = createElement(documentRef, "ul", "concise-evidence-list");
+    for (const item of synthesis.keyEvidence) {
+      const row = createElement(documentRef, "li", "concise-evidence-item");
+      row.append(
+        createElement(documentRef, "strong", "", item.role),
+        paragraph(documentRef, item.text),
       );
-      row.append(heading, paragraph(documentRef, item.body));
-      list.append(row);
+      evidenceList.append(row);
     }
-    positions.append(list);
-    article.append(positions);
+    evidenceSection.append(evidenceList);
+    article.append(evidenceSection);
 
-    const conditions = section(documentRef, "成立、失败与转折条件", "conditions-section");
-    const conditionGrid = createElement(documentRef, "div", "condition-grid");
+    const conditions = section(documentRef, "条件与下一步", "concise-decision-section");
+    const conditionGrid = createElement(documentRef, "div", "concise-decision-grid");
     conditionGrid.append(
-      conditionCard(documentRef, "成立条件", synthesis.conditions.success, "success"),
-      conditionCard(documentRef, "失败条件", synthesis.conditions.failure, "failure"),
-      conditionCard(documentRef, "转折信号", synthesis.conditions.turningPoint, "turning"),
+      decisionCard(documentRef, "成立前提", synthesis.condition.success, "success"),
+      decisionCard(documentRef, "停止信号", synthesis.condition.failure, "failure"),
     );
+    const action = createElement(documentRef, "article", "concise-action-card");
+    action.append(
+      createElement(documentRef, "span", "condition-label", "下一步"),
+      paragraph(documentRef, synthesis.action.text),
+      createElement(documentRef, "small", "", `转折信号：${synthesis.condition.turningPoint.text}`),
+    );
+    conditionGrid.append(action);
     conditions.append(conditionGrid);
     article.append(conditions);
 
-    if (synthesis.manifestation) {
-      const manifestation = section(documentRef, "时间与表现形式", "manifestation-section");
-      const details = createElement(documentRef, "dl", "manifestation-grid");
-      for (const [label, text] of [
-        ["出现渠道", synthesis.manifestation.channel],
-        ["发展速度", synthesis.manifestation.pace],
-        ["演变顺序", synthesis.manifestation.sequence],
-        ["兑现信号", synthesis.manifestation.sign],
-      ]) {
-        details.append(
-          createElement(documentRef, "dt", "", label),
-          createElement(documentRef, "dd", "", text),
-        );
-      }
-      manifestation.append(details);
-      article.append(manifestation);
+    const details = createElement(documentRef, "details", "card-evidence-details");
+    details.append(createElement(documentRef, "summary", "", `查看逐牌依据 · ${synthesis.cardEvidence.length} 张`));
+    const list = createElement(documentRef, "ol", "card-evidence-list");
+    for (const [index, item] of synthesis.cardEvidence.entries()) {
+      const row = createElement(documentRef, "li", "card-evidence-item");
+      const heading = createElement(documentRef, "header", "card-evidence-heading");
+      heading.append(
+        createElement(documentRef, "span", "position-index", String(index + 1).padStart(2, "0")),
+        createElement(documentRef, "strong", "", `${item.positionName}｜${item.cardName} ${item.orientation === "reversed" ? "逆位" : "正位"}`),
+        createElement(documentRef, "em", "", item.role),
+      );
+      row.append(heading, paragraph(documentRef, item.text));
+      list.append(row);
     }
+    details.append(list);
+    article.append(details);
     return article;
+  }
+
+  function buildSummary() {
+    const presentation = state.reading?.assessment?.presentation;
+    return presentation ? buildAssessmentSummary(presentation) : buildLegacySummary();
   }
 
   function renderSummary() {

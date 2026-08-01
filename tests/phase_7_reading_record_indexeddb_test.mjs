@@ -25,7 +25,15 @@ const reading = {
     position: { id: "core", name: "核心" },
     reversed: false,
   }],
-  synthesis: { headline: "旧版摘要" },
+  synthesis: {
+    schemaVersion: "4.0.0",
+    summary: { verdictCode: "adjust", verdictLabel: "调整", takeaway: "先调整路径。", evidenceRefs: ["obs-1"] },
+    keyEvidence: [{ text: "核心证据。", evidenceRefs: ["obs-1"] }],
+    condition: { success: { text: "条件。", evidenceRefs: ["obs-1"] } },
+    action: { text: "下一步。", evidenceRefs: ["obs-1"] },
+    cardEvidence: [{ cardId: "major-0", text: "牌面依据。", evidenceRefs: ["obs-1"] }],
+    provenance: { claimId: "claim-1" },
+  },
 };
 const fingerprint = {
   schemaVersion: "1.0.0",
@@ -46,6 +54,9 @@ const record = createReadingRecord({ reading, artifactFingerprint: fingerprint, 
 assert.deepEqual(validateReadingRecord(record), []);
 assert.equal(record.evidence.status, "available");
 assert.equal(record.evidence.claims[0].id, "claim-1");
+assert.equal(record.interpretation.schemaVersion, "4.0.0");
+assert.equal(record.interpretation.summary.verdictLabel, "调整");
+assert.equal(record.legacySynthesis, null);
 assert.equal("commit" in record.artifactFingerprint, false);
 const { repository } = await createMemoryRepository();
 assert.equal((await repository.save(record)).status, "saved");

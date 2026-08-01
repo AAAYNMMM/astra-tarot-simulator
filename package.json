@@ -59,6 +59,7 @@
     "test:phase-9-performance": "node tests/phase_9_performance_test.mjs",
     "test:phase-9-pwa": "node tests/phase_9_pwa_atomic_update_test.mjs",
     "test:phase-9-release": "node tests/phase_9_release_test.mjs",
+    "test:phase-13": "node tests/offline_evaluation_pilot_test.mjs && node tests/question_evaluation_policy_catalog_test.mjs && node tests/comparison_assessment_test.mjs && node tests/phase_13_integration_test.mjs",
     "test:phase-m": "node tests/phase_m_gate_test.mjs",
     "test:positions": "node tests/position_operator_contract_test.mjs",
     "test:pwa": "node tests/pwa_contract_test.mjs",
