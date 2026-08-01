@@ -12,6 +12,9 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 ASSESSOR = ROOT / "src" / "engine" / "assessment" / "structural-assessor.js"
+sys.path.insert(0, str(ROOT))
+
+from automation.validate import find_node_executable  # noqa: E402
 
 
 def extract_weights(source: str, spread_id: str) -> dict[str, float]:
@@ -23,6 +26,19 @@ def extract_weights(source: str, spread_id: str) -> dict[str, float]:
         raise RuntimeError(f"Missing weight map for {spread_id}.")
     pairs = re.findall(r"(\w+):\s*([0-9.]+)", match.group("body"))
     return {key: float(value) for key, value in pairs}
+
+
+def generate_release_manifest() -> int:
+    node, checked_paths = find_node_executable()
+    if node is None:
+        checked = "\n".join(f"  - {path}" for path in checked_paths)
+        raise RuntimeError(f"Node.js executable was not found.\nChecked:\n{checked}")
+    completed = subprocess.run(
+        [node, "scripts/generate_release_manifest.mjs"],
+        cwd=ROOT,
+        check=False,
+    )
+    return completed.returncode
 
 
 def main() -> int:
@@ -45,6 +61,10 @@ def main() -> int:
             raise RuntimeError(f"{spread_id} outcome weight is not dominant.")
         checked[spread_id] = weights
 
+    manifest_exit_code = generate_release_manifest()
+    if manifest_exit_code != 0:
+        return manifest_exit_code
+
     completed = subprocess.run(
         [sys.executable, "automation/validate.py", "--scope", "full"],
         cwd=ROOT,
@@ -55,6 +75,7 @@ def main() -> int:
         "outcome_weight": 0.6,
         "other_factors_total": 0.4,
         "spreads": sorted(checked),
+        "release_manifest_exit_code": manifest_exit_code,
         "full_validation_exit_code": completed.returncode,
     }
     print(f"CWAPI_REPORT_JSON:{json.dumps(report, ensure_ascii=False, sort_keys=True)}")
