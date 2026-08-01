@@ -5,6 +5,7 @@ import crypto from "node:crypto";
 import { fileURLToPath } from "node:url";
 
 import { validateCompatibilityMatrix } from "../src/platform/release-compatibility.js";
+import { APP_VERSION } from "../src/config/version.js";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const check = process.argv.includes("--check");
@@ -74,8 +75,8 @@ const requiredIconPaths = new Set((manifest.icons || []).map((item) => item.src.
 const checks = {
   performance: performanceReport.status === "PASS",
   blindEvaluation: blind.status === "PASS" && blind.caseCount === 48,
-  compatibility: compatibility.release === "2.0.0",
-  artifactVersion: artifact.appVersion === "2.0.0",
+  compatibility: compatibility.release === APP_VERSION,
+  artifactVersion: artifact.appVersion === APP_VERSION,
   iconFiles: iconChecks.every((item) => item.exists && requiredIconPaths.has(item.path)),
   license: fs.existsSync(path.join(root, "LICENSE")),
   thirdParty: fs.existsSync(path.join(root, "THIRD_PARTY_NOTICES.md")),
@@ -87,7 +88,7 @@ const checks = {
 const report = {
   schemaVersion: "1.0.0",
   reportId: "phase-9-release-acceptance-v1",
-  release: "2.0.0",
+  release: APP_VERSION,
   checks,
   privacy: {
     externalRuntimeOrigins: externalOrigins,

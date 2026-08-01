@@ -108,9 +108,32 @@
               </button>
             </section>
 
-            <section class="setup-section" aria-labelledby="spreadHeading">
+            <section class="setup-section evaluation-setup" id="evaluationSetupSection" aria-labelledby="evaluationSetupHeading">
               <div class="section-title">
                 <span class="section-number">03</span>
+                <div>
+                  <h2 id="evaluationSetupHeading">解读方式</h2>
+                  <p id="evaluationSetupHint">先明确本次想观察的方向</p>
+                </div>
+              </div>
+              <div class="evaluation-choice-list" id="expectationList"></div>
+              <div class="evaluation-choice-list" id="criterionList"></div>
+              <div class="comparison-path-fields" id="comparisonPathFields" hidden>
+                <label>
+                  <span>路径 A</span>
+                  <input id="comparisonOptionA" type="text" maxlength="40" autocomplete="off" placeholder="例如：继续当前方向" />
+                </label>
+                <label>
+                  <span>路径 B</span>
+                  <input id="comparisonOptionB" type="text" maxlength="40" autocomplete="off" placeholder="例如：尝试替代方向" />
+                </label>
+              </div>
+              <p class="evaluation-validation" id="evaluationValidationMessage" role="status" aria-live="polite"></p>
+            </section>
+
+            <section class="setup-section" aria-labelledby="spreadHeading">
+              <div class="section-title">
+                <span class="section-number">04</span>
                 <div>
                   <h2 id="spreadHeading">选择牌阵</h2>
                   <p>不同牌阵会照亮不同角度</p>
@@ -121,7 +144,7 @@
 
             <section class="setup-section" aria-labelledby="deckStyleHeading">
               <div class="section-title">
-                <span class="section-number">04</span>
+                <span class="section-number">05</span>
                 <div>
                   <h2 id="deckStyleHeading">选择牌面</h2>
                   <p>四套真实牌组 · 正面与牌背一一对应</p>
@@ -332,8 +355,8 @@
           <section>
             <span>04</span>
             <div>
-              <h3>查看完整的综合解读</h3>
-              <p>翻开全部牌后会生成综合讯息与三步建议。结果用于自我觉察，真正的决定始终由你作出。</p>
+              <h3>先看关键结论</h3>
+              <p>翻开全部牌后会先显示结论、关键依据、成立前提和下一步；逐牌依据可按需展开。结果用于自我觉察，真正的决定始终由你作出。</p>
             </div>
           </section>
           <div class="help-note">

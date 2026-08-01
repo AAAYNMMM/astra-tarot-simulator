@@ -7,7 +7,7 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const read = (relative) => fs.readFileSync(path.join(root, relative), "utf8");
 const readJson = (relative) => JSON.parse(read(relative));
 const progress = read("docs/PROGRESS.md");
-const release = readJson(".qa/release/release-2.0.0.json");
+const release = readJson(".qa/release/release-2.1.0.json");
 const acceptance = readJson(".qa/release/release-acceptance.json");
 const performance = readJson(".qa/release/performance-report.json");
 

@@ -278,8 +278,12 @@ def baseline_steps(node: str) -> list[tuple[str, list[str]]]:
         ("node-phase-9-terminal-gate", [node, "tests/phase_9_gate_test.mjs"]),
         ("node-phase-10-decisive-worker", [node, "tests/phase_10_decisive_worker_test.mjs"]),
         ("node-phase-10-terminal-gate", [node, "tests/phase_10_gate_test.mjs"]),
-        ("node-phase-11-longform-performance", [node, "tests/phase_11_longform_performance_test.mjs"]),
+        ("node-phase-11-concise-performance", [node, "tests/phase_11_longform_performance_test.mjs"]),
         ("node-phase-11-terminal-gate", [node, "tests/phase_11_gate_test.mjs"]),
+        ("node-phase-13-offline-pilot", [node, "tests/offline_evaluation_pilot_test.mjs"]),
+        ("node-phase-13-policy-catalog", [node, "tests/question_evaluation_policy_catalog_test.mjs"]),
+        ("node-phase-13-comparison", [node, "tests/comparison_assessment_test.mjs"]),
+        ("node-phase-13-integration", [node, "tests/phase_13_integration_test.mjs"]),
         (
             "node-module-contract",
             [node, "tests/module_contract_test.mjs"],
@@ -315,6 +319,7 @@ def full_steps(node: str) -> list[tuple[str, list[str]]]:
         ("phase-2-terminal-gate", [node, "tests/phase_2_gate_test.mjs"]),
         ("phase-3-terminal-gate", [node, "tests/phase_3_gate_test.mjs"]),
         ("phase-4-terminal-gate", [node, "tests/phase_4_gate_test.mjs"]),
+        ("phase-11-real-data-matrix", [node, "tests/phase_11_real_data_matrix_test.mjs"]),
         ("browser-harness", [python, "tests/browser_harness.py"]),
         (
             "module-size-strict",

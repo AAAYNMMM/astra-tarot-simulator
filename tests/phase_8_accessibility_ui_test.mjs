@@ -35,8 +35,11 @@ const synthesis = await synthesizeReading(reading);
 assert.equal(synthesis.engineResult.claim.validation.status, "valid");
 assert.equal(synthesis.engineResult.rendered.plainText.length > 0, true);
 assert.notEqual(synthesis.synthesis.verdict.code, "indeterminate");
-const structured = createStructuredHistorySummary(synthesis.engineResult);
+const structured = createStructuredHistorySummary(synthesis.engineResult, synthesis.synthesis);
 assert.equal(structured.status, "available");
+assert.equal(structured.schemaVersion, "2.0.0");
+assert.equal(structured.interpretationSchemaVersion, "4.0.0");
+assert.equal(structured.verdictLabel, synthesis.synthesis.summary.verdictLabel);
 assert.equal(structured.evidenceCount, synthesis.engineResult.claim.evidenceRefs.length);
 const view = historyRecordView({
   id: reading.id,
@@ -49,15 +52,20 @@ const view = historyRecordView({
   cards: [{ position: spread.positions[0].name, name: card.name, orientation: "正位" }],
 }, (value) => value);
 assert.equal(view.structured.status, "available");
+assert.equal(view.verdictLabel, synthesis.synthesis.summary.verdictLabel);
+assert.equal(view.meta.includes(structured.conclusionType), false);
 assert.equal(moveRovingFocus([1, 2, 3], 0, "ArrowLeft"), 2);
 assert.equal(moveRovingFocus([1, 2, 3], 1, "End"), 2);
 
 const index = fs.readFileSync(path.join(root, "index.html"), "utf8");
 const application = fs.readFileSync(path.join(root, "src/app/application.js"), "utf8");
+const events = fs.readFileSync(path.join(root, "src/app/events.js"), "utf8");
 assert.match(index, /role="tablist"/);
 assert.match(index, /role="tabpanel"/);
 assert.match(index, /aria-live="polite"/);
 assert.match(application, /createPhase8Runtime/);
 assert.match(application, /phase8\.saveStructured\(state\.reading\)/);
+assert.match(events, /dialog\.addEventListener\("cancel"/);
+assert.match(events, /closeDialog\(dialog\)/);
 assert.match(fs.readFileSync(path.join(root, "src/app/controllers/phase-8-runtime.js"), "utf8"), /installAccessibility/);
 console.log("AX-001/UI-001/UI-002/AX-002 engine UI and accessibility contracts passed.");

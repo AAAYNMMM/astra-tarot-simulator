@@ -50,11 +50,16 @@ export function createPhase8Runtime({
       enumerable: false,
       configurable: true,
     });
+    Object.defineProperty(reading, "assessment", {
+      value: result.value.assessment || null,
+      enumerable: false,
+      configurable: true,
+    });
     return result.value.synthesis;
   }
 
   function enrichLegacyRecord(record, reading) {
-    const structured = createStructuredHistorySummary(reading?.engineResult);
+    const structured = createStructuredHistorySummary(reading?.engineResult, reading?.synthesis, reading?.assessment);
     if (structured) record.structured = structured;
     return record;
   }

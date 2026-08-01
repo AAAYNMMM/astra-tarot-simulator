@@ -8,6 +8,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+APP_VERSION = "2.1.0"
 
 
 def read_json(relative: str) -> dict:
@@ -27,7 +28,7 @@ blind_result = read_json(".qa/evaluation/blind-result.json")
 review_packet = read_json(".qa/evaluation/human-review-packet.json")
 performance = read_json(".qa/release/performance-report.json")
 acceptance = read_json(".qa/release/release-acceptance.json")
-release = read_json(".qa/release/release-2.0.0.json")
+release = read_json(f".qa/release/release-{APP_VERSION}.json")
 compatibility = read_json("src/config/compatibility-matrix.json")
 
 core_scores = report.get("coreScores", {})
@@ -54,8 +55,8 @@ check(
 )
 check("performance", performance.get("status") == "PASS", str(performance.get("measurements", {})))
 check("release-acceptance", acceptance.get("status") == "PASS", str(acceptance.get("checks", {})))
-check("release-manifest", release.get("status") == "RELEASED" and release.get("release") == "2.0.0", str(release.get("releaseId")))
-check("compatibility", compatibility.get("release") == "2.0.0", str(compatibility.get("versions", {})))
+check("release-manifest", release.get("status") == "RELEASED" and release.get("release") == APP_VERSION, str(release.get("releaseId")))
+check("compatibility", compatibility.get("release") == APP_VERSION, str(compatibility.get("versions", {})))
 
 required = [
     "src/core/errors/app-error.js",
@@ -89,7 +90,7 @@ else:
 status = "PASS" if all(item["status"] == "PASS" for item in checks) else "FAIL"
 payload = {
     "schemaVersion": "2.0.0",
-    "doctor": "release-2.0.0",
+    "doctor": f"release-{APP_VERSION}",
     "status": status,
     "checks": checks,
 }

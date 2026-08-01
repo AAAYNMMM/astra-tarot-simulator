@@ -1,3 +1,5 @@
+import { APP_VERSION } from "../../config/version.js";
+
 export function createRecoveryActions({
   windowRef,
   documentRef,
@@ -12,7 +14,7 @@ export function createRecoveryActions({
     }
     if (action === "export-diagnostics") {
       try {
-        const content = diagnosticLog.exportReport({ appVersion: "2.0.0-dev" });
+        const content = diagnosticLog.exportReport({ appVersion: APP_VERSION });
         const blob = new windowRef.Blob([content], { type: "application/json" });
         const url = windowRef.URL.createObjectURL(blob);
         const anchor = documentRef.createElement("a");

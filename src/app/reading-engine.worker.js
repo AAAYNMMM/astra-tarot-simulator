@@ -23,6 +23,7 @@ self.addEventListener("message", async (event) => {
       id: message.id,
       status: "failed",
       error: {
+        code: error?.code || "ASTRA-ENGINE-EXECUTION",
         name: error?.name || "Error",
         message: error?.message || "Reading worker failed.",
       },

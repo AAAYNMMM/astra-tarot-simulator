@@ -44,7 +44,7 @@ sandbox.self = new sandbox.ServiceWorkerGlobalScope();
 vm.createContext(sandbox);
 vm.runInContext(read("src/generated/precache-manifest.js"), sandbox);
 const precache = sandbox.self.__ASTRA_PRECACHE_MANIFEST__;
-assert.ok(precache.releaseId.startsWith("2.0.0-"));
+assert.ok(precache.releaseId.startsWith("2.1.0-"));
 assert.equal(precache.artifactManifestHash, hash(artifactText.replace(/\r\n?/g, "\n")));
 assert.equal(precache.optionalDecks.rws.length, 79);
 assert.equal(precache.optionalDecks.arnoult.length, 79);

@@ -8,6 +8,7 @@ import { createDeterministicStreams } from "../src/core/random/deterministic-str
 import { executeReadingEngine } from "../src/engine/runtime/reading-engine.js";
 import { CARD_PROFILE_IDS } from "../src/knowledge/cards/registry.js";
 import { SPREADS } from "../src/knowledge/spreads/definitions.js";
+import { APP_VERSION } from "../src/config/version.js";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const check = process.argv.includes("--check");
@@ -93,6 +94,7 @@ const checks = {
 };
 const report = {
   schemaVersion: "1.0.0",
+  release: APP_VERSION,
   reportId: "phase-9-performance-v1",
   environment: {
     runtime: process.version,

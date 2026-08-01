@@ -11,6 +11,7 @@ export function createReadingEngineWorkerClient({
   let warmPromise = null;
   let workerCreations = 0;
   let synthesisRequests = 0;
+  let status = "warming";
   const pending = new Map();
 
   function failAll(error) {
@@ -38,15 +39,21 @@ export function createReadingEngineWorkerClient({
       clearTimeout(item.timer);
       pending.delete(message.id);
       if (message.status === "completed" || message.status === "ready") {
+        status = message.status;
         item.resolve(message.value);
       } else {
         const error = new Error(message.error?.message || "牌面推理失败。");
         error.name = message.error?.name || "ReadingWorkerError";
+        error.code = message.error?.code || "ASTRA-ENGINE-EXECUTION";
+        status = "failed";
         item.reject(error);
       }
     });
     worker.addEventListener("error", () => {
-      failAll(new Error("牌面推理 Worker 已终止。"));
+      const error = new Error("牌面推理 Worker 已终止。");
+      error.code = "ASTRA-ENGINE-WORKER-TERMINATED";
+      status = "failed";
+      failAll(error);
       worker?.terminate?.();
       worker = null;
       warmPromise = null;
@@ -57,10 +64,14 @@ export function createReadingEngineWorkerClient({
   function request(type, payload = null) {
     const activeWorker = ensureWorker();
     const id = `reading-${Date.now()}-${sequence += 1}`;
+    status = type === WARM_MESSAGE ? "warming" : "running";
     return new Promise((resolve, reject) => {
       const timer = setTimeout(() => {
         pending.delete(id);
-        reject(new Error(type === WARM_MESSAGE ? "牌面引擎预热超时。" : "牌面推理超时。"));
+        const error = new Error(type === WARM_MESSAGE ? "牌面引擎预热超时。" : "牌面推理超时。");
+        error.code = type === WARM_MESSAGE ? "ASTRA-ENGINE-WARM-TIMEOUT" : "ASTRA-ENGINE-TIMEOUT";
+        status = "failed";
+        reject(error);
       }, timeoutMs);
       pending.set(id, { resolve, reject, timer });
       activeWorker.postMessage({ type, id, payload });
@@ -79,7 +90,6 @@ export function createReadingEngineWorkerClient({
 
   function synthesize(payload) {
     synthesisRequests += 1;
-    void warmUp().catch(() => {});
     return request(WORKER_MESSAGE, payload);
   }
 
@@ -89,6 +99,7 @@ export function createReadingEngineWorkerClient({
       synthesisRequests,
       pendingRequests: pending.size,
       warmStarted: Boolean(warmPromise),
+      status,
     });
   }
 

@@ -8,6 +8,7 @@ import json
 import os
 import pathlib
 import shutil
+import socket
 import subprocess
 import tempfile
 import threading
@@ -46,6 +47,14 @@ HARNESS_JS = r'''
 const checks = [];
 const record = (name, passed, detail = '') => checks.push({ name, passed: Boolean(passed), detail: String(detail) });
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+const waitFor = async (predicate, timeout = 8000) => {
+  const until = Date.now() + timeout;
+  while (Date.now() < until) {
+    if (predicate()) return true;
+    await sleep(25);
+  }
+  return false;
+};
 const deadline = Date.now() + 12000;
 while (!['ready', 'failed'].includes(document.documentElement.dataset.astraBoot || '') && Date.now() < deadline) {
   await sleep(50);
@@ -61,6 +70,13 @@ const cspResponse = await fetch(location.href, { cache: 'no-store' });
 const csp = cspResponse.headers.get('content-security-policy') || '';
 record('csp-self-only', csp.includes("script-src 'self'") && csp.includes("style-src-attr 'none'"));
 record('csp-no-unsafe', !csp.includes("'unsafe-inline'") && !csp.includes("'unsafe-eval'"));
+const iconResponses = await Promise.all([
+  '/icon-192.png', '/icon-512.png', '/icon-maskable-192.png', '/icon-maskable-512.png',
+].map(async (path) => {
+  const response = await fetch(path, { cache: 'no-store' });
+  return { path, ok: response.ok, type: response.headers.get('content-type') || '' };
+}));
+record('manifest-icons-http', iconResponses.every((item) => item.ok && item.type.startsWith('image/png')), JSON.stringify(iconResponses));
 
 const historyButton = document.querySelector('#historyButton');
 historyButton?.click();
@@ -71,10 +87,142 @@ record('legacy-history-visible', historyList?.textContent?.includes(malicious));
 record('legacy-history-no-image', !historyList?.querySelector('img'));
 record('legacy-history-no-handler', !historyList?.querySelector('[onerror]'));
 record('no-script-execution', globalThis.__astraInjected !== true);
+document.querySelector('#historyDialog [data-close-dialog]')?.click();
+await sleep(50);
+
+const flowTimings = {};
+for (const [spreadId, count] of [['single', 1], ['timeline', 3], ['cross', 5], ['celtic', 10]]) {
+  document.querySelector(`[data-spread-id="${spreadId}"]`)?.click();
+  const started = performance.now();
+  document.querySelector('#startReading')?.click();
+  await sleep(50);
+  if (document.querySelector('#confirmDialog')?.open) {
+    document.querySelector('#confirmAccept')?.click();
+  }
+  const dealt = await waitFor(() => (
+    document.querySelectorAll('#cardTable .drawn-card').length === count
+    && [...document.querySelectorAll('#cardTable .card-hitbox')].every((button) => !button.disabled)
+  ));
+  const dealtMs = performance.now() - started;
+  record(`${spreadId}-dealt`, dealt, document.querySelectorAll('#cardTable .drawn-card').length);
+  record(`${spreadId}-start-to-dealt-budget`, dealt && dealtMs <= 2000, dealtMs.toFixed(1));
+  const revealStarted = performance.now();
+  if (count === 1) document.querySelector('#cardTable .card-hitbox')?.click();
+  else document.querySelector('#revealAllButton')?.click();
+  const completed = await waitFor(() => (
+    Boolean(document.querySelector('.assessment-summary[data-schema-version="1.0.0"]'))
+    || Boolean(document.querySelector('.concise-reading[data-schema-version="4.0.0"]'))
+    || Boolean(document.querySelector('.recovery-panel'))
+  ), 10000);
+  const revealMs = performance.now() - revealStarted;
+  const summary = document.querySelector('.assessment-summary[data-schema-version="1.0.0"], .concise-reading[data-schema-version="4.0.0"]');
+  record(`${spreadId}-completed`, completed && Boolean(summary) && !document.querySelector('.recovery-panel'));
+  record(`${spreadId}-reveal-to-summary-budget`, Boolean(summary) && revealMs <= 2500, revealMs.toFixed(1));
+  const assessmentSummary = summary?.classList.contains('assessment-summary');
+  record(`${spreadId}-summary-contract`, assessmentSummary ? (
+    summary?.dataset.outputContract === 'situation-map'
+    && summary?.querySelectorAll('.assessment-factor-grid').length === 1
+    && summary?.querySelectorAll('.card-evidence-item').length === 0
+    && summary?.querySelectorAll('.assessment-grade').length === 0
+  ) : (
+    summary?.querySelectorAll('.concise-evidence-item').length >= 2
+    && summary?.querySelectorAll('.concise-evidence-item').length <= 4
+    && summary?.querySelectorAll('.card-evidence-item').length === count
+  ));
+  flowTimings[spreadId] = { dealtMs: Number(dealtMs.toFixed(1)), revealMs: Number(revealMs.toFixed(1)) };
+  if (spreadId !== 'celtic') {
+    document.querySelector('#newReadingButton')?.click();
+    await waitFor(() => !document.querySelector('#startReading')?.disabled);
+  }
+}
+
+document.querySelector('#newReadingButton')?.click();
+await waitFor(() => document.querySelector('#startReading') && !document.querySelector('#startReading').disabled);
+document.querySelector('[data-category-id="decision"]')?.click();
+document.querySelector('[data-question-id="decision-option"]')?.click();
+const optionA = document.querySelector('#comparisonOptionA');
+const optionB = document.querySelector('#comparisonOptionB');
+if (optionA && optionB) {
+  optionA.value = '继续现有路径';
+  optionA.dispatchEvent(new Event('input', { bubbles: true }));
+  optionB.value = '测试替代路径';
+  optionB.dispatchEvent(new Event('input', { bubbles: true }));
+}
+document.querySelector('[data-criterion-id="stability"]')?.click();
+record('comparison-setup-valid', !document.querySelector('#startReading')?.disabled);
+document.querySelector('#startReading')?.click();
+const comparisonDealt = await waitFor(() => (
+  document.querySelectorAll('#cardTable .drawn-card').length === 6
+  && [...document.querySelectorAll('#cardTable .card-hitbox')].every((button) => !button.disabled)
+));
+record('comparison-independent-dealt', comparisonDealt, document.querySelectorAll('#cardTable .drawn-card').length);
+document.querySelector('#revealAllButton')?.click();
+const comparisonCompleted = await waitFor(() => Boolean(
+  document.querySelector('.assessment-summary[data-output-contract="comparison-support"]')
+  || document.querySelector('.recovery-panel')
+), 10000);
+const comparisonSummary = document.querySelector('.assessment-summary[data-output-contract="comparison-support"]');
+record('comparison-completed', comparisonCompleted && Boolean(comparisonSummary) && !document.querySelector('.recovery-panel'));
+record('comparison-no-grade-or-card-list', (
+  comparisonSummary?.querySelectorAll('.assessment-grade').length === 0
+  && comparisonSummary?.querySelectorAll('.card-evidence-item').length === 0
+  && /不会自动选出赢家|没有[^。]*自动赢家/.test(comparisonSummary?.textContent || '')
+));
+
+document.querySelector('#historyButton')?.click();
+await sleep(80);
+record('history-headline', /积极|平稳|变化|困难|受阻|调整|推进|等待|停止|转向|牌阵已完成/.test(historyList?.textContent || ''));
+record('history-hides-raw-code', ![...historyList?.querySelectorAll('.history-summary') || []]
+  .some((item) => /conditional|分数\s*0\./.test(item.textContent || '')));
+
+let offlineReady = false;
+let offlineCacheDetail = {};
+if ('serviceWorker' in navigator && 'caches' in globalThis) {
+  try {
+    let registration = await Promise.race([
+      navigator.serviceWorker.ready,
+      sleep(20000).then(() => null),
+    ]);
+    const requiredOfflinePaths = [
+      '/index.html', '/src/app/bootstrap.js',
+      '/icon-192.png', '/icon-512.png',
+      '/icon-maskable-192.png', '/icon-maskable-512.png',
+    ];
+    const stableDeadline = Date.now() + 20000;
+    let cacheNames = [];
+    while (Date.now() < stableDeadline) {
+      registration = registration || await navigator.serviceWorker.getRegistration();
+      cacheNames = await caches.keys();
+      const hasStableGroups = ['knowledge', 'shell', 'startup'].every((kind) => (
+        cacheNames.some((name) => name.startsWith('astra-release-') && name.endsWith(`-${kind}`))
+      ));
+      const hasStaging = cacheNames.some((name) => name.startsWith('astra-stage-'));
+      if (registration?.active?.state === 'activated' && hasStableGroups && !hasStaging) break;
+      await sleep(50);
+    }
+    const cached = Object.fromEntries(await Promise.all(requiredOfflinePaths.map(async (path) => [
+      path,
+      Boolean(await caches.match(path)),
+    ])));
+    const hasStableGroups = ['knowledge', 'shell', 'startup'].every((kind) => (
+      cacheNames.some((name) => name.startsWith('astra-release-') && name.endsWith(`-${kind}`))
+    ));
+    const hasStaging = cacheNames.some((name) => name.startsWith('astra-stage-'));
+    offlineReady = registration?.active?.state === 'activated'
+      && hasStableGroups
+      && !hasStaging
+      && Object.values(cached).every(Boolean);
+    offlineCacheDetail = { workerState: registration?.active?.state || '', cacheNames, cached };
+  } catch (error) {
+    offlineCacheDetail = { error: String(error) };
+  }
+}
+record('offline-reopen-cache-ready', offlineReady, JSON.stringify(offlineCacheDetail));
 
 const result = {
   browser: new URL(location.href).searchParams.get('browser') || 'unknown',
   userAgent: navigator.userAgent,
+  flowTimings,
   checks,
   passed: checks.every((item) => item.passed),
 };
@@ -100,14 +248,23 @@ class HarnessHandler(AppRequestHandler):
         self.wfile.write(body)
 
     def do_GET(self) -> None:
-        path = urllib.parse.urlsplit(self.path).path
+        parsed = urllib.parse.urlsplit(self.path)
+        path = parsed.path
+        if path == "/offline-reopen-probe" or "offline-reopen-probe" in self.headers.get("Referer", ""):
+            self.close_connection = True
+            try:
+                self.connection.shutdown(socket.SHUT_RDWR)
+            except OSError:
+                pass
+            self.connection.close()
+            return
         if path == "/__astra/test-setup.js":
             self._send_bytes(SETUP_JS.encode("utf-8"), "text/javascript; charset=utf-8")
             return
         if path == "/__astra/test-harness.js":
             self._send_bytes(HARNESS_JS.encode("utf-8"), "text/javascript; charset=utf-8")
             return
-        if path in {"/", "/index.html"}:
+        if path in {"/", "/index.html"} and "browser" in urllib.parse.parse_qs(parsed.query):
             html = (ROOT / "index.html").read_text(encoding="utf-8")
             marker = '<script type="module" src="src/app/bootstrap.js"></script>'
             injected = (
@@ -196,39 +353,169 @@ def command(target: BrowserTarget, profile: pathlib.Path, url: str) -> list[str]
     ]
 
 
-def stop_process_tree(process: subprocess.Popen[bytes]) -> None:
-    if process.poll() is not None:
+def verify_offline_reopen(
+    target: BrowserTarget,
+    profile: pathlib.Path,
+    base_url: str,
+    *,
+    required: bool,
+) -> dict[str, object]:
+    if not required:
+        return {"name": "offline-reopen-navigation", "passed": True, "detail": "covered-by-primary-browser"}
+    if target.engine != "chromium":
+        return {"name": "offline-reopen-navigation", "passed": True, "detail": "not-required"}
+    url = urllib.parse.urljoin(base_url, "offline-reopen-probe")
+    offline_command = [
+        str(target.executable),
+        "--headless=new",
+        "--disable-gpu",
+        "--disable-extensions",
+        "--disable-background-networking",
+        "--disable-sync",
+        "--no-first-run",
+        "--no-default-browser-check",
+        "--proxy-server=http://127.0.0.1:9",
+        "--proxy-bypass-list=<-loopback>",
+        "--virtual-time-budget=8000",
+        "--dump-dom",
+        f"--user-data-dir={profile}",
+        url,
+    ]
+    try:
+        completed = subprocess.run(
+            offline_command,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.DEVNULL,
+            check=False,
+            timeout=25,
+        )
+        dom = completed.stdout.decode("utf-8", errors="replace")
+        passed = 'data-astra-boot="ready"' in dom and "星纱塔罗" in dom
+        detail = f"returncode={completed.returncode};domBytes={len(completed.stdout)}"
+    except subprocess.TimeoutExpired as error:
+        output = error.stdout or b""
+        dom = output.decode("utf-8", errors="replace") if isinstance(output, bytes) else str(output)
+        passed = 'data-astra-boot="ready"' in dom and "星纱塔罗" in dom
+        detail = f"timeout;domBytes={len(output)}"
+    return {"name": "offline-reopen-navigation", "passed": passed, "detail": detail}
+
+
+def stop_profile_processes(profile: pathlib.Path) -> None:
+    if os.name != "nt":
         return
-    if os.name == "nt":
+    temp_root = pathlib.Path(tempfile.gettempdir()).resolve()
+    resolved = profile.resolve()
+    if resolved.parent != temp_root or not resolved.name.startswith("astra-"):
+        return
+    powershell = shutil.which("powershell") or shutil.which("pwsh")
+    if not powershell:
+        return
+    environment = {**os.environ, "ASTRA_TEST_PROFILE": str(resolved)}
+    script = """
+$profilePath = [System.IO.Path]::GetFullPath($env:ASTRA_TEST_PROFILE)
+Get-CimInstance Win32_Process |
+  Where-Object {
+    $_.CommandLine -and
+    $_.CommandLine.IndexOf($profilePath, [System.StringComparison]::OrdinalIgnoreCase) -ge 0
+  } |
+  ForEach-Object { Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue }
+"""
+    subprocess.run(
+        [powershell, "-NoProfile", "-NonInteractive", "-Command", script],
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+        check=False,
+        env=environment,
+        timeout=15,
+    )
+
+
+def stop_all_astra_browser_processes() -> None:
+    if os.name != "nt":
+        return
+    powershell = shutil.which("powershell") or shutil.which("pwsh")
+    if not powershell:
+        return
+    temp_root = pathlib.Path(tempfile.gettempdir()).resolve()
+    environment = {**os.environ, "ASTRA_TEST_TEMP_ROOT": str(temp_root)}
+    script = """
+$profilePrefix = [System.IO.Path]::Combine(
+  [System.IO.Path]::GetFullPath($env:ASTRA_TEST_TEMP_ROOT),
+  'astra-'
+)
+$browserNames = @('chrome.exe', 'msedge.exe', 'brave.exe', 'firefox.exe')
+Get-CimInstance Win32_Process |
+  Where-Object {
+    $browserNames -contains $_.Name -and
+    $_.CommandLine -and
+    $_.CommandLine.IndexOf($profilePrefix, [System.StringComparison]::OrdinalIgnoreCase) -ge 0
+  } |
+  ForEach-Object { Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue }
+"""
+    subprocess.run(
+        [powershell, "-NoProfile", "-NonInteractive", "-Command", script],
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+        check=False,
+        env=environment,
+        timeout=15,
+    )
+
+
+def stop_process_tree(process: subprocess.Popen[bytes], profile: pathlib.Path) -> None:
+    if os.name == "nt" and process.poll() is None:
         subprocess.run(
             ["taskkill", "/PID", str(process.pid), "/T", "/F"],
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL,
             check=False,
         )
-    else:
+    elif os.name != "nt" and process.poll() is None:
         process.terminate()
     try:
         process.wait(timeout=8)
     except subprocess.TimeoutExpired:
         process.kill()
         process.wait(timeout=5)
+    stop_profile_processes(profile)
 
 
-def remove_profile(profile: pathlib.Path) -> None:
-    for attempt in range(20):
+def remove_profile(profile: pathlib.Path) -> str | None:
+    temp_root = pathlib.Path(tempfile.gettempdir()).resolve()
+    resolved = profile.resolve()
+    if resolved.parent != temp_root or not resolved.name.startswith("astra-"):
+        return f"refused unsafe profile cleanup: {resolved}"
+    for attempt in range(32):
         try:
-            shutil.rmtree(profile)
-            return
+            shutil.rmtree(resolved)
+            return None
         except FileNotFoundError:
-            return
-        except PermissionError:
-            if attempt == 19:
-                raise
+            return None
+        except (PermissionError, OSError) as error:
+            if attempt == 31:
+                return f"profile cleanup deferred: {type(error).__name__}: {error}"
             time.sleep(0.25)
 
 
-def run_browser(target: BrowserTarget, base_url: str) -> dict[str, object]:
+def cleanup_stale_profiles(max_age_seconds: int = 86400) -> None:
+    temp_root = pathlib.Path(tempfile.gettempdir()).resolve()
+    cutoff = time.time() - max_age_seconds
+    for profile in temp_root.glob("astra-*-*"):
+        try:
+            resolved = profile.resolve()
+            if (
+                resolved.parent == temp_root
+                and resolved.name.startswith("astra-")
+                and resolved.is_dir()
+                and resolved.stat().st_mtime < cutoff
+            ):
+                stop_profile_processes(resolved)
+                remove_profile(resolved)
+        except OSError:
+            continue
+
+
+def run_browser(target: BrowserTarget, base_url: str, *, verify_offline: bool) -> dict[str, object]:
     HarnessHandler.result_event.clear()
     HarnessHandler.result_payload = None
     profile = pathlib.Path(tempfile.mkdtemp(prefix=f"astra-{target.name}-"))
@@ -238,17 +525,32 @@ def run_browser(target: BrowserTarget, base_url: str) -> dict[str, object]:
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL,
     )
+    result: dict[str, object]
     try:
-        if not HarnessHandler.result_event.wait(25):
-            return {"browser": target.name, "engine": target.engine, "passed": False, "error": "timeout"}
-        payload = HarnessHandler.result_payload or {}
-        return {"engine": target.engine, **payload}
+        if not HarnessHandler.result_event.wait(60):
+            result = {"browser": target.name, "engine": target.engine, "passed": False, "error": "timeout"}
+        else:
+            payload = HarnessHandler.result_payload or {}
+            result = {"engine": target.engine, **payload}
     finally:
-        stop_process_tree(process)
-        remove_profile(profile)
+        stop_process_tree(process, profile)
+    if bool(result.get("passed")):
+        time.sleep(0.5)
+        offline_check = verify_offline_reopen(target, profile, base_url, required=verify_offline)
+        checks = result.get("checks")
+        if isinstance(checks, list):
+            checks.append(offline_check)
+        result["passed"] = bool(offline_check.get("passed"))
+    stop_profile_processes(profile)
+    cleanup_warning = remove_profile(profile)
+    if cleanup_warning:
+        result["cleanupWarning"] = cleanup_warning
+    return result
 
 
 def main() -> int:
+    stop_all_astra_browser_processes()
+    cleanup_stale_profiles(max_age_seconds=60)
     targets = candidates()
     if not any(target.engine == "chromium" for target in targets):
         print(json.dumps({"passed": False, "error": "No Chromium browser found", "targets": []}, ensure_ascii=False))
@@ -259,7 +561,15 @@ def main() -> int:
     thread.start()
     port = int(server.server_address[1])
     try:
-        results = [run_browser(target, f"http://127.0.0.1:{port}/") for target in targets]
+        primary_offline_target = next(target for target in targets if target.engine == "chromium")
+        results = [
+            run_browser(
+                target,
+                f"http://127.0.0.1:{port}/",
+                verify_offline=target == primary_offline_target,
+            )
+            for target in targets
+        ]
     finally:
         server.shutdown()
         server.server_close()

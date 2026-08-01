@@ -1,8 +1,13 @@
 from __future__ import annotations
 
 import pathlib
+import functools
+import threading
 import unittest
+import urllib.request
 
+from src.server.http import AppRequestHandler
+from src.server.lifecycle import AppServer
 from src.server.security import CSP_POLICY, is_loopback_host, resolve_static_path
 from src.server.session import COOKIE_NAME, SessionGuard
 
@@ -40,3 +45,27 @@ class ServerSecurityTests(unittest.TestCase):
         self.assertTrue(is_loopback_host("localhost:57321"))
         self.assertTrue(is_loopback_host("[::1]:57321"))
         self.assertFalse(is_loopback_host("192.168.1.5:57321"))
+
+    def test_manifest_icons_are_served_as_png(self) -> None:
+        handler = functools.partial(AppRequestHandler, directory=str(ROOT))
+        server = AppServer(("127.0.0.1", 0), handler, session_guard=SessionGuard())
+        thread = threading.Thread(target=server.serve_forever, daemon=True)
+        thread.start()
+        port = int(server.server_address[1])
+        try:
+            for name in (
+                "icon-192.png",
+                "icon-512.png",
+                "icon-maskable-192.png",
+                "icon-maskable-512.png",
+            ):
+                with self.subTest(name=name), urllib.request.urlopen(
+                    f"http://127.0.0.1:{port}/{name}", timeout=3
+                ) as response:
+                    self.assertEqual(response.status, 200)
+                    self.assertEqual(response.headers.get_content_type(), "image/png")
+                    self.assertEqual(response.read(8), b"\x89PNG\r\n\x1a\n")
+        finally:
+            server.shutdown()
+            server.server_close()
+            thread.join(timeout=3)

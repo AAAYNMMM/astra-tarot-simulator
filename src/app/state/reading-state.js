@@ -9,6 +9,10 @@ export function createReadingState({ categories, initialDeckStyle }) {
     questionId: firstQuestion.id,
     spreadId: "timeline",
     deckStyleId: initialDeckStyle,
+    expectationId: null,
+    criterionId: null,
+    comparisonOptionA: "",
+    comparisonOptionB: "",
     phase: "setup",
     reading: null,
     revealed: new Set(),
@@ -27,4 +31,8 @@ export function resetReadingState(state) {
   state.selectedIndex = null;
   state.activeTab = "card";
   state.completing = false;
+  state.expectationId = null;
+  state.criterionId = null;
+  state.comparisonOptionA = "";
+  state.comparisonOptionB = "";
 }

@@ -21,6 +21,8 @@ import { bindDom } from "../ui/dom.js";
 import { createHistoryRenderer } from "../ui/renderers/history.js";
 import { createInsightRenderer } from "../ui/renderers/insight.js";
 import { createSetupRenderer } from "../ui/renderers/setup.js";
+import { createEvaluationSetupRenderer } from "../ui/renderers/evaluation-setup.js";
+import { getQuestionEvaluationPolicy } from "../knowledge/evaluation/question-evaluation-policies.js";
 
 export function startApplication({ windowRef = globalThis.window, documentRef = globalThis.document } = {}) {
   if (!windowRef || !documentRef) {
@@ -66,7 +68,15 @@ export function startApplication({ windowRef = globalThis.window, documentRef = 
       selectors,
       cardImagePath,
       cardBackPath,
+      getQuestionEvaluationPolicy,
     });
+    const currentPolicy = () => getQuestionEvaluationPolicy(state.questionId);
+    const {
+      renderEvaluationSetup,
+      isEvaluationSelectionValid,
+      readSelectionFromInputs,
+      setLocked: setEvaluationSetupLocked,
+    } = createEvaluationSetupRenderer({ documentRef: document, state, dom, currentPolicy });
     const { delay, runShuffleAnimation } = createReadingAnimation({
       windowRef: window,
       documentRef: document,
@@ -103,7 +113,13 @@ export function startApplication({ windowRef = globalThis.window, documentRef = 
     function resetReadingView() {
       resetReadingState(state);
 
+      const policy = currentPolicy();
+      if (policy && !policy.allowedSpreads.includes(state.spreadId)) state.spreadId = policy.allowedSpreads[0];
+
       setSetupLocked(false);
+      setEvaluationSetupLocked(false);
+      renderEvaluationSetup();
+      renderSpreads();
       setJourneyStep(1);
       dom.readingKicker.textContent = "THE VEIL IS QUIET";
       dom.readingTitle.textContent = "等待你的问题";
@@ -113,7 +129,9 @@ export function startApplication({ windowRef = globalThis.window, documentRef = 
       dom.cardTable.hidden = true;
       dom.cardTable.innerHTML = "";
       delete dom.cardTable.dataset.spreadId;
+      delete dom.cardTable.dataset.comparison;
       delete dom.readingPanel.dataset.spreadId;
+      delete dom.readingPanel.dataset.comparison;
       dom.stageGuidance.hidden = true;
       dom.statusText.textContent = "牌面正在静候你的选择";
       dom.insightTabs.hidden = true;
@@ -125,12 +143,37 @@ export function startApplication({ windowRef = globalThis.window, documentRef = 
 
     async function startReading() {
       if (state.phase !== "setup") return;
-      state.reading = createReading();
+      if (!isEvaluationSelectionValid()) {
+        renderEvaluationSetup();
+        showToast("请先完成本次期待或判断重点的选择", "!");
+        return;
+      }
+      const policy = currentPolicy();
+      const evaluationSelection = readSelectionFromInputs();
+      const recent = loadHistory().find((record) => (
+        record.questionId === state.questionId
+        && (record.evaluationSelection?.expectationId || null) === evaluationSelection.expectationId
+        && (record.evaluationSelection?.criterionId || null) === evaluationSelection.criterionId
+        && Date.now() - new Date(record.createdAt).getTime() < 24 * 60 * 60 * 1000
+      ));
+      if (recent) {
+        const confirmed = await confirmAction(
+          "近期已有相同设问",
+          `上次记录：${recent.headline || "牌阵已完成"} 建议先核对现实是否出现新变化；如果只是想重抽更高等级，可以先保留上次结果。`,
+          "仍然继续",
+        );
+        if (!confirmed) return;
+      }
+      state.reading = createReading({
+        evaluationSelection,
+        questionText: policy?.displayQuestion || currentQuestion().text,
+      });
       state.phase = "shuffling";
       state.revealed = new Set();
       state.selectedIndex = null;
       state.completing = false;
       setSetupLocked(true);
+      setEvaluationSetupLocked(true);
       setJourneyStep(2);
 
       const { category, question, spread } = state.reading;
@@ -141,10 +184,12 @@ export function startApplication({ windowRef = globalThis.window, documentRef = 
       dom.metaCategory.dataset.accentToken = accentToken(category.accent);
       dom.metaSpread.textContent = spread.name;
       dom.readingPanel.dataset.spreadId = spread.id;
+      if (state.reading.comparison) dom.readingPanel.dataset.comparison = "true";
       dom.idleState.hidden = true;
       dom.cardTable.hidden = true;
       dom.cardTable.innerHTML = "";
       delete dom.cardTable.dataset.spreadId;
+      delete dom.cardTable.dataset.comparison;
       dom.stageGuidance.hidden = true;
       dom.newReadingButton.hidden = true;
       dom.revealAllButton.hidden = true;
@@ -198,22 +243,25 @@ export function startApplication({ windowRef = globalThis.window, documentRef = 
     async function dealCards() {
       if (!state.reading) return;
       state.phase = "dealing";
+      dom.statusText.textContent = "正在发牌，请稍候";
       const { draws } = state.reading;
       dom.cardTable.dataset.count = String(draws.length);
       dom.cardTable.dataset.spreadId = state.reading.spread.id;
+      if (state.reading.comparison) dom.cardTable.dataset.comparison = "true";
       dom.cardTable.innerHTML = draws.map(cardMarkup).join("");
       dom.cardTable.hidden = false;
 
       const cardElements = [...dom.cardTable.querySelectorAll(".drawn-card")];
       const stageRect = dom.readingStage.getBoundingClientRect();
       const cardRects = cardElements.map((cardElement) => cardElement.getBoundingClientRect());
-      cardElements.forEach((cardElement) => cardElement.classList.add("is-dealt"));
+      const animations = [];
       for (const [index, cardElement] of cardElements.entries()) {
+        cardElement.classList.add("is-dealt");
         const cardRect = cardRects[index];
         const originX = stageRect.left + stageRect.width / 2 - (cardRect.left + cardRect.width / 2);
         const originY = stageRect.top + stageRect.height * 0.75 - (cardRect.top + cardRect.height / 2);
         if (!reducedMotion.matches && cardElement.animate) {
-          cardElement.animate(
+          const animation = cardElement.animate(
             [
               {
                 opacity: 0,
@@ -223,14 +271,16 @@ export function startApplication({ windowRef = globalThis.window, documentRef = 
               { opacity: 1, transform: "translate(0, 0) scale(1) rotate(0deg)" },
             ],
             {
-              duration: 620,
+              duration: 480,
+              delay: Math.min(index * 32, 288),
               easing: "cubic-bezier(0.18, 0.78, 0.2, 1)",
               fill: "both",
             },
           );
+          animations.push(animation.finished.catch(() => {}));
         }
-        await delay(240);
       }
+      await Promise.all(animations);
 
       dom.cardTable.querySelectorAll(".card-hitbox").forEach((button) => {
         button.disabled = false;
@@ -251,6 +301,20 @@ export function startApplication({ windowRef = globalThis.window, documentRef = 
       `;
     }
 
+    function markCardRevealed(index, { flip = true } = {}) {
+      const draw = state.reading?.draws[index];
+      const element = dom.cardTable.querySelector(`[data-card-index="${index}"].drawn-card`);
+      const button = element?.querySelector(".card-hitbox");
+      if (!draw || !element || !button) return null;
+      state.revealed.add(index);
+      if (flip) element.classList.add("is-flipped");
+      button.setAttribute(
+        "aria-label",
+        `${draw.position.name}：${draw.card.name}，${draw.reversed ? "逆位" : "正位"}。点击查看解读`,
+      );
+      return { draw, element, button };
+    }
+
     async function revealCard(index, { select = true } = {}) {
       if (!state.reading || !["revealing", "complete"].includes(state.phase)) return;
       if (state.revealed.has(index)) {
@@ -259,25 +323,14 @@ export function startApplication({ windowRef = globalThis.window, documentRef = 
       }
       if (state.phase === "complete") return;
 
-      const draw = state.reading.draws[index];
-      const element = dom.cardTable.querySelector(`[data-card-index="${index}"].drawn-card`);
-      const button = element?.querySelector(".card-hitbox");
-      if (!element || !button) return;
-
-      state.revealed.add(index);
-      element.classList.add("is-flipped");
-      button.setAttribute(
-        "aria-label",
-        `${draw.position.name}：${draw.card.name}，${draw.reversed ? "逆位" : "正位"}。点击查看解读`,
-      );
+      if (!markCardRevealed(index)) return;
       const total = state.reading.draws.length;
       dom.statusText.textContent = `正在显现牌意 · ${state.revealed.size} / ${total} 张已翻开`;
       dom.guidanceText.textContent =
         state.revealed.size === total ? "所有牌面已显现，正在汇总解读" : "继续翻牌，完整的故事正在形成";
 
-      await delay(460);
+      await delay(260);
       if (select) selectCard(index);
-      await delay(310);
 
       if (
         state.revealed.size === total &&
@@ -294,11 +347,23 @@ export function startApplication({ windowRef = globalThis.window, documentRef = 
       const remaining = state.reading.draws
         .map((_, index) => index)
         .filter((index) => !state.revealed.has(index));
-      for (const index of remaining) {
-        await revealCard(index, { select: true });
-        await delay(140);
+      for (const [offset, index] of remaining.entries()) {
+        const marked = markCardRevealed(index, { flip: false });
+        if (!marked) continue;
+        window.setTimeout(
+          () => marked.element.classList.add("is-flipped"),
+          reducedMotion.matches ? 0 : offset * 42,
+        );
       }
-      dom.revealAllButton.disabled = false;
+      const total = state.reading.draws.length;
+      dom.statusText.textContent = `正在显现牌意 · ${state.revealed.size} / ${total} 张已翻开`;
+      dom.guidanceText.textContent = "所有牌面已显现，正在生成精简解读";
+      const completion = completeReading();
+      await Promise.all([
+        completion,
+        delay(Math.min(900, 460 + remaining.length * 42)),
+      ]);
+      if (state.phase !== "complete") dom.revealAllButton.disabled = false;
     }
 
     function selectCard(index) {
@@ -317,16 +382,25 @@ export function startApplication({ windowRef = globalThis.window, documentRef = 
     async function completeReading() {
       if (!state.reading || state.completing) return;
       state.completing = true;
+      state.phase = "interpreting";
       renderLoading();
-      dom.statusText.textContent = "正在本地生成完整判词";
+      dom.statusText.textContent = "正在本地生成精简解读";
       await new Promise((resolve) => window.requestAnimationFrame(resolve));
       state.reading.synthesis = await phase8.synthesize(state.reading);
-      if (!state.reading.synthesis) { state.completing = false; return; }
+      if (!state.reading.synthesis) {
+        state.phase = "failed";
+        dom.statusText.textContent = "解读未完成 · 牌面已保留";
+        dom.guidanceText.textContent = "可以使用原牌重试，或重新开始一次占卜";
+        dom.revealAllButton.hidden = true;
+        dom.newReadingButton.hidden = false;
+        state.completing = false;
+        return;
+      }
       state.phase = "complete";
       setJourneyStep(3);
       dom.stageGuidance.hidden = false;
-      dom.guidanceText.textContent = "牌阵已经完整显现，完整判词已生成";
-      dom.statusText.textContent = "解读完成 · 长篇判词已生成";
+      dom.guidanceText.textContent = "牌阵已经完整显现，精简解读已生成";
+      dom.statusText.textContent = "解读完成 · 关键结论已生成";
       dom.revealAllButton.hidden = true;
       dom.insightTabs.hidden = false;
       state.activeTab = "summary";
@@ -400,24 +474,61 @@ export function startApplication({ windowRef = globalThis.window, documentRef = 
       state.categoryId = button.dataset.categoryId;
       const category = currentCategory();
       state.questionId = category.questions[0].id;
+      state.expectationId = null;
+      state.criterionId = null;
+      state.comparisonOptionA = "";
+      state.comparisonOptionB = "";
+      const policy = currentPolicy();
+      if (policy && !policy.allowedSpreads.includes(state.spreadId)) state.spreadId = policy.allowedSpreads[0];
       renderCategories();
       renderQuestions();
+      renderSpreads();
+      renderEvaluationSetup();
     }
 
     function onQuestionClick(event) {
       const button = event.target.closest("[data-question-id]");
       if (!button || state.phase !== "setup") return;
       state.questionId = button.dataset.questionId;
+      state.expectationId = null;
+      state.criterionId = null;
+      state.comparisonOptionA = "";
+      state.comparisonOptionB = "";
+      const policy = currentPolicy();
+      if (policy && !policy.allowedSpreads.includes(state.spreadId)) state.spreadId = policy.allowedSpreads[0];
       renderQuestions();
+      renderSpreads();
+      renderEvaluationSetup();
       closeDialog(dom.questionDialog);
       dom.questionPickerButton.focus();
     }
 
     function onSpreadClick(event) {
       const button = event.target.closest("[data-spread-id]");
-      if (!button || state.phase !== "setup") return;
+      if (!button || button.disabled || state.phase !== "setup") return;
       state.spreadId = button.dataset.spreadId;
       renderSpreads();
+    }
+
+    function onExpectationClick(event) {
+      const button = event.target.closest("[data-expectation-id]");
+      if (!button || button.disabled || state.phase !== "setup") return;
+      state.expectationId = button.dataset.expectationId;
+      renderEvaluationSetup();
+    }
+
+    function onCriterionClick(event) {
+      const button = event.target.closest("[data-criterion-id]");
+      if (!button || button.disabled || state.phase !== "setup") return;
+      state.criterionId = button.dataset.criterionId;
+      renderEvaluationSetup();
+    }
+
+    function onComparisonInput(event) {
+      if (state.phase !== "setup") return;
+      if (event.target === dom.comparisonOptionA) state.comparisonOptionA = event.target.value;
+      if (event.target === dom.comparisonOptionB) state.comparisonOptionB = event.target.value;
+      setEvaluationSetupLocked(false);
     }
 
     function onDeckStyleClick(event) {
@@ -440,6 +551,9 @@ export function startApplication({ windowRef = globalThis.window, documentRef = 
         onCategoryClick,
         onQuestionClick,
         onSpreadClick,
+        onExpectationClick,
+        onCriterionClick,
+        onComparisonInput,
         onDeckStyleClick,
         openDialog,
         closeDialog,

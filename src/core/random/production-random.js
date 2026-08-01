@@ -77,6 +77,7 @@ export function createReadingRandomContextFactory({
       draw: deterministic.streams.draw,
       orientation: deterministic.streams.orientation,
       rendering: deterministic.streams.rendering,
+      derive: deterministic.derive,
     });
   };
 }
