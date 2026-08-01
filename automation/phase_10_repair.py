@@ -9,6 +9,10 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 verdict_path = ROOT / "src" / "engine" / "decisive" / "verdict.js"
 content = verdict_path.read_text(encoding="utf-8")
+# The connector normalized two ordinary closing quotes to a backslash followed
+# by U+201D. Repair only that transport artifact; intentional Chinese quotes in
+# visible sentences remain untouched.
+content = content.replace("\\”", '"')
 content = content.replace('replace(/\\s+/g, " ”).trim()', 'replace(/\\s+/g, " ").trim()')
 content = content.replace('replace(/\\s+/g, " ”)', 'replace(/\\s+/g, " ")')
 with verdict_path.open("w", encoding="utf-8", newline="\n") as handle:
