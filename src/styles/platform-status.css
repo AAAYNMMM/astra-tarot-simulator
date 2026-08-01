@@ -1,0 +1,18 @@
+.platform-status {
+  display: grid;
+  gap: 0.55rem;
+  margin: 0 0 0.8rem;
+  padding: 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 0.8rem;
+  background: rgba(6, 5, 15, 0.55);
+  font-size: 0.78rem;
+}
+
+.platform-status[hidden] { display: none; }
+.platform-status-row { display: flex; justify-content: space-between; gap: 0.8rem; }
+.platform-status-row strong { color: rgba(255, 255, 255, 0.92); }
+.platform-status-actions { display: flex; flex-wrap: wrap; gap: 0.45rem; }
+.platform-status-actions button { min-height: 2.4rem; }
+.platform-status progress { width: 100%; }
+@media (max-width: 720px) { .platform-status-row { align-items: flex-start; flex-direction: column; gap: 0.2rem; } }

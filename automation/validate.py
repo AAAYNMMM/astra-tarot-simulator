@@ -269,6 +269,13 @@ def baseline_steps(node: str) -> list[tuple[str, list[str]]]:
             "node-pwa-contract",
             [node, "tests/pwa_contract_test.mjs"],
         ),
+        ("phase-9-performance-report-check", [node, "scripts/measure_release.mjs", "--check"]),
+        ("phase-9-release-acceptance-check", [node, "scripts/release_acceptance.mjs", "--check"]),
+        ("phase-9-release-manifest-check", [node, "scripts/generate_release_manifest.mjs", "--check"]),
+        ("node-phase-9-pwa", [node, "tests/phase_9_pwa_atomic_update_test.mjs"]),
+        ("node-phase-9-performance", [node, "tests/phase_9_performance_test.mjs"]),
+        ("node-phase-9-release", [node, "tests/phase_9_release_test.mjs"]),
+        ("node-phase-9-terminal-gate", [node, "tests/phase_9_gate_test.mjs"]),
         (
             "node-module-contract",
             [node, "tests/module_contract_test.mjs"],

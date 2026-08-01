@@ -1,0 +1,57 @@
+{
+  "schemaVersion": "1.0.0",
+  "release": "2.0.0",
+  "application": {
+    "current": "2.0.0",
+    "previousCompleteRelease": "2.0.0-dev",
+    "minimumReadable": "1.0.0"
+  },
+  "pwaProtocol": "1.0.0",
+  "storageSchema": "2.0.0",
+  "historySchemas": {
+    "1.0.0": {
+      "mode": "read-only",
+      "reason": "legacy localStorage snapshot"
+    },
+    "2.0.0": {
+      "mode": "read-write",
+      "reason": null
+    }
+  },
+  "migration": {
+    "supportedFrom": ["1.0.0", "2.0.0"],
+    "rollbackPreservesUpgradedHistory": true
+  },
+  "browsers": [
+    {
+      "platform": "Windows 10/11",
+      "browser": "Chrome 151",
+      "status": "SUPPORTED"
+    },
+    {
+      "platform": "Windows 10/11",
+      "browser": "Edge Chromium",
+      "status": "SUPPORTED-WITH-DEGRADATION"
+    },
+    {
+      "platform": "Windows 10/11",
+      "browser": "Brave Chromium",
+      "status": "SUPPORTED-WITH-DEGRADATION"
+    },
+    {
+      "platform": "Windows 10/11",
+      "browser": "Firefox",
+      "status": "SUPPORTED-WITH-DEGRADATION"
+    },
+    {
+      "platform": "Android",
+      "browser": "Chrome",
+      "status": "NOT-TESTED"
+    },
+    {
+      "platform": "iOS",
+      "browser": "Safari",
+      "status": "NOT-TESTED"
+    }
+  ]
+}

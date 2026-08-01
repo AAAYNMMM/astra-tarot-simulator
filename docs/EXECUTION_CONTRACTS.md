@@ -441,3 +441,17 @@ Card、Question、Position、Observation或固定结构图变化会使Phase 5相
 - AX-001和AX-002覆盖键盘、焦点返回、标签页、动态牌桌、状态朗读以及牌位、名称和正逆位的非视觉表达。
 - UI-001必须让真实应用消费Observation→Relation→Claim→Text新版引擎；UI不得改写引擎输入输出。UI-002显示结构化历史摘要并保留旧历史只读兼容。
 - 阶段出口：最终盲测和Doctor通过，真实UI接入新版引擎，错误可恢复，基础及动态无障碍通过；当前commit取得CWapi full RESULT。
+
+### Phase 9终态要求
+
+`PLAT-001`至`REL-004`必须作为同一阶段连续收口：
+
+- `PLAT-001`使用临时release cache、传输字节哈希和版本化多标签协议；waiting worker不得自行切换，必需资源失败不得激活；至少保留当前与上一完整release。
+- `PERF-001`记录应用壳、知识、牌组、规则计算、ReadingRecord、诊断和目标历史规模预算，报告包含环境、数据规模、阈值和结果。
+- `PWA-002`提供192与512普通PNG和独立maskable图标；首次安装不缓存四套牌组；牌组按需显示进度、空间、失败、恢复和单套删除。
+- `REL-002`覆盖性能、离线三态、隐私、盲测、CSP、无障碍和浏览器支持声明。
+- `REL-005`提供机器可读兼容矩阵、混合版本检测、历史读写/只读范围和不破坏已升级历史的回滚策略。
+- `REL-003`完成README、CHANGELOG、LICENSE、THIRD_PARTY_NOTICES、浏览器矩阵和2.0发布说明。
+- `REL-001`发生在全部发布前运行代码、数据、缓存、迁移、资源清单和生成产物之后；其后任何相关变化都使RESULT失效。
+- `REL-004`只在所有报告通过后生成2.0.0 release manifest并固定关键产物哈希。
+- 阶段出口：2.0.0发布证据齐全，最终commit取得CWapi full RESULT，工作区验证前后均干净。

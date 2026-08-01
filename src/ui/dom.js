@@ -8,6 +8,9 @@ const REQUIRED_IDS = Object.freeze([
   "insightContent", "newReadingButton", "revealAllButton", "historyButton", "helpButton",
   "historyDialog", "helpDialog", "confirmDialog", "confirmTitle", "confirmMessage",
   "confirmAccept", "historyList", "clearHistoryButton", "toastRegion", "installButton",
+  "platformStatus", "offlineState", "releaseState", "storageState", "clientState",
+  "updateState", "cacheDeckButton", "deleteDeckButton", "updateAppButton",
+  "deckCacheProgress", "deckCacheText",
 ]);
 
 export function bindDom(documentRef = globalThis.document) {

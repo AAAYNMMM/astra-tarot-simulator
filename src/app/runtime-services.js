@@ -77,10 +77,12 @@ export function createRuntimeServices(windowRef = globalThis.window) {
     randomUnit: businessRandom.randomUnit,
     secureShuffle: businessRandom.secureShuffle,
     createReadingRandomContext,
-    registerServiceWorker: () =>
+    registerServiceWorker: (options = {}) =>
       registerPwaServiceWorker({
         navigatorRef: windowRef.navigator,
         locationRef: windowRef.location,
+        windowRef,
+        ...options,
       }),
     registerLocalLifecycle: lifecycle.register,
     offlineStatus,

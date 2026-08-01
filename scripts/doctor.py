@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate Phase 8 evaluation, recovery, accessibility, and UI readiness."""
+"""Validate Phase 8 quality and Phase 9 release readiness."""
 
 from __future__ import annotations
 
@@ -25,18 +25,14 @@ report = read_json(".qa/evaluation/phase-8-evaluation-report.json")
 blind_manifest = read_json(".qa/evaluation/blind-manifest.json")
 blind_result = read_json(".qa/evaluation/blind-result.json")
 review_packet = read_json(".qa/evaluation/human-review-packet.json")
+performance = read_json(".qa/release/performance-report.json")
+acceptance = read_json(".qa/release/release-acceptance.json")
+release = read_json(".qa/release/release-2.0.0.json")
+compatibility = read_json("src/config/compatibility-matrix.json")
 
 core_scores = report.get("coreScores", {})
-check(
-    "core-quality",
-    bool(core_scores) and all(float(value) >= 9 for value in core_scores.values()),
-    f"core scores={core_scores}",
-)
-check(
-    "evaluation-suites",
-    report.get("summary", {}).get("status") == "PASS",
-    f"total cases={report.get('summary', {}).get('totalCases')}",
-)
+check("core-quality", bool(core_scores) and all(float(value) >= 9 for value in core_scores.values()), f"core scores={core_scores}")
+check("evaluation-suites", report.get("summary", {}).get("status") == "PASS", f"total cases={report.get('summary', {}).get('totalCases')}")
 check(
     "blind-custody",
     blind_manifest.get("repositoryContainsCaseContent") is False
@@ -53,10 +49,13 @@ check(
 )
 check(
     "human-review",
-    review_packet.get("sourceIdentityHidden") is True
-    and int(review_packet.get("caseCount", 0)) >= 12,
+    review_packet.get("sourceIdentityHidden") is True and int(review_packet.get("caseCount", 0)) >= 12,
     f"review cases={review_packet.get('caseCount')}",
 )
+check("performance", performance.get("status") == "PASS", str(performance.get("measurements", {})))
+check("release-acceptance", acceptance.get("status") == "PASS", str(acceptance.get("checks", {})))
+check("release-manifest", release.get("status") == "RELEASED" and release.get("release") == "2.0.0", str(release.get("releaseId")))
+check("compatibility", compatibility.get("release") == "2.0.0", str(compatibility.get("versions", {})))
 
 required = [
     "src/core/errors/app-error.js",
@@ -65,9 +64,18 @@ required = [
     "src/ui/accessibility/controller.js",
     "src/app/controllers/engine-synthesis.js",
     "src/engine/runtime/reading-engine.js",
+    "src/platform/release-protocol.js",
+    "src/platform/pwa-update-coordinator.js",
+    "src/platform/release-compatibility.js",
+    "LICENSE",
+    "THIRD_PARTY_NOTICES.md",
+    "icon-192.png",
+    "icon-512.png",
+    "icon-maskable-192.png",
+    "icon-maskable-512.png",
 ]
 for relative in required:
-    check(f"file:{relative}", (ROOT / relative).is_file(), "required Phase 8 runtime module")
+    check(f"file:{relative}", (ROOT / relative).is_file(), "required runtime or release artifact")
 
 for path in ROOT.rglob("*"):
     if path.is_file() and "blind" in path.name.lower() and any(
@@ -80,8 +88,8 @@ else:
 
 status = "PASS" if all(item["status"] == "PASS" for item in checks) else "FAIL"
 payload = {
-    "schemaVersion": "1.0.0",
-    "doctor": "phase-8",
+    "schemaVersion": "2.0.0",
+    "doctor": "release-2.0.0",
     "status": status,
     "checks": checks,
 }

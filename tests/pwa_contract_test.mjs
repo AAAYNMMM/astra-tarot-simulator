@@ -9,9 +9,11 @@ import { installImageFallbacks } from "../src/ui/image-fallback.js";
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const sw = fs.readFileSync(path.join(root, "sw.js"), "utf8");
 assert.match(sw, /^importScripts\("\.\/src\/generated\/precache-manifest\.js"\);/);
-assert.equal(sw.includes("skipWaiting"), false);
 assert.equal(sw.includes("clients.claim"), false);
-assert.equal(sw.includes("caches.keys"), false);
+assert.equal(/addEventListener\("install"[\s\S]{0,600}skipWaiting/.test(sw), false);
+assert.match(sw, /ASTRA_ACTIVATE_RELEASE/);
+assert.match(sw, /cleanupOldReleases/);
+assert.match(sw, /caches\.keys/);
 assert.match(sw, /request\.mode === "navigate"/);
 assert.match(sw, /url\.origin !== self\.location\.origin/);
 assert.match(sw, /url\.pathname\.startsWith\("\/__astra\/"\)/);
@@ -57,7 +59,7 @@ const client = createOfflineStatusClient({
   MessageChannelCtor: FakeMessageChannel,
 });
 assert.equal((await client.refresh()).states["APP-SHELL-READY"], true);
-assert.equal(await client.cacheDeck("rws"), true);
+assert.equal((await client.cacheDeck("rws")).ready, true);
 assert.equal(rootElement.dataset.defaultDeckReady, "true");
 
 let errorHandler = null;

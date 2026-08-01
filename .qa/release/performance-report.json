@@ -1,0 +1,47 @@
+{
+  "schemaVersion": "1.0.0",
+  "reportId": "phase-9-performance-v1",
+  "environment": {
+    "runtime": "v24.18.0",
+    "platform": "win32",
+    "architecture": "x64",
+    "cases": 30,
+    "spread": "celtic"
+  },
+  "budgets": {
+    "shellBytes": 2500000,
+    "knowledgeBytes": 8000000,
+    "defaultDeckBytes": 45000000,
+    "optionalDeckBytes": 70000000,
+    "engineP95Ms": 250,
+    "readingRecordBytes": 524288,
+    "diagnosticsBytes": 262144,
+    "targetHistoryRecords": 1000
+  },
+  "measurements": {
+    "shellBytes": 368219,
+    "knowledgeBytes": 686320,
+    "deckBytes": {
+      "arnoult": 61475074,
+      "piedmont": 6506159,
+      "rws": 3511317,
+      "swiss": 8498433
+    },
+    "engineMedianMs": 1.648,
+    "engineP95Ms": 2.048,
+    "readingRecordBytes": 147518,
+    "diagnosticsBytes": 131072,
+    "targetHistoryRecords": 1000
+  },
+  "checks": {
+    "shell": true,
+    "knowledge": true,
+    "defaultDeck": true,
+    "optionalDecks": true,
+    "engine": true,
+    "readingRecord": true,
+    "diagnostics": true,
+    "targetHistory": true
+  },
+  "status": "PASS"
+}

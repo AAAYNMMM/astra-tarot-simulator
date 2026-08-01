@@ -1,11 +1,4 @@
-#!/usr/bin/env python3
-"""Add the operator-facing rollback procedure required by the 2.0.0 release."""
-
-from pathlib import Path
-
-ROOT = Path(__file__).resolve().parents[1]
-path = ROOT / "docs" / "RELEASE_ROLLBACK.md"
-content = '''# 星纱塔罗 2.0.0 回滚手册
+# 星纱塔罗 2.0.0 回滚手册
 
 ## 适用范围
 
@@ -49,8 +42,3 @@ python automation/validate.py --scope full
 - 不得删除当前与上一完整健康 release 后再尝试回滚。
 - 不得把迁移中的历史降级写回旧 Schema。
 - 不得使用清除全部浏览器数据作为常规回滚步骤。
-'''
-path.parent.mkdir(parents=True, exist_ok=True)
-with path.open("w", encoding="utf-8", newline="\n") as handle:
-    handle.write(content.rstrip() + "\n")
-print("Phase 9 operator rollback guide added.")

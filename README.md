@@ -1,6 +1,6 @@
 # 星纱塔罗 · 占卜模拟器
 
-一个完全离线运行的中文塔罗牌GUI。浏览器负责桌面级界面、洗牌、发牌和3D翻牌动画；Python只负责启动本地服务，不需要安装第三方包。
+星纱塔罗 2.0.0 是一个完全离线运行的中文塔罗牌 GUI。浏览器负责界面、抽牌、规则解读、历史和 PWA；Python 标准库只负责启动本地服务，不需要安装第三方包。
 
 ## 启动
 
@@ -8,7 +8,7 @@
 
 1. 双击 `启动星纱塔罗.bat`。
 2. 应用会自动在默认浏览器中打开。
-3. 关闭最后一个应用页面后，本地服务、脚本和控制台会在短暂宽限后退出。
+3. 关闭最后一个应用页面后，本地服务会在短暂宽限后退出。
 
 也可以在终端运行：
 
@@ -18,100 +18,70 @@ cd astra-tarot-simulator
 python run.py
 ```
 
-默认使用本机端口 `57321`；若端口被占用，会自动选择临时空闲端口。
+默认使用本机端口 `57321`；若端口被占用，会自动选择空闲端口。使用 `python run.py --no-browser` 可禁止自动打开浏览器。
 
-不自动打开浏览器：
+## 2.0.0 功能
 
-```powershell
-python run.py --no-browser
-```
-
-也可以使用 `--port 8765` 指定端口。
-
-## 已实现功能
-
-- 完整78张塔罗牌：22张大阿卡纳、56张小阿卡纳。
-- 四套完整牌组：Rider–Waite–Smith、阿尔诺古典、瑞士1JJ、Solesio皮埃蒙特。
-- 牌组正面与牌背整体切换，不使用滤镜或色相旋转伪造不同牌组。
-- 洗牌、逐张发牌、3D翻牌、选牌高亮和完成动画。
-- 六大主题和42个固定预设问题。
+- 完整 78 张结构化塔罗牌资料。
+- 六大主题、90 个固定预设问题。
 - 四种固定牌阵：心语单张、时间之流、五牌十字、凯尔特十字。
-- 基于问题主题、牌位、正逆位、牌型、元素和关系的当前规则解读。
-- 综合讯息与三步行动建议。
-- 本地历史查看、单条删除和全部清空。
-- 减少动画偏好、键盘操作、移动端适配和PWA离线缓存。
-- 页面关闭通知本地启动器，刷新具有短暂宽限。
+- 四套完整牌组：Rider–Waite–Smith、阿尔诺古典、瑞士 1JJ、Solesio 皮埃蒙特。
+- 纯规则 Observation → Relation → Claim → Text 解读链。
+- 抽牌、正逆位和渲染使用独立、可重放的随机流。
+- IndexedDB 完整历史、旧历史幂等迁移、校验和导入导出和容量降级。
+- 错误恢复、脱敏诊断、键盘、焦点和屏幕阅读器支持。
+- PWA 临时缓存、受控多标签更新、上一完整 release 回滚。
+- 四套牌组按需缓存、进度显示、空间估算和单套删除。
+- 552 例开发评测与 48 例 CWapi 受控盲测发布门禁。
 
-## 开发路线
+## 产品边界
 
-目标2.0采用完全离线、可复现、可审计的纯规则解牌引擎：
+- 运行时不调用 AI 大模型、在线推理 API 或生成式服务。
+- 用户只能选择固定预设问题，不提供自由文本解析。
+- 四种牌阵和公开业务 ID 保持固定。
+- 抽牌先完成，解读后执行；问题和期望结果不会影响抽牌。
+- “准确”表示牌义、问题贴合、证据链、条件和一致性，不宣称科学验证的超自然预测能力。
 
-- 运行时不调用AI大模型或在线生成服务。
-- 保持现有四种牌阵和固定问题模式。
-- 单牌资料、多牌综合和问题贴合度目标均为9.0/10以上。
-- 抽牌、正逆位和解读严格分离。
-- 源码使用原生ES Modules，无强制npm构建。
-- 完整历史迁入本机IndexedDB，并保存证据链、版本和artifact指纹。
+## 离线与更新
 
-规则引擎开发前先完成Phase M模块化，把当前大型JavaScript、CSS和数据文件渐进迁移到 `src/`。每个新模块必须立刻由真实应用使用和回归，不在最后进行一次性大爆炸切换。
+首次安装只准备应用壳和知识资料，不会阻塞式下载四套完整牌面。默认或其他牌组可在界面中按需缓存。
 
-项目不使用GitHub Actions。代码、数据、存储、缓存和发布验证统一通过 `AAAYNMMM/CWapi` 本地Runner对固定commit执行，并返回可审计RESULT。
+新版本先写入临时 release cache，所有必需资源通过状态、类型和传输字节 SHA-256 后才进入 waiting。应用不会在占卜中、待保存或迁移时自行切换；至少保留当前稳定版本和上一完整版本。
 
-## 开发文档权威顺序
+详细策略见：
 
-后续开发代理按以下顺序读取：
+- [`docs/PHASE_9_RELEASE.md`](docs/PHASE_9_RELEASE.md)
+- [`docs/RELEASE_ROLLBACK.md`](docs/RELEASE_ROLLBACK.md)
+- [`docs/BROWSER_SUPPORT.md`](docs/BROWSER_SUPPORT.md)
 
-1. [`AGENTS.md`](AGENTS.md)：接手、开始、继续和审查规则。
-2. [`docs/DECISIONS.md`](docs/DECISIONS.md)：不可擅自改变的产品和技术决策。
-3. [`docs/EXECUTION_CONTRACTS.md`](docs/EXECUTION_CONTRACTS.md)：任务编号、依赖、状态、验证和发布顺序的唯一执行来源。
-4. [`docs/PROGRESS.md`](docs/PROGRESS.md)：当前活动任务、证据和唯一下一任务。
-5. 当前阶段直接相关的领域规范：
-   - [`docs/MODULARIZATION_PLAN.md`](docs/MODULARIZATION_PLAN.md)
-   - [`docs/DATA_ARCHITECTURE.md`](docs/DATA_ARCHITECTURE.md)
-   - [`docs/ENGINEERING_GUARDS.md`](docs/ENGINEERING_GUARDS.md)
-   - [`docs/FINAL_QUALITY_GUARDS.md`](docs/FINAL_QUALITY_GUARDS.md)
-   - [`docs/ENGINE_ARCHITECTURE.md`](docs/ENGINE_ARCHITECTURE.md)
-   - [`docs/CARD_DATA_STANDARD.md`](docs/CARD_DATA_STANDARD.md)
-6. [`docs/ROADMAP.md`](docs/ROADMAP.md)：阶段导航和任务目录。
+## 隐私
 
-当前唯一下一任务以 `PROGRESS.md` 为准。规划已经冻结，连续审查在两轮没有新重大问题后停止，不能继续用“再优化一下文档”推迟开发。人类已经为此准备了足够多的Markdown。
-
-## 当前下一任务
-
-```text
-MOD-001：模块边界、数据边界与基线验证
-```
-
-它将建立模块映射、已知技术债基线、依赖检查和最小CWapi验证入口，不改变运行行为。
-
-## 隐私与说明
-
-应用不会联网发送问题或牌面。当前历史记录保存在浏览器 `localStorage` 中；目标2.0会把完整历史和证据链迁移到本机IndexedDB，小型设置继续使用 `localStorage`。清除浏览器站点数据会删除本地记录。
+问题、牌面、解读、历史和随机种子均保存在本机。应用不会把这些内容发送到外部服务。清除浏览器站点数据会删除本地历史、设置和缓存。
 
 塔罗内容用于自我觉察、叙事探索和娱乐，不替代医疗、法律、投资或其他专业意见。
 
 ## 牌面来源
 
-经典韦特使用LuciellaES整理的 [Rider-Waite Smith Tarot Cards (CC0)](https://luciellaes.itch.io/rider-waite-smith-tarot-cards-cc0)；其余三套历史牌面来自Wikimedia Commons公共领域馆藏。
+经典韦特使用 LuciellaES 整理的 Rider–Waite Smith Tarot Cards（CC0）；其余三套历史牌面来自 Wikimedia Commons 公共领域馆藏。逐套来源和映射见各牌组目录中的 `SOURCE.md`。
 
-逐套来源、映射与许可说明见各牌组目录中的 `SOURCE.md`。运行应用时不会从外部网站加载图片。
+运行时不会从外部网站加载牌面。项目代码使用 MIT License，牌面许可与第三方声明见 [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md)。
 
-重新获取历史牌面：
+## 开发与验证
+
+应用使用原生 ES Modules，无强制 npm 构建步骤，也不使用 GitHub Actions。
 
 ```powershell
-.\scripts\fetch_historic_decks.ps1
+python automation/validate.py --scope full
+python scripts/doctor.py
 ```
+
+真实发布验证由 CWapi 本地 Runner 对固定 40 位 commit 执行。2.0.0 的任务状态与证据见 [`docs/PROGRESS.md`](docs/PROGRESS.md)。
 
 ## 快捷键
 
 - `Ctrl+Enter`：在准备页开始占卜。
 - `R`：牌阵发完后翻开全部牌。
 
-## 当前基础验证
+## 隐私与本地数据
 
-```powershell
-python -m unittest discover -s tests -v
-node tests\smoke_test.js
-```
-
-Phase M会建立统一的 `automation/validate.py`，并通过CWapi对固定commit执行。应用本身不依赖Node.js，也不使用GitHub Actions。
+星纱塔罗的运行时不连接第三方服务，也不会上传问题、解读、历史记录、随机根种子或诊断正文。浏览器本地服务地址、SVG/XML 命名空间以及 JSON Schema 的声明 URI 仅用于本机运行、资源格式和结构标识，不属于外部网络传输。历史和缓存由浏览器本地存储管理，用户可以在应用内导出、删除牌组缓存或清除历史。

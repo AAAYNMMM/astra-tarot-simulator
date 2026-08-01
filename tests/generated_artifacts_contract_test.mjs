@@ -30,7 +30,7 @@ assert.equal(artifact.knowledgeManifestHash, hash(knowledgeText.replace(/\r\n?/g
 for (const forbidden of ["finalCommit", "commit", "precacheManifestHash", "artifactManifestHash"]) {
   assert.equal(Object.hasOwn(artifact, forbidden), false, `artifact manifest must not contain ${forbidden}`);
 }
-assert.equal(artifact.generatorVersion, "1.0.0");
+assert.equal(artifact.generatorVersion, "1.1.0");
 assert.equal(Object.keys(artifact.modules.cards).length, 78);
 assert.equal(Object.keys(artifact.modules.questions).length, questionCount);
 assert.ok(Object.keys(artifact.modules.vocabularies).length >= 5);
@@ -44,7 +44,7 @@ sandbox.self = new sandbox.ServiceWorkerGlobalScope();
 vm.createContext(sandbox);
 vm.runInContext(read("src/generated/precache-manifest.js"), sandbox);
 const precache = sandbox.self.__ASTRA_PRECACHE_MANIFEST__;
-assert.ok(precache.releaseId.startsWith("2.0.0-dev-"));
+assert.ok(precache.releaseId.startsWith("2.0.0-"));
 assert.equal(precache.artifactManifestHash, hash(artifactText.replace(/\r\n?/g, "\n")));
 assert.equal(precache.optionalDecks.rws.length, 79);
 assert.equal(precache.optionalDecks.arnoult.length, 79);

@@ -7,9 +7,9 @@
   "files": {
     "src/engine/legacy/card-reading.js": "8cb14ef15e014bc00b58f5b8156cbb4cf106d2c48f65ffd1c134bfbf29e73cba",
     "src/engine/legacy/synthesis.js": "586a2a578dfa3410c6c6933c397432544666a1da51f499050824d1b12919caac",
-    "src/generated/card-catalog.js": "d27d0e79a507718813a0fb3ff049ed5036fffba748f5e98073866fd921385c5e",
-    "src/generated/knowledge-registry.js": "42aa45fd6c628d1e3b13153e2e4f3d5c81a2f5c9e5b187a2d24ea57d7534aa82",
-    "src/generated/question-catalog.js": "d1fc45f8e436bcae2c6e44ecb24295c70f72f0cfbab3a73112978f9f229a4e14",
+    "src/generated/card-catalog.js": "a22807edf56258054a1572dde0e0ccb3c0563bf2d3f4ed8e73ee0e2e7726d1ae",
+    "src/generated/knowledge-registry.js": "a323e4ffac123c093e03399bc576e0937a335e5edd87f583affb88a613924108",
+    "src/generated/question-catalog.js": "48b2a22a42ebc68b8546780cc053300ad74956502ae9eb8b1c7513b0e5022473",
     "src/knowledge/cards/create-complete-profile.js": "5152a4e83c31b205574be0c6b733010754bf732c87e77ed70bf68707f81df65b",
     "src/knowledge/cards/cups-ace.js": "5da4dd626711dd55de568368c296fa4ab16b9d8a67e432a3edfa47f2a7c4c243",
     "src/knowledge/cards/cups-eight.js": "21c45291bee9efa6b667c223e5628a7dcbbe67c0b5edc1cbac42e666c424eab7",
@@ -213,6 +213,6 @@
     "src/knowledge/vocabularies/tags.js": "fe391616b7b1b468a0b6cd237ec9e845656b7e3fab0994e380df3d818f4c612d",
     "src/knowledge/vocabularies/taxonomy.js": "5004b1e4eb71bcf07eaf8eefc602d9d285da3d8131cd824fe128b37c9fc6c957"
   },
-  "generatorVersion": "1.0.0",
+  "generatorVersion": "1.1.0",
   "schemaVersion": "1.0.0"
 }

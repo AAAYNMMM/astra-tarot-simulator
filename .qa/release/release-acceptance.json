@@ -1,0 +1,65 @@
+{
+  "checks": {
+    "artifactVersion": true,
+    "blindEvaluation": true,
+    "compatibility": true,
+    "iconFiles": true,
+    "license": true,
+    "noGithubActions": true,
+    "performance": true,
+    "privacy": true,
+    "serviceWorkerAtomic": true,
+    "thirdParty": true
+  },
+  "icons": [
+    {
+      "exists": true,
+      "hash": "859a7cdf76ad1d5f2699eda2e633ee17afa8b8d7e66410760577ee39a294cd59",
+      "path": "icon-192.png"
+    },
+    {
+      "exists": true,
+      "hash": "b154c6ac159309b9a67f8977f5619afe936a42f75972cafaf19c7f4c5057f293",
+      "path": "icon-512.png"
+    },
+    {
+      "exists": true,
+      "hash": "26a017ab34dc8cd766f911eed2994666b83ab7ce33ff62d27253278b605f39c3",
+      "path": "icon-maskable-192.png"
+    },
+    {
+      "exists": true,
+      "hash": "b39feb6732a75805473b72fd99cbb47ca089c90139c69593ba58ab91591a53ae",
+      "path": "icon-maskable-512.png"
+    }
+  ],
+  "offline": {
+    "atomicRequiredResources": true,
+    "deckCachesIndependent": true,
+    "previousReleaseRetained": true,
+    "states": [
+      "APP-SHELL-READY",
+      "DEFAULT-DECK-READY",
+      "SELECTED-DECKS-READY"
+    ]
+  },
+  "privacy": {
+    "blindSourceLogged": false,
+    "externalRuntimeOrigins": [],
+    "ignoredLoopbackNamespaceAndSchemaIdentifiers": [
+      "https://astra.local/schemas/card-semantic-profile/1.0.0",
+      "https://astra.local/schemas/consumer-fixture/1.0.0",
+      "https://astra.local/schemas/evaluation-case/1.0.0",
+      "https://astra.local/schemas/observation.schema.json",
+      "https://astra.local/schemas/phase-8-evaluation-case/1.0.0",
+      "https://astra.local/schemas/position-operator/1.0.0",
+      "https://astra.local/schemas/question-profile/1.0.0",
+      "https://json-schema.org/draft/2020-12/schema"
+    ],
+    "questionOrHistoryUpload": false
+  },
+  "release": "2.0.0",
+  "reportId": "phase-9-release-acceptance-v1",
+  "schemaVersion": "1.0.0",
+  "status": "PASS"
+}

@@ -16,3 +16,8 @@ design-qa.md
 !.qa/evaluation/human-review-packet.json
 !.qa/evaluation/phase-8-evaluation-report.json
 !.qa/evaluation/blind-result.json
+!.qa/release/
+.qa/release/*
+!.qa/release/performance-report.json
+!.qa/release/release-acceptance.json
+!.qa/release/release-2.0.0.json

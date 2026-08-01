@@ -14,6 +14,7 @@ import { cardBackPath, cardImagePath } from "../platform/assets.js";
 import { createReadingAnimation } from "../ui/animations/reading.js";
 import { createDialogController, formatDate } from "../ui/components/dialogs.js";
 import { createToast } from "../ui/components/toast.js";
+import { createPlatformRuntime } from "./platform-runtime.js";
 import { installImageFallbacks } from "../ui/image-fallback.js";
 import { bindDom } from "../ui/dom.js";
 import { createHistoryRenderer } from "../ui/renderers/history.js";
@@ -483,6 +484,8 @@ export function startApplication({ windowRef = globalThis.window, documentRef = 
     }
   const { openDialog, closeDialog, confirmAction, resolveConfirmation } = createDialogController({ dom, state, documentRef: document });
 
+  const platformRuntime = createPlatformRuntime({ windowRef: window, dom, offlineStatus, registerServiceWorker, state, currentDeckStyle, showToast });
+
   const { renderHistory, toggleHistoryDetail, deleteHistoryRecord } = createHistoryRenderer({
       documentRef: document,
       dom,
@@ -540,6 +543,7 @@ export function startApplication({ windowRef = globalThis.window, documentRef = 
       state.deckStyleId = button.dataset.deckStyleId;
       saveSettings({ deckStyle: state.deckStyleId });
       renderDeckStyles();
+      platformRuntime.render();
       void offlineStatus.cacheDeck(state.deckStyleId);
       showToast(`已切换为${currentDeckStyle().name}牌面`, "✦");
     }
@@ -585,7 +589,7 @@ export function startApplication({ windowRef = globalThis.window, documentRef = 
       bindEvents();
       resetReadingView();
       void initializeStructuredHistory();
-      void registerServiceWorker().then(() => offlineStatus.start({ selectedDeckId: initialDeckStyle }));
+      void platformRuntime.start(initialDeckStyle);
       registerLocalLifecycle();
     }
 

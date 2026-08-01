@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "1.0.0",
+  "release": "2.0.0",
+  "releaseId": "2.0.0-6664648f8655",
+  "status": "RELEASED",
+  "artifactManifestHash": "6664648f8655639fc41d71e8bedaead5630efc43c34743b0f1828fb9aaecd96b",
+  "precacheManifestHash": "a429ca6db21bdabb297a81d787a11979410d40af1ddf88f2f475f89e4579ceac",
+  "compatibilityMatrixHash": "b56d7f7ec219a2a2413e6c028351fa74d89d112b973b2d2faae4305df5c70e14",
+  "licenseHash": "2d9c40a52d824ab16d2706e238303c6b0d3cd3ff062cf6e79409abc4fbdf15b4",
+  "thirdPartyNoticesHash": "81be617558c0c006b4240ada23ebd89bfcc098bc83ea1634f12eb5d8c91407de",
+  "reports": {
+    "performance": "3899fac03a13bae3bf489487683bb8ea9c4f4ecdf3457f8019edef3154179c18",
+    "acceptance": "2652b2ff83665d74b9ca9b12d22c43927db8a44bd4b7d2ef72b89b9283281c87",
+    "blindEvaluation": "3f024c5676bc3b883af027a208fa7cc39599007fb7a01ce6d0c6c349449c3565"
+  },
+  "guarantees": {
+    "runtimeAI": false,
+    "fixedQuestions": true,
+    "fixedSpreads": 4,
+    "deterministicRules": true,
+    "localHistory": true,
+    "blindSourceInRepository": false
+  }
+}

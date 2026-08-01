@@ -44,9 +44,12 @@ assert.match(historyRenderer, /createElement/);
 assert.equal(historyRenderer.includes("innerHTML"), false);
 const sw = read("sw.js");
 assert.match(sw, /^importScripts\("\.\/src\/generated\/precache-manifest\.js"\);/);
-for (const forbidden of ["skipWaiting", "clients.claim", "caches.keys", "cached || caches.match(\"./index.html\")"]) {
+for (const forbidden of ["clients.claim", "cached || caches.match(\"./index.html\")"]) {
   assert.equal(sw.includes(forbidden), false, `SW contains forbidden fallback/update behavior: ${forbidden}`);
 }
+assert.equal(/addEventListener\("install"[\s\S]{0,600}skipWaiting/.test(sw), false);
+assert.match(sw, /ASTRA_ACTIVATE_RELEASE/);
+assert.match(sw, /cleanupOldReleases/);
 for (const state of ["APP-SHELL-READY", "DEFAULT-DECK-READY", "SELECTED-DECKS-READY"]) {
   assert.ok(sw.includes(state), `SW missing ${state}`);
 }
