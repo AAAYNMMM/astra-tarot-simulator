@@ -82,10 +82,13 @@ class TarotAppContractTests(unittest.TestCase):
         for expected in (
             'id: "cross"', 'name: "五牌十字"', 'id: "celtic"',
             'name: "凯尔特十字"', 'name: "希望与恐惧"',
-            "createDecisiveInterpretation", "最终判断", "走势依据", "决定性牌位", "改判条件",
+            "createLongformInterpretation", "最终判断", "局势总解", "关键牌位详解", "成立条件",
         ):
             self.assertIn(expected, knowledge + application)
-        for removed in ("createSpreadNarrative", "createConnections", "牌与牌之间如何对话", "接下来的三步"):
+        for removed in (
+            "createSpreadNarrative", "createConnections", "走势依据", "走势从",
+            "决定性牌位", "改判条件", "牌与牌之间如何对话", "接下来的三步",
+        ):
             self.assertNotIn(removed, visible_runtime)
         self.assertIn('data-spread-id="celtic"', styles)
         self.assertIn("rotate(90deg)", styles)

@@ -10,6 +10,7 @@ import {
 import {
   createReadingEngineWorkerClient,
   WORKER_MESSAGE,
+  WARM_MESSAGE,
 } from "../src/app/engine-worker-client.js";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -94,13 +95,14 @@ class FakeWorker {
     this.listeners.set(name, listener);
   }
   postMessage(message) {
-    assert.equal(message.type, WORKER_MESSAGE);
+    assert.equal([WORKER_MESSAGE, WARM_MESSAGE].includes(message.type), true);
     queueMicrotask(() => {
+      const warm = message.type === WARM_MESSAGE;
       this.listeners.get("message")?.({
         data: {
           id: message.id,
-          status: "completed",
-          value: { synthesis: first, engineResult },
+          status: warm ? "ready" : "completed",
+          value: warm ? { status: "ready" } : { synthesis: first, engineResult },
         },
       });
     });

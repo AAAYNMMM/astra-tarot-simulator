@@ -1,6 +1,5 @@
 import { accentToken } from "../../config/accent-tokens.js";
 import { resolveDeckStyle } from "../../config/decks.js";
-import { escapeHtml } from "../../core/html.js";
 
 function scrollTop(dom) {
   requestAnimationFrame(() => {
@@ -9,7 +8,35 @@ function scrollTop(dom) {
 }
 
 function factorForPosition(synthesis, positionId) {
-  return synthesis?.decisiveFactors?.find((factor) => factor.positionIds.includes(positionId)) || null;
+  return synthesis?.positionAnalyses?.find((factor) => factor.positionId === positionId)
+    || synthesis?.decisiveFactors?.find((factor) => factor.positionIds.includes(positionId))
+    || null;
+}
+
+function createElement(documentRef, tag, className = "", text = "") {
+  const element = documentRef.createElement(tag);
+  if (className) element.className = className;
+  if (text) element.textContent = text;
+  return element;
+}
+
+function section(documentRef, label, className = "") {
+  const element = createElement(documentRef, "section", `reading-block longform-block ${className}`.trim());
+  element.append(createElement(documentRef, "div", "reading-block-label", label));
+  return element;
+}
+
+function paragraph(documentRef, text, className = "") {
+  return createElement(documentRef, "p", className, text);
+}
+
+function conditionCard(documentRef, label, text, tone) {
+  const item = createElement(documentRef, "article", `condition-card is-${tone}`);
+  item.append(
+    createElement(documentRef, "span", "condition-label", label),
+    paragraph(documentRef, text),
+  );
+  return item;
 }
 
 export function createInsightRenderer({
@@ -21,87 +48,150 @@ export function createInsightRenderer({
   if (typeof cardImagePath !== "function") {
     throw new TypeError("Card image path resolver is required.");
   }
-  function renderCardInsight(index) {
-    if (!state.reading) return;
+  const documentRef = dom.insightContent.ownerDocument;
+  const summaryCache = new WeakMap();
+  const cardCache = new WeakMap();
+
+  function commit(node) {
+    dom.insightContent.replaceChildren(node);
+    scrollTop(dom);
+  }
+
+  function renderLoading() {
+    const fragment = documentRef.createDocumentFragment();
+    const container = createElement(documentRef, "div", "interpretation-loading");
+    container.setAttribute("role", "status");
+    container.setAttribute("aria-live", "polite");
+    container.append(
+      createElement(documentRef, "span", "loading-kicker", "正在整理完整判词"),
+      createElement(documentRef, "div", "loading-line is-wide"),
+      createElement(documentRef, "div", "loading-line"),
+      createElement(documentRef, "div", "loading-line is-short"),
+    );
+    fragment.append(container);
+    commit(fragment);
+  }
+
+  function buildCardInsight(index) {
     const draw = state.reading.draws[index];
     const { card, reversed, position } = draw;
     const deckStyle = resolveDeckStyle(state.reading.deckStyle || currentDeckStyle());
     const orientation = reversed ? "逆位" : "正位";
-    const meaning = reversed ? card.reversed : card.upright;
     const factor = factorForPosition(state.reading.synthesis, position.id);
-    const directMeaning = factor?.text || meaning;
-    const role = factor?.role || (reversed ? "阻断" : "推动");
+    const directMeaning = factor?.body || (reversed ? card.reversed : card.upright);
+    const role = factor?.role || (reversed ? "阻力" : "推动");
 
-    dom.insightContent.innerHTML = `
-      <article class="card-reading">
-        <header class="selected-card-heading">
-          <div class="mini-card deck-style-${deckStyle.id} ${reversed ? "is-reversed" : ""}" data-accent-token="${accentToken(card.accent)}">
-            <img src="${cardImagePath(card.id, deckStyle)}" alt="" />
-          </div>
-          <div class="selected-card-copy">
-            <span class="position-overline">${String(index + 1).padStart(2, "0")} · ${escapeHtml(position.name)}</span>
-            <h3>${escapeHtml(card.name)}</h3>
-            <p>${escapeHtml(card.en)}</p>
-            <span class="orientation-badge ${reversed ? "is-reversed" : ""}">
-              ${reversed ? "↧" : "↥"} ${orientation}
-            </span>
-          </div>
-        </header>
+    const article = createElement(documentRef, "article", "card-reading");
+    const header = createElement(documentRef, "header", "selected-card-heading");
+    const miniCard = createElement(documentRef, "div", `mini-card deck-style-${deckStyle.id} ${reversed ? "is-reversed" : ""}`.trim());
+    miniCard.dataset.accentToken = accentToken(card.accent);
+    const image = documentRef.createElement("img");
+    image.src = cardImagePath(card.id, deckStyle);
+    image.alt = "";
+    miniCard.append(image);
+    const copy = createElement(documentRef, "div", "selected-card-copy");
+    copy.append(
+      createElement(documentRef, "span", "position-overline", `${String(index + 1).padStart(2, "0")} · ${position.name}`),
+      createElement(documentRef, "h3", "", card.name),
+      createElement(documentRef, "p", "", card.en),
+      createElement(documentRef, "span", `orientation-badge ${reversed ? "is-reversed" : ""}`.trim(), `${reversed ? "↧" : "↥"} ${orientation}`),
+    );
+    header.append(miniCard, copy);
 
-        <section class="reading-block">
-          <div class="reading-block-label">牌位判词</div>
-          <p>${escapeHtml(`${position.name}由${card.name}${orientation}定调：${directMeaning}`)}</p>
-        </section>
+    const verdict = section(documentRef, "牌位详解", "position-detail-block");
+    verdict.append(paragraph(documentRef, directMeaning));
+    const context = section(documentRef, "在整副牌中的作用");
+    const contextBody = createElement(documentRef, "div", "position-context");
+    contextBody.append(
+      createElement(documentRef, "strong", "", role),
+      paragraph(documentRef, position.prompt),
+    );
+    context.append(contextBody);
+    article.append(header, verdict, context);
+    return article;
+  }
 
-        <section class="reading-block">
-          <div class="reading-block-label">在牌阵中的作用</div>
-          <div class="position-context">
-            <strong>${escapeHtml(role)}</strong>
-            <p>${escapeHtml(position.prompt)}</p>
-          </div>
-        </section>
-      </article>
-    `;
-    scrollTop(dom);
+  function renderCardInsight(index) {
+    if (!state.reading) return;
+    let cache = cardCache.get(state.reading);
+    if (!cache) {
+      cache = new Map();
+      cardCache.set(state.reading, cache);
+    }
+    if (!cache.has(index)) cache.set(index, buildCardInsight(index));
+    commit(cache.get(index));
+  }
+
+  function buildSummary() {
+    const { synthesis, category } = state.reading;
+    const article = createElement(documentRef, "article", "summary-reading longform-reading");
+    article.dataset.accentToken = accentToken(category.accent);
+
+    const hero = createElement(documentRef, "header", "summary-hero longform-hero");
+    hero.append(
+      createElement(documentRef, "span", "summary-overline", "FINAL JUDGMENT · 最终判断"),
+      createElement(documentRef, "h3", "", synthesis.verdict.label),
+      paragraph(documentRef, synthesis.judgment, "judgment-copy"),
+    );
+    article.append(hero);
+
+    const situation = section(documentRef, "局势总解", "situation-analysis");
+    for (const text of synthesis.situationAnalysis) {
+      situation.append(paragraph(documentRef, text));
+    }
+    article.append(situation);
+
+    const positions = section(documentRef, "关键牌位详解", "position-analysis-section");
+    const list = createElement(documentRef, "ol", "position-analysis-list");
+    for (const item of synthesis.positionAnalyses) {
+      const row = createElement(documentRef, "li", "position-analysis-card");
+      const heading = createElement(documentRef, "header", "position-analysis-heading");
+      heading.append(
+        createElement(documentRef, "span", "position-index", String(synthesis.positionAnalyses.indexOf(item) + 1).padStart(2, "0")),
+        createElement(documentRef, "strong", "", `${item.positionName}｜${item.cardName} ${item.orientation}`),
+        createElement(documentRef, "em", "", item.role),
+      );
+      row.append(heading, paragraph(documentRef, item.body));
+      list.append(row);
+    }
+    positions.append(list);
+    article.append(positions);
+
+    const conditions = section(documentRef, "成立、失败与转折条件", "conditions-section");
+    const conditionGrid = createElement(documentRef, "div", "condition-grid");
+    conditionGrid.append(
+      conditionCard(documentRef, "成立条件", synthesis.conditions.success, "success"),
+      conditionCard(documentRef, "失败条件", synthesis.conditions.failure, "failure"),
+      conditionCard(documentRef, "转折信号", synthesis.conditions.turningPoint, "turning"),
+    );
+    conditions.append(conditionGrid);
+    article.append(conditions);
+
+    if (synthesis.manifestation) {
+      const manifestation = section(documentRef, "时间与表现形式", "manifestation-section");
+      const details = createElement(documentRef, "dl", "manifestation-grid");
+      for (const [label, text] of [
+        ["出现渠道", synthesis.manifestation.channel],
+        ["发展速度", synthesis.manifestation.pace],
+        ["演变顺序", synthesis.manifestation.sequence],
+        ["兑现信号", synthesis.manifestation.sign],
+      ]) {
+        details.append(
+          createElement(documentRef, "dt", "", label),
+          createElement(documentRef, "dd", "", text),
+        );
+      }
+      manifestation.append(details);
+      article.append(manifestation);
+    }
+    return article;
   }
 
   function renderSummary() {
     if (!state.reading?.synthesis) return;
-    const { synthesis, category } = state.reading;
-    const factors = synthesis.decisiveFactors.map((factor) => `
-      <li>
-        <strong>${escapeHtml(`${factor.positionName} · ${factor.cardName} ${factor.orientation}`)}</strong>
-        <span>${escapeHtml(factor.role)}</span>
-        <p>${escapeHtml(factor.text)}</p>
-      </li>
-    `).join("");
-
-    dom.insightContent.innerHTML = `
-      <article class="summary-reading decisive-reading" data-accent-token="${accentToken(category.accent)}">
-        <header class="summary-hero">
-          <span class="summary-overline">FINAL JUDGMENT · 最终判断</span>
-          <h3>${escapeHtml(synthesis.verdict.label)}</h3>
-          <p>${escapeHtml(synthesis.judgment)}</p>
-        </header>
-
-        <section class="reading-block">
-          <div class="reading-block-label">走势依据</div>
-          <p>${escapeHtml(synthesis.trajectory)}</p>
-        </section>
-
-        <section class="reading-block">
-          <div class="reading-block-label">决定性牌位</div>
-          <ul class="summary-list decisive-factor-list">${factors}</ul>
-        </section>
-
-        <section class="reading-block">
-          <div class="reading-block-label">改判条件</div>
-          <p>${escapeHtml(synthesis.changeCondition)}</p>
-        </section>
-      </article>
-    `;
-    scrollTop(dom);
+    if (!summaryCache.has(state.reading)) summaryCache.set(state.reading, buildSummary());
+    commit(summaryCache.get(state.reading));
   }
 
-  return Object.freeze({ renderCardInsight, renderSummary });
+  return Object.freeze({ renderCardInsight, renderSummary, renderLoading });
 }

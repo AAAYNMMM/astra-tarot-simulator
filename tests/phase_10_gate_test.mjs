@@ -10,7 +10,6 @@ const index = fs.readFileSync(path.join(root, "index.html"), "utf8");
 const application = fs.readFileSync(path.join(root, "src/app/application.js"), "utf8");
 
 assert.match(progress, /Phase 10状态 \| `PARENT-DONE`/);
-assert.match(progress, /唯一下一任务 \| `无（2\.1解读重构终态）`/);
 assert.match(phase, /最终判断/);
 assert.match(phase, /模块 Web Worker/);
 assert.equal(index.includes("class=\"platform-status\""), false);

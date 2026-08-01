@@ -79,7 +79,7 @@ export function startApplication({ windowRef = globalThis.window, documentRef = 
     const showToast = createToast({ documentRef: document, windowRef: window, dom, reducedMotion });
     const engineWorkerClient = createReadingEngineWorkerClient({ WorkerRef: window.Worker });
     const synthesizeReading = createEngineSynthesis({ workerClient: engineWorkerClient });
-    const { renderCardInsight, renderSummary } = createInsightRenderer({
+    const { renderCardInsight, renderSummary, renderLoading } = createInsightRenderer({
       dom,
       state,
       currentDeckStyle,
@@ -317,13 +317,16 @@ export function startApplication({ windowRef = globalThis.window, documentRef = 
     async function completeReading() {
       if (!state.reading || state.completing) return;
       state.completing = true;
+      renderLoading();
+      dom.statusText.textContent = "正在本地生成完整判词";
+      await new Promise((resolve) => window.requestAnimationFrame(resolve));
       state.reading.synthesis = await phase8.synthesize(state.reading);
       if (!state.reading.synthesis) { state.completing = false; return; }
       state.phase = "complete";
       setJourneyStep(3);
       dom.stageGuidance.hidden = false;
-      dom.guidanceText.textContent = "牌阵已经完整显现，综合讯息已生成";
-      dom.statusText.textContent = "解读完成 · 综合讯息与行动建议已生成";
+      dom.guidanceText.textContent = "牌阵已经完整显现，完整判词已生成";
+      dom.statusText.textContent = "解读完成 · 长篇判词已生成";
       dom.revealAllButton.hidden = true;
       dom.insightTabs.hidden = false;
       state.activeTab = "summary";
@@ -467,6 +470,7 @@ export function startApplication({ windowRef = globalThis.window, documentRef = 
       renderDeckStyles();
       bindEvents();
       resetReadingView();
+      void engineWorkerClient.warmUp().catch(() => {});
       void initializeStructuredHistory();
       void platformRuntime.start(initialDeckStyle);
       registerLocalLifecycle();

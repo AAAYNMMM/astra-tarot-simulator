@@ -278,6 +278,8 @@ def baseline_steps(node: str) -> list[tuple[str, list[str]]]:
         ("node-phase-9-terminal-gate", [node, "tests/phase_9_gate_test.mjs"]),
         ("node-phase-10-decisive-worker", [node, "tests/phase_10_decisive_worker_test.mjs"]),
         ("node-phase-10-terminal-gate", [node, "tests/phase_10_gate_test.mjs"]),
+        ("node-phase-11-longform-performance", [node, "tests/phase_11_longform_performance_test.mjs"]),
+        ("node-phase-11-terminal-gate", [node, "tests/phase_11_gate_test.mjs"]),
         (
             "node-module-contract",
             [node, "tests/module_contract_test.mjs"],

@@ -1,10 +1,16 @@
 function serializeDraw(draw) {
+  const card = draw.card;
   return {
-    cardId: draw.card.id,
-    cardName: draw.card.name,
+    cardId: card.id,
+    cardName: card.name,
     positionId: draw.position.id,
     positionName: draw.position.name,
     orientation: draw.reversed ? "reversed" : "upright",
+    meaning: draw.reversed ? card.reversed : card.upright,
+    advice: card.advice,
+    keywords: [...(card.keywords || [])].slice(0, 4),
+    suit: card.suit || (card.arcana === "major" ? "major" : null),
+    arcana: card.arcana,
   };
 }
 
@@ -15,6 +21,7 @@ export function serializeReadingForWorker(reading) {
   return {
     questionId: reading.question.id,
     questionText: reading.question.text,
+    categoryId: reading.category?.id || null,
     spreadId: reading.spread.id,
     draws: reading.draws.map(serializeDraw),
   };
