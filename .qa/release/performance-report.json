@@ -21,16 +21,16 @@
     "targetHistoryRecords": 1000
   },
   "measurements": {
-    "shellBytes": 418998,
-    "knowledgeBytes": 943453,
+    "shellBytes": 419086,
+    "knowledgeBytes": 944298,
     "deckBytes": {
       "arnoult": 61475074,
       "piedmont": 6506159,
       "rws": 3511317,
       "swiss": 8498433
     },
-    "engineMedianMs": 3.248,
-    "engineP95Ms": 4.214,
+    "engineMedianMs": 3.285,
+    "engineP95Ms": 4.025,
     "readingRecordBytes": 215201,
     "diagnosticsBytes": 131072,
     "targetHistoryRecords": 1000

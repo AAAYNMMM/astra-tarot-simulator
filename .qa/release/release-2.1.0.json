@@ -1,15 +1,15 @@
 {
   "schemaVersion": "1.0.0",
   "release": "2.1.0",
-  "releaseId": "2.1.0-6d687c3dc760",
+  "releaseId": "2.1.0-bcec24d758e6",
   "status": "RELEASED",
-  "artifactManifestHash": "6d687c3dc7602185d56e359448ebf4aec286d1811003d9b4e5f4bc94a40ecd98",
-  "precacheManifestHash": "3cc76356e354bc95de221a0553fdc7e35e3b30b1b0c36804f2504b6e8f70ddaf",
+  "artifactManifestHash": "bcec24d758e6a171ba4e594b98a3458e5310f80c4c41ae1dfbdaf9973a13cca7",
+  "precacheManifestHash": "4304efa4cc29c58f4e4cbba05f74c1882f45e6650b1b3d14ab5b989e05087c0e",
   "compatibilityMatrixHash": "7451010eae05b3955052f05b9d1f9f4ca819c9227a4a68c2e76b2aead920fe36",
   "licenseHash": "75bf186119a2f4098a995a4a00b4f93445af34c8b66732f5aaa7019f6972a317",
   "thirdPartyNoticesHash": "91f33d9cfdffff68d453146747511d90372221578362e0f84a87c6f636629374",
   "reports": {
-    "performance": "cecc96624d2d27c697c00a27e8a7042900217a058aa66b44c847b10f3b592963",
+    "performance": "c94dba6eb1c2b6ec4bbb7bf07984b8edb7e62da489a9b955fbbe73cb2cac10d8",
     "acceptance": "f3a2baefc9d1a62693f7bcd5fb8cee81cb0525ede884717a166975c9dd5896d1",
     "blindEvaluation": "3f024c5676bc3b883af027a208fa7cc39599007fb7a01ce6d0c6c349449c3565"
   },
