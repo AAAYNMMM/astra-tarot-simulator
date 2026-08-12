@@ -119,6 +119,7 @@ export function startApplication({ windowRef = globalThis.window, documentRef = 
       dom.insightContent.innerHTML = emptyInsightMarkup;
       dom.newReadingButton.hidden = true;
       dom.revealAllButton.hidden = true;
+      dom.revealAllButton.disabled = false;
       platformRuntime?.render?.();
     }
 
@@ -268,6 +269,7 @@ export function startApplication({ windowRef = globalThis.window, documentRef = 
       dom.statusText.textContent = `牌阵已完成 · 0 / ${draws.length} 张已翻开`;
       dom.newReadingButton.hidden = false;
       dom.revealAllButton.hidden = draws.length === 1;
+      dom.revealAllButton.disabled = false;
       dom.insightContent.innerHTML = `
         <div class="insight-empty">
           <div class="empty-symbol" aria-hidden="true"><span>☽</span><i></i></div>

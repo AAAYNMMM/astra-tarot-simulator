@@ -12,3 +12,4 @@
 *.jpeg binary
 *.png binary
 *.webp binary
+*.bat text eol=crlf

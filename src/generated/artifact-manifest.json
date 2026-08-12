@@ -225,7 +225,8 @@
     "manifest.webmanifest": "70bde6de7f06ae6967b5aec825f86acbda6e4e9f9a5769fae094f397cc13db4e",
     "src/README.md": "5220fb1f1f47d61735eb7864ecba0e860437c96610d02823a71a154577bc946b",
     "src/__init__.py": "79e2cf890e7ca34c897a0632bf6f2559612999c1faa4f32cf379cf86f764278f",
-    "src/app/application.js": "0a094e6f0ecb9ab6e05f368621f6816171dfb770f565fcd1aa56da175160bf1b",
+    "src/__pycache__/__init__.cpython-312.pyc": "60a40644c18bb6d14793c9a56511fe51f74e96a0f7f6a9b4ea960fd28d5ce37b",
+    "src/app/application.js": "0c632c089ceb65d26538434a6de685e76b1297ff3632a6b20094d5310d5bd0c1",
     "src/app/bootstrap.js": "b5077fa69040deb35e1b9f411e792b6e4649e545a520e8da73a1b184b9b174b4",
     "src/app/controllers/engine-synthesis.js": "3cb155d108b6dc3e24eee2a8a1c3ed9d993d7ff05475842ef6a3ceac4b7d13e4",
     "src/app/controllers/phase-8-runtime.js": "e20f854d8f5176bbc56feb0fd02dcb7636165bc7815b026365a9a6c17900e216",
@@ -524,6 +525,12 @@
     "src/platform/release-compatibility.js": "e17c0fc2e53d569390a10b5365259ab52e6ce654e90c90558afb07b60eec92b4",
     "src/platform/release-protocol.js": "c012d7e8065ea724ae9b6f8d6ab0bb79e0e5eaa43ea0e0b37ea94936029db321",
     "src/server/__init__.py": "5c2655e3f19e2f666e7f136bfda7bbfa06b5eae7a2db91fbcc805bcc452dc734",
+    "src/server/__pycache__/__init__.cpython-312.pyc": "678daf2764fd7391fcf642807090d028e846bc8369b1e6c3bc842142eb1b0d48",
+    "src/server/__pycache__/app.cpython-312.pyc": "0a17de3cb643bcfbe3bb6154a4106d7f53d63d58ec77d7cbe9988efe2c183ce3",
+    "src/server/__pycache__/http.cpython-312.pyc": "68e0c7ad569198b1e2dae27807e51c41edf715176a501a10a459c615c9734990",
+    "src/server/__pycache__/lifecycle.cpython-312.pyc": "c4e2710dbdec58ebb3fbea84b4bd5c57b1b6863b3beeee4423a5ca3e4fd12e01",
+    "src/server/__pycache__/security.cpython-312.pyc": "f40ce8cf58ea1d0d4eebec6529cd58da5a3e01fb95587858073b7f49fe04ace3",
+    "src/server/__pycache__/session.cpython-312.pyc": "64d3aac441a53bfdf529360a0f4b3b81e794272f997491d34027b1357a74b6d6",
     "src/server/app.py": "d47b0cddeaf7a16485d5b23add2c1bf0dcb32b5b2ee6a001b234daf0c48664a6",
     "src/server/http.py": "b0a431849b424102e4bf1fad7483421f04d17da8a6d1a904d003210527286391",
     "src/server/lifecycle.py": "bb88e2ac35310895993c25ee52e1d123bdbe0bd6623a5a087f28060099f9864c",
@@ -569,5 +576,5 @@
     "sw.js": "785bc20aae5af423025b167aa5190d4b300395c5f02f6717a7d3e288fb36a00d"
   },
   "schemaVersion": "1.0.0",
-  "sourceSetHash": "7a5e4b3ce7a88a55cef65aabbc96f34194b5c2c76487cf1c33c2444a86bd0794"
+  "sourceSetHash": "249fd1268627521c16c421490c70cd9c3de6d479678f32ef64a32affff6115ff"
 }

@@ -120,8 +120,17 @@ for (const [spreadId, count] of [['single', 1], ['timeline', 3], ['cross', 5], [
   record(`${spreadId}-start-to-dealt-budget`, dealt && dealtMs <= 2000, dealtMs.toFixed(1));
   record(`${spreadId}-question-title-only`, document.querySelector('#readingTitle')?.textContent === question);
   const revealStarted = performance.now();
-  if (count === 1) document.querySelector('#cardTable .card-hitbox')?.click();
-  else document.querySelector('#revealAllButton')?.click();
+  const revealAllButton = document.querySelector('#revealAllButton');
+  if (count === 1) {
+    document.querySelector('#cardTable .card-hitbox')?.click();
+  } else {
+    record(
+      `${spreadId}-reveal-all-ready`,
+      Boolean(revealAllButton) && !revealAllButton.hidden && !revealAllButton.disabled,
+      `hidden=${revealAllButton?.hidden};disabled=${revealAllButton?.disabled}`,
+    );
+    revealAllButton?.click();
+  }
   const completed = await waitFor(() => (
     Boolean(document.querySelector('.structural-summary[data-schema-version="3.0.0"]'))
     || Boolean(document.querySelector('.recovery-panel'))
@@ -152,8 +161,15 @@ for (const [spreadId, count] of [['single', 1], ['timeline', 3], ['cross', 5], [
   ));
   flowTimings[spreadId] = { dealtMs: Number(dealtMs.toFixed(1)), revealMs: Number(revealMs.toFixed(1)) };
   if (spreadId !== 'celtic') {
+    if (count > 1) await sleep(1000);
     document.querySelector('#newReadingButton')?.click();
     await waitFor(() => !questionInput.disabled && startButton.disabled);
+    const resetRevealAllButton = document.querySelector('#revealAllButton');
+    record(
+      `${spreadId}-reveal-all-reset`,
+      Boolean(resetRevealAllButton) && !resetRevealAllButton.disabled,
+      `disabled=${resetRevealAllButton?.disabled}`,
+    );
   }
 }
 
