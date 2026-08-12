@@ -8,12 +8,14 @@
 |---|---|
 | 当前阶段 | Phase 14：自由问题隔离、统一顺势评分与独立牌阵 V3；维护修复已完成 |
 | 当前进行中任务 | 无 |
-| 最近完成任务 | `HOTFIX-001`：牌面瞬时加载失败恢复 |
+| 最近完成任务 | `HOTFIX-002`：Windows 双击启动与“全部翻开”复用修复 |
 | 唯一下一任务 | `REL-007`：正式版本与 exact-commit 发布验证 |
 | 阻塞项 | 无 |
 | 工作分支 | `main` |
 | 实施基线commit | `525e3efb45fd08a2a0dd63249e5a1a35006b91f3` |
 | HOTFIX-001功能验证commit | `b55893d629df669391899f3565e3145993b1e881` |
+| HOTFIX-002源码与生成物commit | `70f41607a0ef582e950d54e736608bba30f81fc1` |
+| HOTFIX-002发布证据commit | `7d36277465fd5000c3a36a078eb5c9f9ed471ec7` |
 | Phase 1状态 | `PARENT-DONE` |
 | Phase 2状态 | `PARENT-DONE` |
 | Phase 3状态 | `PARENT-DONE` |
@@ -27,8 +29,21 @@
 | Phase 11状态 | `PARENT-DONE` |
 | Phase 12状态 | `PARENT-IN-PROGRESS`（正式发布证据未绑定最终 commit） |
 | Phase 13状态 | `HISTORICAL-COMPATIBILITY` |
-| Phase 14状态 | `PARENT-IN-PROGRESS`（`V3-001`至`V3-009`与`HOTFIX-001`已完成；`REL-007`按约定后移） |
+| Phase 14状态 | `PARENT-IN-PROGRESS`（`V3-001`至`V3-009`、`HOTFIX-001`与`HOTFIX-002`已完成；`REL-007`按约定后移） |
 | 最后更新时间 | 2026-08-12 |
+
+## HOTFIX-002 实施现场
+
+- 状态：`DONE`。
+- 问题一：从 PowerShell 显式调用启动脚本可以正常启动并打开网页，但 Windows 资源管理器双击后由 `cmd.exe` 解析原批处理时出现命令碎片化、乱码和“not recognized”错误。
+- 启动器修复：根启动 BAT 改为 ASCII-safe 命令体与 CRLF 行尾，移除对中文控制台编码的依赖，使用扁平标签选择 `py -3` 或 `python`，并继续透传启动参数；`.gitattributes` 固定 `*.bat text eol=crlf`，避免检出后再次得到不适合 `cmd.exe` 的行尾。
+- 问题二：“全部翻开”首次使用后会保持 `disabled=true`；进入下一次占卜时，重置与重新发牌路径没有明确恢复按钮状态，因此真实用房等待本轮完成后再开始下一轮时按钮无法继续使用。
+- 按钮修复：`resetReadingView()` 与 `dealCards()` 都显式恢复 `revealAllButton.disabled = false`；本轮全部翻开期间仍保持防重复点击，下一轮开始时恢复可用。
+- 回归合同：新增 `tests/test_windows_launcher.py`，在 Windows 上真实调用 `cmd.exe /d /c call <launcher> --help` 检查批处理可解析、参数可透传且不存在命令碎片化；`tests/browser_harness.py` 对多牌牌阵在每轮点击前验证“全部翻开”可见且可用，并在异步尾部完全落定后进入下一轮，再验证按钮已复位。
+- 源码与生成物commit：`70f41607a0ef582e950d54e736608bba30f81fc1`；生成 artifact manifest `bcec24d758e6a171ba4e594b98a3458e5310f80c4c41ae1dfbdaf9973a13cca7`，precache manifest `4304efa4cc29c58f4e4cbba05f74c1882f45e6650b1b3d14ab5b989e05087c0e`。
+- 发布证据commit：`7d36277465fd5000c3a36a078eb5c9f9ed471ec7`；releaseId `2.1.0-bcec24d758e6`，性能与发布接受检查均为 `PASS`。
+- CWapi exact-commit full 验证：任务 `GPT638D850C2BB7BBD6544927DB109D4` 绑定 `7d36277465fd5000c3a36a078eb5c9f9ed471ec7`；90 个验证步骤全部 `PASS`，0 warning，真实数据矩阵、browser harness、Python unittest 均 `PASS`，严格模块检查 416/416 `PASS`，工作区验证前后均干净；SUMMARY 为 `READY`。
+- 下一具体动作：继续 `REL-007` 正式版本与 exact-commit 发布验证。
 
 ## HOTFIX-001 实施现场
 
