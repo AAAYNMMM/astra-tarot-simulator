@@ -1,6 +1,6 @@
 {
   "appVersion": "2.1.0",
-  "engineManifestHash": "cc56dedeb324d4ab197ae0d6384f21a8d046e88012bc4739360d55320964919f",
+  "engineManifestHash": "2889b09cb702bd968b84b1f7f122c7a5cbea9e8148970e1c590fff3ee9bf14fc",
   "generatorHash": "2598d8ef6228164e8739dc8a5a7be7f46be75566d4b02ea0368d2a490f98cb6f",
   "generatorVersion": "1.1.0",
   "knowledgeManifestHash": "65f364c379d1fa3be50fca3e967c207270924e0a3f3612c8d543e8cb6cbd3255",
@@ -225,7 +225,6 @@
     "manifest.webmanifest": "70bde6de7f06ae6967b5aec825f86acbda6e4e9f9a5769fae094f397cc13db4e",
     "src/README.md": "5220fb1f1f47d61735eb7864ecba0e860437c96610d02823a71a154577bc946b",
     "src/__init__.py": "79e2cf890e7ca34c897a0632bf6f2559612999c1faa4f32cf379cf86f764278f",
-    "src/__pycache__/__init__.cpython-312.pyc": "60a40644c18bb6d14793c9a56511fe51f74e96a0f7f6a9b4ea960fd28d5ce37b",
     "src/app/application.js": "0a094e6f0ecb9ab6e05f368621f6816171dfb770f565fcd1aa56da175160bf1b",
     "src/app/bootstrap.js": "b5077fa69040deb35e1b9f411e792b6e4649e545a520e8da73a1b184b9b174b4",
     "src/app/controllers/engine-synthesis.js": "3cb155d108b6dc3e24eee2a8a1c3ed9d993d7ff05475842ef6a3ceac4b7d13e4",
@@ -253,7 +252,7 @@
     "src/engine/assessment/alignment-assessor.js": "8f69623f4568229e8b364d4bb3c5efb0c79598c86031aefdf7476eea9557be9c",
     "src/engine/assessment/assessment-presentation.js": "4c11e558fa26f416c6cbcc9c933f5d9731a68c1e3db9ca63f442a765566882b8",
     "src/engine/assessment/assessment-signal.js": "b06459f958e56194ae4497ac0a41b55a08201ce7527054b46bede4b3ece7d22f",
-    "src/engine/assessment/structural-assessor.js": "5c5237eba5cc7580fa1bd582e1329a1a13f80720b49bd5c0ebda8b769312e52d",
+    "src/engine/assessment/structural-assessor.js": "91eebf47923ee562aa30f8cf8f54ce5f0e98e612f6fe51a5df8e0e580fea7bec",
     "src/engine/assessment/structural-presentation.js": "38c8d678337dd5008419d28d0087dd24181af2a2dab08eaecb80884fae193405",
     "src/engine/claims/claim-candidate.js": "54198ef7797da4ad4b39e2156147ebee49c9561fe84d7b971bc7e3cf87eaad57",
     "src/engine/claims/claim-engine.js": "9d756c223fbf96e386c3e0c25b1b1d44d66bbebba20b77f99c5f62fbcb452c7e",
@@ -525,12 +524,6 @@
     "src/platform/release-compatibility.js": "e17c0fc2e53d569390a10b5365259ab52e6ce654e90c90558afb07b60eec92b4",
     "src/platform/release-protocol.js": "c012d7e8065ea724ae9b6f8d6ab0bb79e0e5eaa43ea0e0b37ea94936029db321",
     "src/server/__init__.py": "5c2655e3f19e2f666e7f136bfda7bbfa06b5eae7a2db91fbcc805bcc452dc734",
-    "src/server/__pycache__/__init__.cpython-312.pyc": "678daf2764fd7391fcf642807090d028e846bc8369b1e6c3bc842142eb1b0d48",
-    "src/server/__pycache__/app.cpython-312.pyc": "0a17de3cb643bcfbe3bb6154a4106d7f53d63d58ec77d7cbe9988efe2c183ce3",
-    "src/server/__pycache__/http.cpython-312.pyc": "68e0c7ad569198b1e2dae27807e51c41edf715176a501a10a459c615c9734990",
-    "src/server/__pycache__/lifecycle.cpython-312.pyc": "c4e2710dbdec58ebb3fbea84b4bd5c57b1b6863b3beeee4423a5ca3e4fd12e01",
-    "src/server/__pycache__/security.cpython-312.pyc": "f40ce8cf58ea1d0d4eebec6529cd58da5a3e01fb95587858073b7f49fe04ace3",
-    "src/server/__pycache__/session.cpython-312.pyc": "64d3aac441a53bfdf529360a0f4b3b81e794272f997491d34027b1357a74b6d6",
     "src/server/app.py": "d47b0cddeaf7a16485d5b23add2c1bf0dcb32b5b2ee6a001b234daf0c48664a6",
     "src/server/http.py": "b0a431849b424102e4bf1fad7483421f04d17da8a6d1a904d003210527286391",
     "src/server/lifecycle.py": "bb88e2ac35310895993c25ee52e1d123bdbe0bd6623a5a087f28060099f9864c",
@@ -567,14 +560,14 @@
     "src/ui/components/recovery-panel.js": "3a173961837209336f1653f7e5753d55d6e5653ef39f50268bb72c8f7e2658a9",
     "src/ui/components/toast.js": "a0eff02799f1cafbd5ba20f690ad8ba1d1ae9ec9d5ce1f9cf47cf3621eb10393",
     "src/ui/dom.js": "a2b9dae7358809f20cb1635ffdf8a212d6d5d5942d6b021c0c4d356c6f727687",
-    "src/ui/image-fallback.js": "ee50787bb11ae42c25792bada1369eeec885a42f1f905a7c3743b429a1f9c7c2",
+    "src/ui/image-fallback.js": "05fba555b664f5d62e66e798389e24a7d1b9724e5029b6568b814ca5fff36657",
     "src/ui/renderers/evaluation-setup.js": "5c998b5b2e15650772c370efe4405429730bbeb6a928a477c4126f513473bdb6",
     "src/ui/renderers/history.js": "c0308316e49e5499a89685c1d9dcaca466dabf41bdc7f5a26f47db80a99f01cd",
     "src/ui/renderers/insight.js": "a5687558bf2d6277fdd601017ac66036fd96c6171debd5287ac5af2122734b8c",
     "src/ui/renderers/setup.js": "2b329a94e1800b71077be909b48c3a1fc7ac87f76a230e8b02f7dd3b8315bdec",
     "src/ui/safe-dom.js": "882f55730daf9c65093cd7592769d61ce7ba79568a037c32c32858af0993cec2",
-    "sw.js": "76fca094ffae5c6d26c3b3c454654be1a2bde35bf1d3a95c7e1eef849d657c05"
+    "sw.js": "785bc20aae5af423025b167aa5190d4b300395c5f02f6717a7d3e288fb36a00d"
   },
   "schemaVersion": "1.0.0",
-  "sourceSetHash": "97c9fd49016c24d003ecdf87c55f0108f55d199d9fe4606c714ea5f1f2dd7fdf"
+  "sourceSetHash": "7a5e4b3ce7a88a55cef65aabbc96f34194b5c2c76487cf1c33c2444a86bd0794"
 }
