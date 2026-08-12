@@ -20,6 +20,9 @@ assert.match(sw, /url\.pathname\.startsWith\("\/__astra\/"\)/);
 assert.match(sw, /response\.type === "opaque"/);
 assert.match(sw, /response\.redirected/);
 assert.match(sw, /event\.waitUntil\(cache\.put/);
+assert.match(sw, /async function fetchDeckNetwork\(request\)/);
+assert.match(sw, /return fetch\(request\.clone\(\)\);/);
+assert.match(sw, /const response = await fetchDeckNetwork\(event\.request\);/);
 assert.deepEqual([...OFFLINE_STATE_NAMES], ["APP-SHELL-READY", "DEFAULT-DECK-READY", "SELECTED-DECKS-READY"]);
 
 let registrationOptions = null;
@@ -62,12 +65,50 @@ assert.equal((await client.refresh()).states["APP-SHELL-READY"], true);
 assert.equal((await client.cacheDeck("rws")).ready, true);
 assert.equal(rootElement.dataset.defaultDeckReady, "true");
 
-let errorHandler = null;
-const documentRef = { addEventListener: (_name, handler) => { errorHandler = handler; }, removeEventListener: () => {} };
-installImageFallbacks(documentRef);
-const image = { tagName: "IMG", dataset: {}, alt: "", src: "missing.jpg" };
-errorHandler({ target: image });
-assert.equal(image.dataset.imageStatus, "unavailable");
-assert.equal(image.alt, "牌面图片暂时不可用");
-assert.equal(image.src, "./icon.svg");
-console.log("MOD-006C PWA contract passed: generated classic manifest, cache classes, offline states, and accessible image fallback are wired.");
+const imageHandlers = new Map();
+const documentRef = {
+  addEventListener: (name, handler) => imageHandlers.set(name, handler),
+  removeEventListener: (name) => imageHandlers.delete(name),
+};
+let retryCallback = null;
+const uninstallFallbacks = installImageFallbacks(documentRef, {
+  retryDelayMs: 0,
+  scheduleRetry: (callback) => { retryCallback = callback; },
+});
+const image = {
+  tagName: "IMG",
+  dataset: {},
+  alt: "",
+  src: "missing.jpg",
+  getAttribute: (name) => (name === "src" ? image.src : null),
+};
+imageHandlers.get("error")({ target: image });
+assert.equal(image.dataset.imageStatus, "retrying");
+assert.equal(image.dataset.imageRetryCount, "1");
+assert.equal(image.src, "missing.jpg");
+assert.equal(typeof retryCallback, "function");
+retryCallback();
+assert.equal(image.src, "missing.jpg");
+imageHandlers.get("load")({ target: image });
+assert.equal(image.dataset.imageStatus, undefined);
+assert.equal(image.dataset.imageRetryCount, undefined);
+
+retryCallback = null;
+const unavailableImage = {
+  tagName: "IMG",
+  dataset: {},
+  alt: "",
+  src: "still-missing.jpg",
+  getAttribute: (name) => (name === "src" ? unavailableImage.src : null),
+};
+imageHandlers.get("error")({ target: unavailableImage });
+assert.equal(unavailableImage.dataset.imageStatus, "retrying");
+retryCallback();
+imageHandlers.get("error")({ target: unavailableImage });
+assert.equal(unavailableImage.dataset.imageStatus, "unavailable");
+assert.equal(unavailableImage.alt, "牌面图片暂时不可用");
+assert.equal(unavailableImage.src, "./icon.svg");
+uninstallFallbacks();
+assert.equal(imageHandlers.size, 0);
+
+console.log("MOD-006C PWA contract passed: deck fetches and image elements recover once from transient failures before accessible fallback.");

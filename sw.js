@@ -287,12 +287,20 @@ async function requiredResponse(event) {
   return (await cache.match(event.request)) || fetch(event.request);
 }
 
+async function fetchDeckNetwork(request) {
+  try {
+    return await fetch(request);
+  } catch {
+    return fetch(request.clone());
+  }
+}
+
 async function deckResponse(event, deckId) {
   const releaseId = await activeReleaseId();
   const cache = await caches.open(deckCacheName(releaseId, deckId));
   const cached = await cache.match(event.request);
   if (cached) return cached;
-  const response = await fetch(event.request);
+  const response = await fetchDeckNetwork(event.request);
   if (responseIsCacheable(response, event.request.url)) {
     event.waitUntil(cache.put(event.request, response.clone()).then(async () => {
       await updateDeckStatus(deckId, await deckIsComplete(releaseId, deckId));
