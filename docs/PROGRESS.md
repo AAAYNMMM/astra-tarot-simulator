@@ -6,13 +6,14 @@
 
 | 项目 | 当前值 |
 |---|---|
-| 当前阶段 | Phase 14：自由问题隔离、统一顺势评分与独立牌阵 V3；维护修复中 |
-| 当前进行中任务 | `HOTFIX-001`：牌面瞬时加载失败恢复 |
-| 最近完成任务 | `V3-009`：生成物、真实浏览器、离线、旧数据矩阵与 full 集成验证 |
-| 唯一下一任务 | `HOTFIX-001` 完成后恢复 `REL-007` 正式版本与 exact-commit 发布验证 |
+| 当前阶段 | Phase 14：自由问题隔离、统一顺势评分与独立牌阵 V3；维护修复已完成 |
+| 当前进行中任务 | 无 |
+| 最近完成任务 | `HOTFIX-001`：牌面瞬时加载失败恢复 |
+| 唯一下一任务 | `REL-007`：正式版本与 exact-commit 发布验证 |
 | 阻塞项 | 无 |
 | 工作分支 | `main` |
 | 实施基线commit | `525e3efb45fd08a2a0dd63249e5a1a35006b91f3` |
+| HOTFIX-001功能验证commit | `b55893d629df669391899f3565e3145993b1e881` |
 | Phase 1状态 | `PARENT-DONE` |
 | Phase 2状态 | `PARENT-DONE` |
 | Phase 3状态 | `PARENT-DONE` |
@@ -26,19 +27,23 @@
 | Phase 11状态 | `PARENT-DONE` |
 | Phase 12状态 | `PARENT-IN-PROGRESS`（正式发布证据未绑定最终 commit） |
 | Phase 13状态 | `HISTORICAL-COMPATIBILITY` |
-| Phase 14状态 | `PARENT-IN-PROGRESS`（`V3-001`至`V3-009`已完成；`REL-007`按约定后移） |
+| Phase 14状态 | `PARENT-IN-PROGRESS`（`V3-001`至`V3-009`与`HOTFIX-001`已完成；`REL-007`按约定后移） |
 | 最后更新时间 | 2026-08-12 |
 
 ## HOTFIX-001 实施现场
 
-- 状态：`IN_PROGRESS`。
+- 状态：`DONE`。
 - 规范来源：D-021、D-042、D-052、D-058、`MOD-006C` 与 CWapi exact-commit 验证要求。
 - 问题：牌组文件与生成清单完整，但牌面图片的瞬时网络/缓存读取失败会直接触发 UI 占位图；原实现不会重试，因而一次瞬时错误会在当前牌面元素上表现为永久加载失败。
-- 范围：只调整牌组图片的 Service Worker 网络恢复与 UI 图片错误恢复，不改变抽牌、正逆位、牌义、评分、牌阵和历史格式。
-- 自动验收：PWA 合同覆盖“第一次失败后恢复”和“持续失败后仍进入可访问占位”；生成产物同步；`python automation/validate.py --scope full` 通过。
-- 人工验收：真实 Chromium 浏览器回归由 full scope 执行，确认牌面、离线和 PWA 主流程未退化。
-- CWapi：待生成物提交后绑定新的 40 位 commit 执行 full 验证。
-- 下一具体动作：提交修复源码和回归测试，使用 CWapi 在该 commit 上运行正式生成器并回写生成物，再对生成物 commit 执行 full 验证。
+- 修复：Service Worker 在牌面网络请求抛出瞬时异常时使用克隆请求进行一次恢复；UI 图片错误处理第一次失败进入 `retrying` 并重试原始牌面，只有持续失败才进入可访问占位图；成功加载会清理重试状态。
+- 范围：未改变抽牌、正逆位、牌义、评分、牌阵和历史格式。
+- 源码修复commit：`b34afddcf9109c40df3b115d37a89794f3cc3629`。
+- 生成物同步commit：`ec34d5994127d4fabfc8398208d55ed934877557`。
+- 发布证据修复与功能验证commit：`b55893d629df669391899f3565e3145993b1e881`；同时更新当前 2.1.0 性能报告并纳入 `release-2.1.0.json`，使干净 exact-commit worktree 不再依赖本地残留 `.qa` 文件。
+- 生成物：artifact manifest `6d687c3dc7602185d56e359448ebf4aec286d1811003d9b4e5f4bc94a40ecd98`；precache manifest `3cc76356e354bc95de221a0553fdc7e35e3b30b1b0c36804f2504b6e8f70ddaf`；releaseId `2.1.0-6d687c3dc760`。
+- 回归合同：`tests/pwa_contract_test.mjs`覆盖“第一次失败后恢复”和“持续失败后进入可访问占位”，并验证 Service Worker 牌面请求恢复链路。
+- CWapi full 验证：任务 `GPT5B8DDCCC2BB28A0A0D27B729E5D58` 绑定 `b55893d629df669391899f3565e3145993b1e881`；90 个验证步骤全部 `PASS`，0 warning，56,160 组真实数据矩阵 `PASS`，browser harness `PASS`，严格模块检查 416/416 `PASS`，工作区验证前后均干净；SUMMARY 为 `READY`、`needs_attention=false`。
+- 下一具体动作：恢复 `REL-007` 正式版本与 exact-commit 发布验证，不再扩展本次维护修复范围。
 
 ## Phase 14 实施现场
 
